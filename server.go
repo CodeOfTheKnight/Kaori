@@ -41,7 +41,7 @@ func main() {
 	fs := http.FileServer(http.Dir(pathGui))
 
 	mux := &http.ServeMux{}
-	mux.HandleFunc("/", serveIndex)
+	mux.HandleFunc(endpointRoot.String(), serveIndex)
 	mux.Handle(endpointGui.String(), http.StripPrefix(string(filepath.Separator) + nameDirGui + string(filepath.Separator), fs))
 
 	var handler http.Handler = mux
