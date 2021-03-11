@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/felixge/httpsnoop"
 	"log"
+	"net/http"
 	"os"
 	"sync"
 	"time"
@@ -43,6 +45,30 @@ func (ri *HTTPReqInfo) logHTTPReq() {
 	}
 
 	ri.muLogHTTP.Unlock()
+}
+
+func logRequestHandler(h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		ri := &HTTPReqInfo{
+			Method:    r.Method,
+			Url:       r.URL.String(),
+			Referer:   r.Header.Get("Referer"),
+			UserAgent: r.Header.Get("User-Agent"),
+			Data:      time.Now().Unix(),
+		}
+
+		ri.Ipaddr = GetIP(r)
+
+		// this runs handler h and captures information about
+		// HTTP request
+		m := httpsnoop.CaptureMetrics(h, w, r)
+
+		ri.Code = m.Code
+		ri.Size = m.Written
+		ri.Duration = m.Duration
+		ri.logHTTPReq()
+	}
+	return http.HandlerFunc(fn)
 }
 
 

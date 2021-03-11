@@ -1,13 +1,21 @@
 package main
 
 import (
-	"github.com/felixge/httpsnoop"
 	logger "github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"os"
+	"path"
+	"path/filepath"
 	"time"
 )
+
+//Settings
+const pathGui string = "./KaoriGui"
+const nameDirGui string = "KaoriGui"
+const certFile string = "cert/cert.pem"
+const keyPem string = "cert/key.pem"
+const port string = ":8020"
 
 func init() {
 
@@ -23,27 +31,30 @@ func init() {
 	// Can be any io.Writer, see below for File example
 	logger.SetOutput(file)
 
+	//Set global variables
+	os.Setenv("CERTIFICATE", filepath.FromSlash(certFile))
+	os.Setenv("KEY", filepath.FromSlash(keyPem))
 }
 
 func main() {
 
-	fs := http.FileServer(http.Dir("./KaoriGui"))
+	fs := http.FileServer(http.Dir(pathGui))
 
 	mux := &http.ServeMux{}
 	mux.HandleFunc("/", serveIndex)
-	mux.Handle("/KaoriGui/", http.StripPrefix("/KaoriGui/", fs))
+	mux.Handle(endpointGui.String(), http.StripPrefix(string(filepath.Separator) + nameDirGui + string(filepath.Separator), fs))
 
 	var handler http.Handler = mux
 	handler = logRequestHandler(handler)
 
 	server := http.Server{
-		Addr:           ":8090",
+		Addr:           port,
 		Handler:        handler,
 		ReadTimeout:    10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Fatal(server.ListenAndServeTLS("cert/cert.pem", "cert/key.pem"))
+	log.Fatal(server.ListenAndServeTLS(os.Getenv("CERTIFICATE"), os.Getenv("KEY")))
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +65,19 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 
 		ip := GetIP(r)
 
-		content, err := os.ReadFile("KaoriGui/home.html")
+		//Server push
+		files, err := ls(filepath.ToSlash(nameDirGui + "/"))
+
+		if pusher, ok := w.(http.Pusher); ok {
+			// Push is supported.
+			for _, file := range files {
+				if err := pusher.Push(filepath.ToSlash(path.Join("/", file)), nil); err != nil {
+					log.Printf("Failed to push: %v", err)
+				}
+			}
+		}
+
+		content, err := os.ReadFile(filepath.ToSlash(filepath.Join(nameDirGui, "/home.html")))
 		if err != nil {
 			log.Println(ip, err)
 			printInternalErr(w)
@@ -67,29 +90,5 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 		printErr(w, "")
 		return
 	}
-}
-
-func logRequestHandler(h http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		ri := &HTTPReqInfo{
-			Method:    r.Method,
-			Url:       r.URL.String(),
-			Referer:   r.Header.Get("Referer"),
-			UserAgent: r.Header.Get("User-Agent"),
-			Data:      time.Now().Unix(),
-		}
-
-		ri.Ipaddr = GetIP(r)
-
-		// this runs handler h and captures information about
-		// HTTP request
-		m := httpsnoop.CaptureMetrics(h, w, r)
-
-		ri.Code = m.Code
-		ri.Size = m.Written
-		ri.Duration = m.Duration
-		ri.logHTTPReq()
-	}
-	return http.HandlerFunc(fn)
 }
 

@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-func ls() (files []string, err error ){
-	err = filepath.Walk("KaoriGui/",
+func ls(dir string) (files []string, err error ){
+	err = filepath.Walk(dir,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
