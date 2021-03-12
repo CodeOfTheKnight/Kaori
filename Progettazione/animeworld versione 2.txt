@@ -1,0 +1,6 @@
+ 
+ VIDEO LINKS ENDPOINT: https://www.animeworld.tv/api/download/<idEpisodio>
+ VIDEO LINK FHD: https://www.animeworld.tv/api/episode/info?id=<idEpisodioString>
+ VIDEO LINK PLAYER: https://player2.animeworld.tv/player?link=https://www.proxyworld1.org/DDL/ANIME/JujutsuKaisenFHD/01/playlist.m3u8
+ Direct m3u8 LINK: https://www.proxyworld1.org/DDL/ANIME/JujutsuKaisenFHD/01/1080p.m3u8
+ EPISODE COMMENTS ID: https://www.animeworld.tv/api/comments/anime/get/2922?episodeId=<episodeId>
