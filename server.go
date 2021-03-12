@@ -43,6 +43,7 @@ func main() {
 	mux := &http.ServeMux{}
 	mux.HandleFunc(endpointRoot.String(), serveIndex)
 	mux.Handle(endpointGui.String(), http.StripPrefix(string(filepath.Separator) + nameDirGui + string(filepath.Separator), fs))
+	mux.HandleFunc(endApiInfo.String(), ApiInfo)
 
 	var handler http.Handler = mux
 	handler = logRequestHandler(handler)

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -52,4 +54,22 @@ func printErr(w http.ResponseWriter, err string) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusBadRequest)
 	w.Write([]byte("400 - Bad Request!" + err + "\n"))
+}
+
+func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, error) {
+
+	values := make(map[string]interface{})
+
+	for _, param := range params {
+		keys, err := r.URL.Query()[param.Key]
+
+		if (!err || len(keys[0]) < 1) && param.Required == true {
+			return nil , errors.New(fmt.Sprint("Url Param \"%s\" is missing", param.Key))
+		}
+
+		values[param.Key] = keys[0]
+	}
+
+	return values, nil
+
 }
