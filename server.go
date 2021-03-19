@@ -1,21 +1,24 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 //Settings
 const pathGui string = "./KaoriGui"
+const pathTests string = "./tests"
 const nameDirGui string = "KaoriGui"
 const certFile string = "cert/cert.pem"
 const keyPem string = "cert/key.pem"
-const port string = ":8020"
+const port string = ":8010"
 
 func init() {
 
@@ -34,23 +37,38 @@ func init() {
 	//Set global variables
 	os.Setenv("CERTIFICATE", filepath.FromSlash(certFile))
 	os.Setenv("KEY", filepath.FromSlash(keyPem))
+	os.Setenv("ACCESS_SECRET", "secret")
 }
+
+/*PRIVILEGI: ucta
+	u: User = Accesso base
+	c: Creator = Accesso alle api di verifica dati aggiunti da utenti
+	t: Tester = Accesso alle api di test
+	a: Admin = tutti gli accessi
+*/
 
 func main() {
 
-	fs := http.FileServer(http.Dir(pathGui))
+	//Creazione router
+	router := mux.NewRouter()
+	router.Use(enableCors) //CORS middleware
+	routerAdd := router.PathPrefix(endApiAddData.String()).Subrouter()
+	routerTest := router.PathPrefix(endpointTest.String()).Subrouter()
 
-	mux := &http.ServeMux{}
-	mux.HandleFunc(endpointRoot.String(), serveIndex)
-	mux.Handle(endpointGui.String(), http.StripPrefix(string(filepath.Separator) + nameDirGui + string(filepath.Separator), fs))
-	mux.HandleFunc(endApiInfo.String(), ApiInfo)
+	//Rotte base
+	router.HandleFunc(endpointRoot.String(), serveIndex)
+	router.PathPrefix("/KaoriGui/").Handler(http.StripPrefix("/KaoriGui/", http.FileServer(http.Dir(pathGui))))
 
-	var handler http.Handler = mux
-	handler = logRequestHandler(handler)
+	//Rotte API AddData
+	routerAdd.Path(endApiAddDataMusic.String()).HandlerFunc(ApiAddMusic).Methods(http.MethodPost)
+
+	//Rotte API test
+	routerTest.Use(authmiddleware)
+	routerTest.PathPrefix(testFiles.String()).Handler(http.StripPrefix(path.Join(endpointTest.String(), testFiles.String()), http.FileServer(http.Dir(pathTests)))).Methods(http.MethodGet, http.MethodOptions)
 
 	server := http.Server{
-		Addr:           port,
-		Handler:        handler,
+		Addr:           "0.0.0.0" + port,
+		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
@@ -59,8 +77,6 @@ func main() {
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
-
-	enableCors(w) //CORS POLICY
 
 	if r.Method == http.MethodGet {
 
@@ -93,3 +109,33 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func authmiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		metadata, err := ExtractTokenMetadata(r)
+		if err != nil {
+			printInternalErr(w)
+			return
+		}
+
+		if !strings.Contains(metadata.Permission, "a"){
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("HTTP 403- Forbidden"))
+			return
+		}
+
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
+
+	})
+}
+
+func enableCors(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers:", "*")
+		w.Header().Set("Allow-Credentials", "true")
+		next.ServeHTTP(w, r)
+	})
+}

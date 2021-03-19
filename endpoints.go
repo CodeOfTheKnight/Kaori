@@ -7,26 +7,29 @@ const (
 	endpointGui  endpoints = "/KaoriGui/"
 
 	//Endpoint per servizio
-	endApiInfo endpoints = "/api/info" //[GET] Parametri: IdAnilist
-	endApiAnime endpoints = "/api/anime" //[GET] Parametri: IdAnilist
-	endApiManga endpoints = "/api/manga" //[GET] Parametri: IdAnilist
+	endApiAnime   endpoints = "/api/anime"   //[GET] Parametri: IdAnilist
+	endApiManga   endpoints = "/api/manga"   //[GET] Parametri: IdAnilist
 	endApiChapter endpoints = "/api/chapter" //[GET] Parametri: IdAnilist, numEpisodio, sito
 	endApiEpisode endpoints = "/api/episode" //[GET] Parametri: IdAnilist, numCapitolo, sito
-	endApiMuisc endpoints = "/api/music" //[GET] Parametri: IdAnilist, [tipo](OP, ED, OST)
+	endApiMuisc   endpoints = "/api/music"   //[GET] Parametri: IdAnilist, [tipo](OP, ED, OST)
 
-	//Endpoint di gestione
-	endApiSignUp endpoints = "/api/signup" //[POST] Parametri: Username, mail, password.
-	endApiLogin endpoints = "/api/login" //[POST] Parametri: mail, password  | Utilizza basic auth + JWT
+	//Endpoint utenti
+	endApiSignUp endpoints = "/api/user/signup" //[POST] Parametri: Username, mail, password.
+	endApiLogin  endpoints = "/api/user/login"  //[POST] Parametri: mail, password  | Utilizza basic auth + JWT
 
 	//Endpoint addData
-	endApiAddDataAnime endpoints = "/api/addData/anime" //[POST] Struttura dati da definire.
-	endApiAddDataManga endpoints = "/api/addData/manga" //[POST] Struttura dati da definire.
-	endApiAddDataMusic endpoints = "/api/addData/music" //[POST] Struttura dati da definire.
+	endApiAddData      endpoints = "/api/addData/"
+	endApiAddDataAnime endpoints = "/anime" //[POST] Struttura dati da definire.
+	endApiAddDataManga endpoints = "/manga" //[POST] Struttura dati da definire.
+	endApiAddDataMusic endpoints = "/music" //[POST] Struttura dati da definire.
 
 	//Endpoint lista anime/manga
 	endpointUserList endpoints = "/api/list/userList" //[Get] Parametri: TokenAnilist, TokenServer, TipoLista
 	endpointUserInfo endpoints = "/api/list/userinfo" //[Get] Parametri: TokenAnilist, TokenServer
 
+	//Endpoint for tests
+	endpointTest endpoints = "/api/test/"
+	testFiles endpoints = "/files/"
 )
 
 func (e endpoints) String() string {

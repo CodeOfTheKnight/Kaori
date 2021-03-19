@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-const logConnection string = "connection.log.json"
-const logServer string = "logServer.log.json"
+const logConnection string = "log/connection.log.json"
+const logServer string = "log/logServer.log.json"
 
 type HTTPReqInfo struct {
 	Method  string `json:"method"`

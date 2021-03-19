@@ -1,11 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	logger "github.com/sirupsen/logrus"
-	"github.com/KiritoNya/anilist-go"
 	"log"
 	"net/http"
+	"os"
 )
 
 type ParamsInfo struct {
@@ -13,25 +13,77 @@ type ParamsInfo struct {
 	Required bool
 }
 
-func ApiInfo(w http.ResponseWriter, r *http.Request) {
+const jsonTestAddMusicFile = "tests/addData/music/addMusic.json"
 
-	if r.Method == http.MethodGet {
+func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 
-		params := []ParamsInfo {
-			{Key: "id", Required: true},
-		}
+		//TODO: Verificare che l'utente (se ha solo i permessi di utente) non abbia già caricato il massimo di canzoni (cioè 10)
 
-		ip := GetIP(r)
+		// Declare a new MusicData struct.
+		var md MusicData
 
-		values, err := getParams(params, r)
+		// Try to decode the request body into the struct. If there is an error,
+		// respond to the client with the error message and a 400 status code.
+		err := json.NewDecoder(r.Body).Decode(&md)
 		if err != nil {
-			logger.WithField("function", "ApiInfo").Error(fmt.Sprint("%s: %s", ip, err))
-			w.WriteHeader(400)
-			w.Write([]byte("Bad request!"))
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		log.Println(values["id"])
+		err = md.CheckError()
+		if err != nil {
+			log.Println(err)
+			printErr(w, err.Error())
+			return
+		}
+
+		md.GetNameAnime()
+		fmt.Println(md.AnimeName)
+		err = md.NormalizeName()
+		if err != nil {
+			log.Println(err)
+			printInternalErr(w)
+			return
+		}
+
+		//Upload
+		err = md.UploadTemporaryFile()
+		if err != nil {
+			printInternalErr(w)
+			return
+		}
+
+		//TODO: Verificare che non sia già nel database
+
+		//Add to database
+		err = md.AddDataToTmpDatabase()
+		if err != nil {
+			log.Println(err)
+			printInternalErr(w)
+			return
+		}
+}
+
+//TESTS
+//TODO: Inserire l'autenticazione di amministratore
+
+func TestAddDataMusicJson(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "OPTIONS" {
+		w.Write([]byte("CIAONE"))
+		return
 	}
 
+	if r.Method == http.MethodGet {
+
+
+		content, err := os.ReadFile(jsonTestAddMusicFile)
+		if err != nil {
+			log.Println(err)
+			printInternalErr(w)
+			return
+		}
+
+		w.Write(content)
+	}
 }
