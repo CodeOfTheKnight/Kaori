@@ -304,8 +304,8 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 	//TODO: Add base_url
 	c := Conferma{
 		Username: u.Username,
-		Link: fmt.Sprintf("https://127.0.0.1:8012/api/auth/confirm?email=%s&id=%s", u.Email, rf),
-		Login: "https://waifuai.dd-dns.de:8012/KaoriGui/login.html",
+		Link: filepath.Join(baseUrl, fmt.Sprintf(  "/api/auth/confirm?email=%s&id=%s", u.Email, rf)),
+		Login: filepath.Join(baseUrl, "/KaoriGui/login.html"),
 	}
 
 
