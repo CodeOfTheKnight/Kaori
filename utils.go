@@ -4,8 +4,12 @@ import (
 	"bytes"
 	"encoding/base64"
 	"errors"
+	"text/template"
+	"time"
 	"fmt"
+	"github.com/gorilla/securecookie"
 	"github.com/hajimehoshi/go-mp3"
+	"github.com/segmentio/ksuid"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -59,7 +63,7 @@ func printInternalErr(w http.ResponseWriter) {
 func printErr(w http.ResponseWriter, err string) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusBadRequest)
-	w.Write([]byte("400 - Bad Request!" + err + "\n"))
+	w.Write([]byte(fmt.Sprintln("400 - Bad Request!", err)))
 }
 
 //getParams ritorna i parametri inviati tramite metodo GET dell'HTTP request.
@@ -71,7 +75,7 @@ func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, er
 		keys, err := r.URL.Query()[param.Key]
 
 		if (!err || len(keys[0]) < 1) && param.Required == true {
-			return nil , errors.New(fmt.Sprint("Url Param \"%s\" is missing", param.Key))
+			return nil , errors.New(fmt.Sprintf("Url Param \"%s\" is missing", param.Key))
 		}
 
 		values[param.Key] = keys[0]
@@ -184,4 +188,94 @@ func uploadLittleBox(data []byte, nameFile string) (uri string, err error) {
 	}
 
 	return string(content), nil
+}
+
+func GenerateID() string {
+	return ksuid.New().String()
+}
+
+func setCookies(w http.ResponseWriter, token string) error {
+
+	//TODO: METTERE NEL FILE DI CONFIGURAZIONE
+	var hashKey = []byte("very-secret")
+	var s = securecookie.New(hashKey, nil)
+
+	value := map[string]string{
+		"RefreshToken": token,
+	}
+	if encoded, err := s.Encode("KaoriStream", value); err == nil {
+		cookie := &http.Cookie{
+			Name:  "KaoriStream",
+			Value: encoded,
+			Secure: true,
+			HttpOnly: true,
+		}
+		fmt.Println("COOKIE", cookie)
+		http.SetCookie(w, cookie)
+	} else {
+		return err
+	}
+
+	return nil
+}
+
+func getCookies(r *http.Request) (map[string]string, error) {
+
+	var hashKey = []byte("very-secret")
+	var s = securecookie.New(hashKey, nil)
+
+	if cookie, err := r.Cookie("KaoriStream"); err == nil {
+		value := make(map[string]string)
+		if err = s.Decode("KaoriStream", cookie.Value, &value); err == nil {
+			return value, nil
+		}
+	}
+
+	return nil, errors.New("Cookies not valid!")
+}
+
+func verifyAuth(email, password string) (bool, error) {
+
+	document, err := kaoriUser.Client.GetItem("User", email)
+	if err != nil {
+		return false, err
+	}
+
+	data := document.Data()
+
+	if !data["IsActive"].(bool) {
+		return false, errors.New("unactive")
+	}
+
+	p := data["Password"].(string)
+	if p == password {
+		return true, nil
+	}
+	return false, nil
+}
+
+func dateToUnix(date string) int64 {
+	t, _ := time.Parse(time.RFC3339Nano, date)
+	return t.Unix()
+}
+
+func parseTemplate(tmpl string, data interface{}) (string, error) {
+
+	templatePath, err := filepath.Abs(tmpl)
+	if err != nil {
+		return "", errors.New("invalid template name")
+	}
+
+	t, err := template.ParseFiles(templatePath)
+	if err != nil {
+		return "", err
+	}
+
+	buf := new(bytes.Buffer)
+
+	if err = t.Execute(buf, data); err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
 }

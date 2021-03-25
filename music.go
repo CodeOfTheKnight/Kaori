@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	anilist "github.com/kaiserbh/anilistgo/anilist/query"
 	"strings"
@@ -11,13 +10,13 @@ import (
 
 //MusicData struct
 type MusicData struct {
-	IdAnilist int `json:"idAnilist""`
-	AnimeName string `json:"animeName,omitempty"`
+	IdAnilist int `json:"idAnilist"`
+	AnimeName string `json:"-"`
 	Type string `json:"type"`
 	NumSong int `json:"numSong"`
 	IsFull bool `json:"isFull"`
-	Artist string `json:"artist"`
-	NameSong string `json:"nameSong"`
+	Artist string `json:"artist,omitempty"`
+	NameSong string `json:"nameSong,omitempty"`
 	Cover string `json:"cover"`
 	Track string `json:"track"`
 	imgCover []byte
@@ -114,6 +113,12 @@ func (md *MusicData) CheckTrack() (err error) {
 			return err
 		}
 
+	case "audio/mpeg":
+		md.track, err = base64toMp3(strings.Split(md.Track, "base64,")[1])
+		if err != nil {
+			return err
+		}
+
 	default:
 		return errors.New("Track not valid")
 	}
@@ -179,15 +184,8 @@ func (md *MusicData) UploadTemporaryFile() error {
 
 //Aggiunge il dato al database
 func (md *MusicData) AddDataToTmpDatabase() error {
-	var c Client
-	ctx := context.Background()
 
-	err := c.Connect(&ctx)
-	if err != nil {
-		return err
-	}
-
-	err = c.AddMusicTemp(&ctx, md)
+	err := kaoriTmp.Client.AddMusicTemp(md)
 	if err != nil {
 		return err
 	}

@@ -7,21 +7,33 @@ const (
 	endpointGui  endpoints = "/KaoriGui/"
 
 	//Endpoint per servizio
-	endApiAnime   endpoints = "/api/anime"   //[GET] Parametri: IdAnilist
-	endApiManga   endpoints = "/api/manga"   //[GET] Parametri: IdAnilist
-	endApiChapter endpoints = "/api/chapter" //[GET] Parametri: IdAnilist, numEpisodio, sito
-	endApiEpisode endpoints = "/api/episode" //[GET] Parametri: IdAnilist, numCapitolo, sito
-	endApiMuisc   endpoints = "/api/music"   //[GET] Parametri: IdAnilist, [tipo](OP, ED, OST)
+	endpointService endpoints = "/api/service/"
+	serviceAnime    endpoints = "/anime"   //[GET] Parametri: IdAnilist
+	serviceManga    endpoints = "/manga"   //[GET] Parametri: IdAnilist
+	serviceChapter  endpoints = "/chapter" //[GET] Parametri: IdAnilist, numEpisodio, sito
+	serviceEpisode  endpoints = "/episode" //[GET] Parametri: IdAnilist, numCapitolo, sito
+	serviceMusic    endpoints = "/music"   //[GET] Parametri: IdAnilist, [tipo](OP, ED, OST)
 
 	//Endpoint utenti
-	endApiSignUp endpoints = "/api/user/signup" //[POST] Parametri: Username, mail, password.
-	endApiLogin  endpoints = "/api/user/login"  //[POST] Parametri: mail, password  | Utilizza basic auth + JWT
+	endpointUser endpoints = "/api/user/"
+	userInfo     endpoints = "/info" //[GET]
+	userSettings endpoints = "/settings" //[GET]
+	userBadge    endpoints = "/badge" //[GET]
+	userExist	 endpoints = "/exist" //[GET] Parametri: email
+
+	//Endpoint auth
+	endpointAuth endpoints = "/api/auth/"
+	authRefresh	 endpoints = "/refresh"
+	authLogin endpoints = "/login"
+	authSignUp endpoints = "/signup"
+	authConfirmSignUp endpoints = "/confirm"
+
 
 	//Endpoint addData
-	endApiAddData      endpoints = "/api/addData/"
-	endApiAddDataAnime endpoints = "/anime" //[POST] Struttura dati da definire.
-	endApiAddDataManga endpoints = "/manga" //[POST] Struttura dati da definire.
-	endApiAddDataMusic endpoints = "/music" //[POST] Struttura dati da definire.
+	endpointAddData endpoints = "/api/addData/"
+	addDataAnime    endpoints = "/anime" //[POST] Struttura dati da definire.
+	addDataManga    endpoints = "/manga" //[POST] Struttura dati da definire.
+	addDataMusic    endpoints = "/music" //[POST] Struttura dati da definire.
 
 	//Endpoint lista anime/manga
 	endpointUserList endpoints = "/api/list/userList" //[Get] Parametri: TokenAnilist, TokenServer, TipoLista
@@ -29,7 +41,7 @@ const (
 
 	//Endpoint for tests
 	endpointTest endpoints = "/api/test/"
-	testFiles endpoints = "/files/"
+	testFiles    endpoints = "/files/"
 )
 
 func (e endpoints) String() string {

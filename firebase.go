@@ -11,26 +11,97 @@ import (
 	"time"
 )
 
-type Client struct {
-	client *firestore.Client
+type database struct {
+	ProjectId string
+	Database string
+	Client ClientFirestore
 }
 
-func (c *Client) Connect(ctx *context.Context) error {
-	conf := &firebase.Config{ProjectID: "kaori-504c3"}
-	app, err := firebase.NewApp(*ctx, conf, option.WithCredentialsFile("database/kaori-504c3-firebase-adminsdk-5apba-f66a21203e.json"))
+type ClientFirestore struct {
+	c *firestore.Client
+	ctx context.Context
+}
+
+var (
+	kaoriTmp *database
+	kaoriUser *database
+)
+
+func NewDatabase(projId, db string) (*database, error) {
+	var d database
+
+	d.ProjectId = projId
+	d.Database = db
+	err := d.Connect()
+	if err != nil {
+		return nil, err
+	}
+
+	return &d, nil
+}
+
+func (d *database) Connect() error {
+	d.Client.ctx = context.Background()
+
+	conf := &firebase.Config{ProjectID: d.ProjectId}
+	app, err := firebase.NewApp(d.Client.ctx, conf, option.WithCredentialsFile(d.Database))
 	if err != nil {
 		return errors.New(fmt.Sprintf("error initializing app: %v\n", err.Error()))
 	}
 
-	client, err := app.Firestore(*ctx)
+	client, err := app.Firestore(d.Client.ctx)
 	if err != nil {
 		return err
 	}
-	c.client = client
+	d.Client.c = client
 	return nil
 }
 
-func (c *Client) AddMusicTemp(ctx *context.Context, md *MusicData) error {
+func (cl *ClientFirestore) GetItem(collection string, item string) (*firestore.DocumentSnapshot, error) {
+
+	document, err := cl.c.Collection(collection).Doc(item).Get(cl.ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return 	document, nil
+}
+
+func (cl *ClientFirestore) UpdateField(coll string, doc string, path string, val interface{}) error {
+	_, err := cl.c.Collection(coll).Doc(doc).Update (cl.ctx, [] firestore.Update {{Path: path, Value: val}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cl *ClientFirestore) SetField(coll string, doc string, val interface{}, merge bool) (err error) {
+	if merge {
+		_, err = cl.c.Collection(coll).Doc(doc).Set(cl.ctx, val, firestore.MergeAll)
+	} else {
+		_, err = cl.c.Collection(coll).Doc(doc).Set(cl.ctx, val)
+	}
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cl *ClientFirestore) AppendArray(coll string, doc string, path string, val interface{}) error {
+
+	dc := cl.c.Collection(coll).Doc(doc)
+
+	_, err := dc.Update(cl.ctx, []firestore.Update{
+		{Path: path, Value: firestore.ArrayUnion(val)},
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cl *ClientFirestore) AddMusicTemp(md *MusicData) error {
 
 	var tmp interface{}
 	tmp = map[string]struct {
@@ -57,7 +128,47 @@ func (c *Client) AddMusicTemp(ctx *context.Context, md *MusicData) error {
 		},
 	}
 
-	_, err := c.client.Collection(md.Type).Doc(strconv.Itoa(md.IdAnilist)).Set(*ctx, tmp, firestore.MergeAll)
+	_, err := cl.c.Collection(md.Type).Doc(strconv.Itoa(md.IdAnilist)).Set(cl.ctx, tmp, firestore.MergeAll)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cl *ClientFirestore) AddUser(u *User) error {
+	var tmp interface{}
+	tmp = struct {
+		Username string
+		Password string
+		Permission string
+		ProfilePicture string
+		IsDonator bool
+		IsActive bool
+		AnilistId int
+		DateSignUp int64
+		ItemAdded int
+		Credits int
+		Level int
+		Badges []string
+		Settings Settings
+	}{
+		Username: u.Username,
+		Password: u.Password,
+		Permission: u.permission,
+		ProfilePicture: u.ProfilePicture,
+		IsDonator: u.isDonator,
+		IsActive: u.isDonator,
+		AnilistId: u.anilistId,
+		DateSignUp: u.dateSignUp,
+		ItemAdded: u.itemAdded,
+		Credits: u.credits,
+		Level: u.level,
+		Badges: []string{},
+		Settings: u.settings,
+	}
+
+	_, err := cl.c.Collection("User").Doc(u.Email).Set(cl.ctx, tmp)
 	if err != nil {
 		return err
 	}
