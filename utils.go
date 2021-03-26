@@ -243,7 +243,9 @@ func verifyAuth(email, password string) (bool, error) {
 
 	data := document.Data()
 
-	if !data["IsActive"].(bool) {
+	active := data["IsActive"].(bool)
+
+	if !active {
 		return false, errors.New("unactive")
 	}
 

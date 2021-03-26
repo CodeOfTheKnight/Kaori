@@ -34,7 +34,7 @@ type JWTContainer struct {
 
 func GenerateTokenPair(email string) (map[string]JWTContainer, error) {
 
-	expire := time.Now().Add(time.Minute * 15).Unix()
+	expire := time.Now().Add(time.Minute * 3).Unix()
 
 	//Get permissions
 	document, err := kaoriUser.Client.GetItem("User", email)

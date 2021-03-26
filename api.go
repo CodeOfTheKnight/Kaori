@@ -61,13 +61,19 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 	//Verify password and email
 	isValid, err := verifyAuth(params.Email, params.Password)
 
-	if err.Error() == "unactive" {
-		w.WriteHeader(401)
-		w.Write([]byte("Account inattivo!"))
-		return
+	if err != nil  {
+		if err.Error() == "unactive" {
+                	w.WriteHeader(401)
+                	w.Write([]byte("Account inattivo!"))
+                	return
+        	}
+		log.Println(err)
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte("Nome utente e/o password errati."))
+                return
 	}
 
-	if err != nil  || isValid == false {
+	if isValid == false {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Nome utente e/o password errati."))
@@ -378,6 +384,8 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(md.IdAnilist)
+
 	//TODO: Check size files
 	//TODO: Forse potrei controllare anche che non ci siano virus
 	err = md.CheckError()
@@ -388,7 +396,6 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 	}
 
 	md.GetNameAnime()
-	fmt.Println(md.AnimeName)
 	err = md.NormalizeName()
 	if err != nil {
 		log.Println(err)

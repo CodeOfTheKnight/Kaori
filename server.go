@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
-	"google.golang.org/api/gmail/v1"
+//	"google.golang.org/api/gmail/v1"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +15,7 @@ import (
 )
 
 //Settings
+const baseUrl string = "ec2-13-58-107-13.us-east-2.compute.amazonaws.com"
 const pathGui string = "./KaoriGui"
 const pathTests string = "./tests"
 const nameDirGui string = "KaoriGui"
@@ -85,7 +86,7 @@ func main() {
 
 	//Rotte API Auth
 	routerAuth.Path(authLogin.String()).HandlerFunc(ApiLogin).Methods(http.MethodPost)
-	routerAuth.Path(authRefresh.String()).HandlerFunc(ApiRefresh).Methods(http.MethodPost)
+	routerAuth.Path(authRefresh.String()).HandlerFunc(ApiRefresh).Methods(http.MethodGet)
 	routerAuth.Path(authSignUp.String()).HandlerFunc(ApiSignUp).Methods(http.MethodPost)
 	routerAuth.Path(authConfirmSignUp.String()).HandlerFunc(ApiConfirmSignUp).Methods(http.MethodGet)
 
@@ -176,6 +177,7 @@ func enableCors(next http.Handler) http.Handler {
 //NEL CASO COMMENTARE POI SISTEMERÒ
 func mailDetector() {
 
+/*
 	var srv Service
 
 	config, err := readMailConfig(gmail.MailGoogleComScope)
@@ -189,6 +191,8 @@ func mailDetector() {
 	for x := range time.Tick(10 * time.Second) {
 		srv.WaitMail(x)
 	}
+
+*/
 }
 
 func (s *Service) WaitMail(t time.Time) {
