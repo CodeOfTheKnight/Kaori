@@ -89,11 +89,21 @@ func (md *MusicData) CheckImage() (err error) {
 			return err
 		}
 
+		//Check size
+		if len(md.imgCover) == 0 {
+			return errors.New("Cover not valid")
+		}
+
 	case "image/jpeg":
 
 		md.imgCover, err = base64toJpg(strings.Split(md.Cover, "base64,")[1])
 		if err != nil {
 			return err
+		}
+
+		//Check size
+		if len(md.imgCover) == 0 {
+			return errors.New("Cover not valid")
 		}
 
 	default:
@@ -113,10 +123,20 @@ func (md *MusicData) CheckTrack() (err error) {
 			return err
 		}
 
+		//Check size
+		if len(md.track) == 0 {
+			return errors.New("Track not valid")
+		}
+
 	case "audio/mpeg":
 		md.track, err = base64toMp3(strings.Split(md.Track, "base64,")[1])
 		if err != nil {
 			return err
+		}
+
+		//Check size
+		if len(md.track) == 0 {
+			return errors.New("Track not valid")
 		}
 
 	default:

@@ -37,7 +37,7 @@ func GenerateTokenPair(email string) (map[string]JWTContainer, error) {
 	expire := time.Now().Add(time.Minute * 3).Unix()
 
 	//Get permissions
-	document, err := kaoriUser.Client.GetItem("User", email)
+	document, err := kaoriUser.Client.c.Collection("User").Doc(email).Get(kaoriUser.Client.ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -57,16 +57,6 @@ func (d *database) Connect() error {
 	return nil
 }
 
-func (cl *ClientFirestore) GetItem(collection string, item string) (*firestore.DocumentSnapshot, error) {
-
-	document, err := cl.c.Collection(collection).Doc(item).Get(cl.ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return 	document, nil
-}
-
 func (cl *ClientFirestore) UpdateField(coll string, doc string, path string, val interface{}) error {
 	_, err := cl.c.Collection(coll).Doc(doc).Update (cl.ctx, [] firestore.Update {{Path: path, Value: val}})
 	if err != nil {

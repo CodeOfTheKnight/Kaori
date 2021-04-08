@@ -54,16 +54,16 @@ func GetIP(r *http.Request) string {
 
 //printInternalErr imposta a 500 lo status code della risposta HTTP.
 func printInternalErr(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte("500 - Internal Server Error!\n"))
+	w.Write([]byte("{\"code\": 500, \"msg\": \"Internal Server Error\"}\n"))
 }
 
 //printErr ritorna un errore al client impostando a 400 lo status code della risposta HTTP.
 func printErr(w http.ResponseWriter, err string) {
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
-	w.Write([]byte(fmt.Sprintln("400 - Bad Request!", err)))
+	w.Write([]byte(fmt.Sprintf("{\"code\": 400, \"msg\": \"%s\"}\n", err)))
 }
 
 //getParams ritorna i parametri inviati tramite metodo GET dell'HTTP request.
@@ -208,7 +208,7 @@ func setCookies(w http.ResponseWriter, token string) error {
 			Name:  "KaoriStream",
 			Value: encoded,
 			Secure: true,
-			HttpOnly: true,
+			HttpOnly: false,
 		}
 		fmt.Println("COOKIE", cookie)
 		http.SetCookie(w, cookie)
@@ -236,7 +236,7 @@ func getCookies(r *http.Request) (map[string]string, error) {
 
 func verifyAuth(email, password string) (bool, error) {
 
-	document, err := kaoriUser.Client.GetItem("User", email)
+	document, err := kaoriUser.Client.c.Collection("User").Doc(email).Get(kaoriUser.Client.ctx)
 	if err != nil {
 		return false, err
 	}
@@ -246,7 +246,7 @@ func verifyAuth(email, password string) (bool, error) {
 	active := data["IsActive"].(bool)
 
 	if !active {
-		return false, errors.New("unactive")
+		return false, errors.New("inactive")
 	}
 
 	p := data["Password"].(string)
@@ -280,4 +280,13 @@ func parseTemplate(tmpl string, data interface{}) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+func existUser(email string ) bool {
+	_, err := kaoriUser.Client.c.Collection("User").Doc(email).Get(kaoriUser.Client.ctx)
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
 }

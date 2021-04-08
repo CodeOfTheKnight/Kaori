@@ -318,7 +318,7 @@ func (m *Mail) checkAllegati() error {
 }
 
 func (m *Mail) IsUser() bool {
-	_, err := kaoriUser.Client.GetItem("User", m.Head[4].Value)
+	_, err := kaoriUser.Client.c.Collection("User").Doc(m.Head[4].Value).Get(kaoriUser.Client.ctx)
 	if err != nil {
 		return false
 	}

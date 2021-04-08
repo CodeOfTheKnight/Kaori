@@ -1,21 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
-//	"google.golang.org/api/gmail/v1"
+	//	"google.golang.org/api/gmail/v1"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
 //Settings
-const baseUrl string = "ec2-13-58-107-13.us-east-2.compute.amazonaws.com"
+const baseUrl string = "https://127.0.0.1:8012/"
 const pathGui string = "./KaoriGui"
 const pathTests string = "./tests"
 const nameDirGui string = "KaoriGui"
@@ -142,6 +140,7 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 func authmiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
+		//Extract token JWT
 		tokenString := ExtractToken(r)
 		metadata, err := ExtractAccessTokenMetadata(tokenString, os.Getenv("ACCESS_SECRET"))
 		if err != nil {
@@ -149,11 +148,15 @@ func authmiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		fmt.Println(metadata.Permission)
+		permissions, err := metadata.GetPermission()
+		if err != nil {
+			log.Println(err)
+			printInternalErr(w)
+			return
+		}
 
-		if !strings.Contains(metadata.Permission, "a"){
-			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte("HTTP 403- Forbidden"))
+		if !IsAuthorized(permissions, AdminPerm) {
+			http.Error(w, `{"code": 403, "msg": "You need permissions to access the service!"}`, http.StatusForbidden)
 			return
 		}
 

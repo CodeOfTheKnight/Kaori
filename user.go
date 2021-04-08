@@ -1,6 +1,9 @@
 package main
 
 import (
+	"errors"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -73,6 +76,39 @@ func (u *User) AddNewUser() error {
 	err := kaoriUser.Client.AddUser(u)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (u *User) IsValid() error {
+
+	//Check email
+	if u.Email == "" || strings.Contains(u.Email, "@") == false {
+		return errors.New("Email not valid")
+	}
+	if len(strings.Replace(u.Email, "@", "", -1)) < 3 {
+		return errors.New("Lenght of email not valid")
+	}
+
+	//Check Username
+	if u.Username == "" {
+		return errors.New("Username not valid")
+	}
+
+	//Check Password
+	if u.Password == "" || len(u.Password) < 8 {
+		return errors.New("Insufficient string length. The password must be at least 8 characters long.")
+	}
+
+	if b, err := regexp.MatchString(`[0-9]{1}`, u.Password); !b || err != nil {
+		return errors.New("password need num")
+	}
+	if b, err := regexp.MatchString(`[a-z]{1}`, u.Password); !b || err != nil {
+		return errors.New("password need a_z")
+	}
+	if b, err := regexp.MatchString(`[A-Z]{1}`, u.Password); !b || err != nil {
+		return errors.New("password need A_Z")
 	}
 
 	return nil

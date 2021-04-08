@@ -3,12 +3,12 @@ package main
 import (
 	"cloud.google.com/go/firestore"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -21,8 +21,6 @@ type ParamsInfo struct {
 
 func ApiUserExist(w http.ResponseWriter, r *http.Request) {
 
-	var exist bool
-
 	set := []ParamsInfo{
 		{Key: "email", Required: true},
 	}
@@ -33,12 +31,8 @@ func ApiUserExist(w http.ResponseWriter, r *http.Request) {
 		printErr(w, err.Error())
 		return
 	}
-	_, err = kaoriUser.Client.GetItem("User", params["email"].(string))
-	if err != nil {
-		exist = false
-	} else {
-		exist = true
-	}
+
+	exist := existUser(params["email"].(string))
 
 	w.Write([]byte(fmt.Sprintf(`{"exist": "%v"}`, exist)))
 }
@@ -60,23 +54,22 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 
 	//Verify password and email
 	isValid, err := verifyAuth(params.Email, params.Password)
-
 	if err != nil  {
-		if err.Error() == "unactive" {
-                	w.WriteHeader(401)
-                	w.Write([]byte("Account inattivo!"))
+		if err.Error() == "inactive" {
+					http.Error(w, `{"code": 401, "msg": "Account unactivated!"}`, http.StatusUnauthorized)
                 	return
         	}
+
+		//Nel caso in cui non è corretto perchè non c'è nel database
 		log.Println(err)
-                w.WriteHeader(http.StatusBadRequest)
-                w.Write([]byte("Nome utente e/o password errati."))
-                return
+        printErr(w, "Incorrect username or password")
+        return
 	}
 
 	if isValid == false {
+		//Nel caso in cui c'è nel database ma non è corretta la password
 		log.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Nome utente e/o password errati."))
+		printErr(w, "Incorrect username or password")
 		return
 	}
 
@@ -97,7 +90,6 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 
 	//Save refresh token in the database
 	data := tokens["RefreshToken"].Fields
-
 	exp := data["exp"].(time.Time).Unix()
 
 	rf, ok := data["refreshId"].(string)
@@ -159,13 +151,13 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request){
 	//Check validity
 
 	if !VerifyRefreshToken(data.Email, data.RefreshId) {
-		printErr(w, errors.New("Token not valid").Error())
+		printErr(w, "Token not valid")
 		return
 	}
 
 	if !VerifyExpireDate(data.Exp){
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Token expired! Login required!"))
+		http.Error(w, `{"code": 401, "msg": "Token expired! Login required!"}`, http.StatusUnauthorized)
+		//TODO: Send redirect
 		return
 	}
 
@@ -206,7 +198,6 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request){
 
 	//Save refresh token in the database
 	data2 := tokens["RefreshToken"].Fields
-
 	exp := data2["exp"].(time.Time).Unix()
 
 	rf, ok := data2["refreshId"].(string)
@@ -260,8 +251,16 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//TODO: Verifica che i dati inviati siano corretti.
-	//TODO: Verifica che l'utente non esista (quindi che non ci sia la mail).
+	err = u.IsValid()
+	if err != nil {
+		printErr(w, err.Error())
+		return
+	}
+
+	if existUser(u.Email) {
+		printErr(w, "A user with this email already exists")
+		return
+	}
 
 	u.NewUser() //Set default value
 
@@ -288,7 +287,6 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
 	//Save refresh token in the database
 	data := tokens["RefreshToken"].Fields
-
 	exp := data["exp"].(time.Time).Unix()
 
 	rf, ok := data["refreshId"].(string)
@@ -307,11 +305,10 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//TODO: Add base_url
 	c := Conferma{
 		Username: u.Username,
-		Link: filepath.Join(baseUrl, fmt.Sprintf(  "/api/auth/confirm?email=%s&id=%s", u.Email, rf)),
-		Login: filepath.Join(baseUrl, "/KaoriGui/login.html"),
+		Link: fmt.Sprintf(  "%s/api/auth/confirm?email=%s&id=%s", baseUrl, u.Email, rf),
+		Login: fmt.Sprintf("%s/KaoriGui/login.html", baseUrl),
 	}
 
 
@@ -338,7 +335,7 @@ func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !VerifyRefreshToken(p["email"].(string), p["id"].(string)) {
-		printErr(w, errors.New("Token not valid").Error())
+		printErr(w, "Token not valid!")
 		return
 	}
 
@@ -357,21 +354,25 @@ func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 	_, err = kaoriUser.Client.c.Collection("User").Doc(p["email"].(string)).
 								Set(kaoriUser.Client.ctx, map[string]bool{"IsActive": true}, firestore.MergeAll)
 
-	content, err := os.ReadFile("KaoriGui/login.html")
-	if err != nil {
-		log.Println(err)
-		printInternalErr(w)
-		return
-	}
-
-	w.Write(content)
+	//TODO: Create template
+	w.Write([]byte(fmt.Sprintf(`<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function redirect() {
+            window.location.replace("%s/KaoriGui/login.html")
+        }
+    </script>
+</head>
+<body onload="redirect()">
+</body>
+</html> 
+`, baseUrl)))
 }
 
 //API ADD-DATA
 
 func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
-
-	//TODO: Verificare che l'utente (se ha solo i permessi di utente) non abbia già caricato il massimo di canzoni (cioè 10)
 
 	// Declare a new MusicData struct.
 	var md MusicData
@@ -386,12 +387,20 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(md.IdAnilist)
 
-	//TODO: Check size files
 	//TODO: Forse potrei controllare anche che non ci siano virus
 	err = md.CheckError()
 	if err != nil {
 		log.Println(err)
 		printErr(w, err.Error())
+		return
+	}
+
+	//Check if it already exist
+	_, err = kaoriTmp.Client.c.Collection(md.Type).
+								Doc(strconv.Itoa(md.IdAnilist)).
+								Get(kaoriTmp.Client.ctx)
+	if err == nil {
+		http.Error(w, `{"code": 409, "msg": "The track already exists"}`, http.StatusConflict)
 		return
 	}
 
@@ -409,8 +418,6 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 		printInternalErr(w)
 		return
 	}
-
-	//TODO: Verificare che non sia già nel database
 
 	//Add to database
 	err = md.AddDataToTmpDatabase()
