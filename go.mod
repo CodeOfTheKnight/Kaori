@@ -17,5 +17,6 @@ require (
 	go.uber.org/config v1.4.0 // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
 	golang.org/x/oauth2 v0.0.0-20210218202405-ba52d332ba99 // indirect
+	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 	google.golang.org/api v0.40.0
 )

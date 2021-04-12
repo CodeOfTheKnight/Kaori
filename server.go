@@ -70,6 +70,7 @@ func main() {
 
 	//Creazione router
 	router := mux.NewRouter()
+	router.Use(limit)
 	router.Use(enableCors) //CORS middleware
 
 	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()
