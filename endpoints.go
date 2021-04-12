@@ -3,8 +3,9 @@ package main
 type endpoints string
 
 const (
-	endpointRoot endpoints = "/"
-	endpointGui  endpoints = "/KaoriGui/"
+	endpointRoot  endpoints = "/"
+	endpointGui   endpoints = "/KaoriGui/"
+	endpointLogin endpoints = "/login"
 
 	//Endpoint per servizio
 	endpointService endpoints = "/api/service/"
@@ -16,18 +17,17 @@ const (
 
 	//Endpoint utenti
 	endpointUser endpoints = "/api/user/"
-	userInfo     endpoints = "/info" //[GET]
+	userInfo     endpoints = "/info"     //[GET]
 	userSettings endpoints = "/settings" //[GET]
-	userBadge    endpoints = "/badge" //[GET]
-	userExist	 endpoints = "/exist" //[GET] Parametri: email
+	userBadge    endpoints = "/badge"    //[GET]
 
 	//Endpoint auth
-	endpointAuth endpoints = "/api/auth/"
-	authRefresh	 endpoints = "/refresh"
-	authLogin endpoints = "/login"
-	authSignUp endpoints = "/signup"
+	endpointAuth      endpoints = "/api/auth/"
+	authRefresh       endpoints = "/refresh"
+	authLogin         endpoints = "/login"
+	authSignUp        endpoints = "/signup"
 	authConfirmSignUp endpoints = "/confirm"
-
+	authUserExist     endpoints = "/exist" //[GET] Parametri: email
 
 	//Endpoint addData
 	endpointAddData endpoints = "/api/addData/"

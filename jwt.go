@@ -6,29 +6,28 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"google.golang.org/api/iterator"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type JWTAccessMetadata struct {
-	Iss string
-	Iat int64
-	Exp int64
-	Company string
-	Email string
+	Iss        string
+	Iat        int64
+	Exp        int64
+	Company    string
+	Email      string
 	Permission string
 }
 
 type JWTRefreshMetadata struct {
 	RefreshId string
-	Email string
-	Exp int64
+	Email     string
+	Exp       int64
 }
 
 type JWTContainer struct {
-	Token string
+	Token  string
 	Fields map[string]interface{}
 }
 
@@ -45,14 +44,14 @@ func GenerateTokenPair(email string) (map[string]JWTContainer, error) {
 
 	//Generate Access token
 	atClaims := jwt.MapClaims{}
-	atClaims["iss"] = "KaoriStream.com"
+	atClaims["iss"] = cfg.Jwt.Iss
 	atClaims["iat"] = time.Now().Unix()
 	atClaims["exp"] = expire
-	atClaims["company"] = "CodeOfTheKnight"
+	atClaims["company"] = cfg.Jwt.Company
 	atClaims["email"] = email
-	atClaims["permission"]= data["Permission"].(string)
+	atClaims["permission"] = data["Permission"].(string)
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	token, err := at.SignedString([]byte(cfg.Password.AccessToken))
 	if err != nil {
 		return nil, err
 	}
@@ -63,13 +62,13 @@ func GenerateTokenPair(email string) (map[string]JWTContainer, error) {
 	rtClaims["email"] = email
 	rtClaims["exp"] = time.Now().Add(168 * time.Hour) //7 days
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
-	refreshToken, err := rt.SignedString([]byte(os.Getenv("REFRESH_SECRET")))
+	refreshToken, err := rt.SignedString([]byte(cfg.Password.RefreshToken))
 	if err != nil {
 		return nil, err
 	}
 
 	return map[string]JWTContainer{
-		"AccessToken": {token, atClaims},
+		"AccessToken":  {token, atClaims},
 		"RefreshToken": {refreshToken, rtClaims},
 	}, nil
 }
@@ -111,8 +110,8 @@ func VerifyExpireDate(exp int64) bool {
 func VerifyRefreshToken(email, idRefresh string) bool {
 
 	_, err := kaoriUser.Client.c.Collection("User").Doc(email).
-										Collection("RefreshToken").Doc(idRefresh).
-										Get(kaoriUser.Client.ctx)
+		Collection("RefreshToken").Doc(idRefresh).
+		Get(kaoriUser.Client.ctx)
 	if err != nil {
 		return false
 	}
@@ -151,24 +150,20 @@ func ExtractAccessTokenMetadata(tokenString, secret string) (*JWTAccessMetadata,
 			return nil, err
 		}
 
-
 		exp, err := strconv.ParseInt(fmt.Sprintf("%.f", claims["exp"]), 10, 64)
 		if err != nil {
 			return nil, err
 		}
-
 
 		company, ok := claims["company"].(string)
 		if !ok {
 			return nil, err
 		}
 
-
 		email, ok := claims["email"].(string)
 		if !ok {
 			return nil, err
 		}
-
 
 		perm, ok := claims["permission"].(string)
 		if !ok {
@@ -176,7 +171,7 @@ func ExtractAccessTokenMetadata(tokenString, secret string) (*JWTAccessMetadata,
 		}
 
 		return &JWTAccessMetadata{
-			Iss:       	iss,
+			Iss:        iss,
 			Iat:        iat,
 			Exp:        exp,
 			Company:    company,

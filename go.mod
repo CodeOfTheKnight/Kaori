@@ -14,6 +14,7 @@ require (
 	github.com/kaiserbh/anilistgo v0.0.0-20210218173819-8318e657598c
 	github.com/segmentio/ksuid v1.0.3 // indirect
 	github.com/sirupsen/logrus v1.8.1
+	go.uber.org/config v1.4.0 // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
 	golang.org/x/oauth2 v0.0.0-20210218202405-ba52d332ba99 // indirect
 	google.golang.org/api v0.40.0

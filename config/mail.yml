@@ -1,0 +1,7 @@
+# Mail configuration of Kaori
+
+mail:
+  address: "no.reply.kaorianimestream@gmail.com"
+  smtpServer:
+    host: "smtp.gmail.com"
+    port: ":587"

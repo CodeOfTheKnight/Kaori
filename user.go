@@ -2,46 +2,45 @@ package main
 
 import (
 	"errors"
-	"regexp"
 	"strings"
 	"time"
 )
 
 type User struct {
-	Email string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	permission string //[u]ser,[c]reator,[t]ester,[a]admin
+	Email          string `json:"email"`
+	Username       string `json:"username"`
+	Password       string `json:"password"`
+	permission     string //[u]ser,[c]reator,[t]ester,[a]admin
 	ProfilePicture string `json:"profilePicture,omitempty"`
-	isDonator bool
-	isActive bool
-	anilistId int //-1 se anilist non è stato collegato.
-	dateSignUp int64
-	itemAdded int //Numero di item aggiunti al database
-	credits int //Punti utili per guardare anime. Si guadagnano guardando pubblicità, donando o aggiungendo item al database.
-	level int //Si incrementa in base ai minuti passati sull'applicazione.
-	badges []Badge
-	settings Settings
-	notifications Notifications
-	refreshToken map[string]int64
+	isDonator      bool
+	isActive       bool
+	anilistId      int //-1 se anilist non è stato collegato.
+	dateSignUp     int64
+	itemAdded      int //Numero di item aggiunti al database
+	credits        int //Punti utili per guardare anime. Si guadagnano guardando pubblicità, donando o aggiungendo item al database.
+	level          int //Si incrementa in base ai minuti passati sull'applicazione.
+	badges         []Badge
+	settings       Settings
+	notifications  Notifications
+	refreshToken   map[string]int64
 }
 
 type Settings struct {
-	Graphics GraphicSettings
-	ShowBadge bool
-	IsPervert bool
+	Graphics      GraphicSettings
+	ShowBadge     bool
+	IsPervert     bool
 	ShowListAnime bool
 	ShowListManga bool
 }
 
 type GraphicSettings struct {
-	ThemePrimary string
-	ThemeSecondary string
-	ThemeFontPrimary string
+	ThemePrimary       string
+	ThemeSecondary     string
+	ThemeFontPrimary   string
 	ThemeFontSecondary string
-	ThemeShadow string
-	Error string
-	FontError string
+	ThemeShadow        string
+	Error              string
+	FontError          string
 }
 
 func (u *User) NewUser() {
@@ -55,7 +54,7 @@ func (u *User) NewUser() {
 	u.level = 1
 	u.badges = []Badge{}
 	u.settings = Settings{
-		Graphics:      GraphicSettings{
+		Graphics: GraphicSettings{
 			ThemePrimary:       "",
 			ThemeSecondary:     "",
 			ThemeFontPrimary:   "",
@@ -96,21 +95,5 @@ func (u *User) IsValid() error {
 		return errors.New("Username not valid")
 	}
 
-	//Check Password
-	if u.Password == "" || len(u.Password) < 8 {
-		return errors.New("Insufficient string length. The password must be at least 8 characters long.")
-	}
-
-	if b, err := regexp.MatchString(`[0-9]{1}`, u.Password); !b || err != nil {
-		return errors.New("password need num")
-	}
-	if b, err := regexp.MatchString(`[a-z]{1}`, u.Password); !b || err != nil {
-		return errors.New("password need a_z")
-	}
-	if b, err := regexp.MatchString(`[A-Z]{1}`, u.Password); !b || err != nil {
-		return errors.New("password need A_Z")
-	}
-
 	return nil
 }
-

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
 	//	"google.golang.org/api/gmail/v1"
@@ -12,20 +13,24 @@ import (
 	"time"
 )
 
+var cfg *Config
+
 //Settings
-const baseUrl string = "https://127.0.0.1:8012/"
-const pathGui string = "./KaoriGui"
-const pathTests string = "./tests"
-const nameDirGui string = "KaoriGui"
-const certFile string = "cert/cert.pem"
-const keyPem string = "cert/key.pem"
-const port string = ":8012"
-const adminToken string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJLYW9yaVN0cmVhbSIsImlhdCI6MTYxNjUxMDIyMSwiZXhwIjoxNjE3MTA3Nzg4LCJjb21wYW55IjoiQ29kZU9mVGhlS25pZ2h0IiwiZW1haWwiOiJ3YXRhc2hpd2F5dXJpZGFpc3VraUBnbWFpbC5jb20iLCJwZXJtaXNzaW9uIjoidWN0YSJ9.lf4KbMv2TK-eFeiGHS_jlIf5OMFLs18EvTbAWKt-Ef4"
+const indexFile string = "home.html"
+const loginFile string = "login.html"
 
 func init() {
+	var err error
+
+	//READ CONFIG
+	cfg, err = NewConfig()
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
 
 	//SET LOGGER
-	file, err := os.OpenFile(logServer, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile(cfg.Logger.Server, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,71 +42,92 @@ func init() {
 	// Can be any io.Writer, see below for File example
 	logger.SetOutput(file)
 
+	printLog("Server", "", "init", "Setting Database start", 0)
+
 	//SET DATABASES
-	kaoriTmp, err = NewDatabase("kaori-504c3", "database/kaori-504c3-firebase-adminsdk-5apba-f66a21203e.json")
+	kaoriTmp, err = NewDatabase(cfg.Database[0].ProjectId, cfg.Database[0].Key)
 	if err != nil {
+		printLog("Server", "", "init", err.Error(), 1)
 		panic(err)
 	}
 
-	kaoriUser, err = NewDatabase("kaoriuser-fbae1", "database/kaoriuser-fbae1-firebase-adminsdk-1dfp8-d23953ad42.json")
+	kaoriUser, err = NewDatabase(cfg.Database[1].ProjectId, cfg.Database[1].Key)
 	if err != nil {
+		printLog("Server", "", "init", err.Error(), 1)
 		panic(err)
 	}
 
-	//SET GLOBAL VARIABLES
-	os.Setenv("CERTIFICATE", filepath.FromSlash(certFile))
-	os.Setenv("KEY", filepath.FromSlash(keyPem))
-	os.Setenv("ACCESS_SECRET", "secret")
-	os.Setenv("REFRESH_SECRET", "mcmvmkmsdnfsdmfdsjf")
+	printLog("Server", "", "init", "Setting Database done", 0)
 }
 
-/*PRIVILEGI: ucta
-	u: User = Accesso base
-	c: Creator = Accesso alle api di verifica dati aggiunti da utenti
-	t: Tester = Accesso alle api di test
-	a: Admin = tutti gli accessi
-*/
-
 func main() {
+
+	//Setting auth middleware
+	userAuthMiddleware := NewAuthMiddlewarePerm(UserPerm)
+	//creatorAuthMiddleware := NewAuthMiddlewarePerm(CreatorPerm)
+	testerAuthMiddleware := NewAuthMiddlewarePerm(TesterPerm)
+	//adminAuthMiddleware := NewAuthMiddlewarePerm(AdminPerm)
 
 	//Creazione router
 	router := mux.NewRouter()
 	router.Use(enableCors) //CORS middleware
+
 	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()
+	routerAdd.Use(userAuthMiddleware.authmiddleware)
+
 	routerTest := router.PathPrefix(endpointTest.String()).Subrouter()
+	routerTest.Use(testerAuthMiddleware.authmiddleware)
+
 	routerUser := router.PathPrefix(endpointUser.String()).Subrouter()
+	routerUser.Use(userAuthMiddleware.authmiddleware)
+
 	routerAuth := router.PathPrefix(endpointAuth.String()).Subrouter()
 
 	//Rotte base
 	router.HandleFunc(endpointRoot.String(), serveIndex)
-	router.PathPrefix("/KaoriGui/").Handler(http.StripPrefix("/KaoriGui/", http.FileServer(http.Dir(pathGui))))
+	router.HandleFunc(endpointLogin.String(), serveLogin)
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir(cfg.Server.Gui)))
 
 	//Rotte API AddData
 	routerAdd.Path(addDataMusic.String()).HandlerFunc(ApiAddMusic).Methods(http.MethodPost)
-
-	//Rotte API User
-	routerUser.Path(userExist.String()).HandlerFunc(ApiUserExist).Methods(http.MethodGet)
 
 	//Rotte API Auth
 	routerAuth.Path(authLogin.String()).HandlerFunc(ApiLogin).Methods(http.MethodPost)
 	routerAuth.Path(authRefresh.String()).HandlerFunc(ApiRefresh).Methods(http.MethodGet)
 	routerAuth.Path(authSignUp.String()).HandlerFunc(ApiSignUp).Methods(http.MethodPost)
 	routerAuth.Path(authConfirmSignUp.String()).HandlerFunc(ApiConfirmSignUp).Methods(http.MethodGet)
+	routerAuth.Path(authUserExist.String()).HandlerFunc(ApiUserExist).Methods(http.MethodGet)
 
 	//Rotte API test
-	routerTest.Use(authmiddleware)
-	routerTest.PathPrefix(testFiles.String()).Handler(http.StripPrefix(path.Join(endpointTest.String(), testFiles.String()), http.FileServer(http.Dir(pathTests)))).Methods(http.MethodGet, http.MethodOptions)
+	routerTest.PathPrefix(testFiles.String()).Handler(
+		http.StripPrefix(
+			path.Join(
+				endpointTest.String(),
+				testFiles.String(),
+			),
+			http.FileServer(http.Dir(cfg.Server.Test)),
+		),
+	).Methods(http.MethodGet, http.MethodOptions)
+
+	//Add logger middleware
+	var handler http.Handler = router
+	handler = logRequestHandler(handler)
 
 	server := http.Server{
-		Addr:           "0.0.0.0" + port,
-		Handler:        router,
+		Addr:           "0.0.0.0" + cfg.Server.Port,
+		Handler:        handler,
 		ReadTimeout:    10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
 
 	go mailDetector()
 
-	log.Fatal(server.ListenAndServeTLS(os.Getenv("CERTIFICATE"), os.Getenv("KEY")))
+	printLog("Server", "", "main", "Start Server", 0)
+
+	err := server.ListenAndServeTLS(cfg.Server.Ssl.Certificate, cfg.Server.Ssl.Key)
+	if err != nil {
+		printLog("Server", "", "main", "Server crash", 1)
+	}
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
@@ -111,20 +137,21 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 		ip := GetIP(r)
 
 		//Server push
-		files, err := ls(filepath.ToSlash(nameDirGui + "/"))
+		files, err := ls(filepath.ToSlash(cfg.Server.Gui))
 
 		if pusher, ok := w.(http.Pusher); ok {
 			// Push is supported.
 			for _, file := range files {
 				if err := pusher.Push(filepath.ToSlash(path.Join("/", file)), nil); err != nil {
-					log.Printf("Failed to push: %v", err)
+					printLog("General", ip, "ServeHttp", fmt.Sprint("Failed to push: ", err), 1)
+					return
 				}
 			}
 		}
 
-		content, err := os.ReadFile(filepath.ToSlash(filepath.Join(nameDirGui, "/home.html")))
+		content, err := os.ReadFile(filepath.ToSlash(filepath.Join(cfg.Server.Gui, indexFile)))
 		if err != nil {
-			log.Println(ip, err)
+			printLog("General", ip, "ServeHttp", "Error to open index file", 1)
 			printInternalErr(w)
 			return
 		}
@@ -137,68 +164,43 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func authmiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func serveLogin(w http.ResponseWriter, r *http.Request) {
 
-		//Extract token JWT
-		tokenString := ExtractToken(r)
-		metadata, err := ExtractAccessTokenMetadata(tokenString, os.Getenv("ACCESS_SECRET"))
-		if err != nil {
-			printErr(w, err.Error())
-			return
-		}
+	ip := GetIP(r)
 
-		permissions, err := metadata.GetPermission()
-		if err != nil {
-			log.Println(err)
-			printInternalErr(w)
-			return
-		}
+	data, err := os.ReadFile(filepath.Join(cfg.Server.Gui, loginFile))
+	if err != nil {
+		printLog("General", ip, "serveLogin", "Error to open file: "+loginFile, 1)
+		printInternalErr(w)
+		return
+	}
 
-		if !IsAuthorized(permissions, AdminPerm) {
-			http.Error(w, `{"code": 403, "msg": "You need permissions to access the service!"}`, http.StatusForbidden)
-			return
-		}
-
-		// Call the next handler, which can be another middleware in the chain, or the final handler.
-		next.ServeHTTP(w, r)
-
-	})
-}
-
-func enableCors(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers:", "*")
-		w.Header().Set("Allow-Credentials", "true")
-		next.ServeHTTP(w, r)
-	})
+	w.Write(data)
 }
 
 //POTREBBE DARE ERRORE NEL CASO HA RAGGIUNTO IL MASSIMO DI MAIL LETTE/SCRITTE
 //NEL CASO COMMENTARE POI SISTEMERÒ
 func mailDetector() {
 
-/*
-	var srv Service
+	/*
+		var srv Service
 
-	config, err := readMailConfig(gmail.MailGoogleComScope)
-	if err != nil {
-		log.Fatal(err)
-	}
-	client := getClient(config)
+		conf, err := readMailConfig(gmail.MailGoogleComScope)
+		if err != nil {
+			log.Fatal(err)
+		}
+		client := getClient(conf)
 
-	srv, err = NewService(client)
+		srv, err = NewService(client)
 
-	for x := range time.Tick(10 * time.Second) {
-		srv.WaitMail(x)
-	}
+		for x := range time.Tick(10 * time.Second) {
+			srv.WaitMail(x)
+		}
 
-*/
+	*/
 }
 
-func (s *Service) WaitMail(t time.Time) {
+/*func (s *Service) WaitMail(t time.Time) {
 
 	err := s.GetMails()
 	if err != nil {
@@ -295,4 +297,4 @@ func (s *Service) WaitMail(t time.Time) {
 		}
 		log.Println(err)
 	}
-}
+}*/

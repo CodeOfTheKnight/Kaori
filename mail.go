@@ -37,11 +37,6 @@ type Attach struct {
 	Data     []byte
 }
 
-//TODO: Li metterò in un file di configurazione...lo faccio dopo
-const emailTemplate string = "template/email/"
-const noReplyAddress string = "no.reply.kaorianimestream@gmail.com"
-const noReplyPassword string = "oezsupmekmfsabga"
-
 func readMailConfig(scope ...string) (*oauth2.Config, error) {
 	b, err := ioutil.ReadFile("credentials.json")
 	if err != nil {
@@ -168,11 +163,11 @@ func (s *Service) GetMails() error {
 					return err
 				}
 
-					decoded, err := base64.URLEncoding.DecodeString(attach.Data)
-					if err != nil {
-						return err
-					}
-					str := base64.StdEncoding.EncodeToString(decoded)
+				decoded, err := base64.URLEncoding.DecodeString(attach.Data)
+				if err != nil {
+					return err
+				}
+				str := base64.StdEncoding.EncodeToString(decoded)
 
 				attachs = append(attachs, &Attach{
 					FileName: h.Filename,
@@ -288,7 +283,7 @@ func (m *Mail) ParseMailMusic() (*MusicData, error) {
 		return nil, errors.New("Dati inviati non validi!!\nLeggere attentamente la documentazione.\nNel caso in cui si è sicuri di aver inviato i dati correttamente contattare gli sviluppatori.")
 	}
 
-	for i, a := range m.Attach{
+	for i, a := range m.Attach {
 		if m.Attach[i].Mime == "image/jpeg" {
 			mu.Cover = fmt.Sprintf("data:%s;base64,%s", "image/jpeg", string(a.Data))
 		} else {
@@ -326,8 +321,8 @@ func (m *Mail) IsUser() bool {
 }
 
 func sendEmail(to string, sub string, data interface{}, tmpl string) error {
-	from := noReplyAddress
-	pass := noReplyPassword
+	from := cfg.Mail.Address
+	pass := cfg.Password.Mail
 
 	emailBody, err := parseTemplate(tmpl, data)
 	if err != nil {
@@ -341,12 +336,11 @@ func sendEmail(to string, sub string, data interface{}, tmpl string) error {
 		"Subject: " + sub + "\n\n" +
 		emailBody
 
-	err = smtp.SendMail("smtp.gmail.com:587",
-		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
+	err = smtp.SendMail(cfg.Mail.SmtpServer.Host+cfg.Mail.SmtpServer.Port,
+		smtp.PlainAuth("", from, pass, cfg.Mail.SmtpServer.Host),
 		from, []string{to}, []byte(msg))
 
 	if err != nil {
-		log.Printf("smtp error: %s", err)
 		return errors.New(fmt.Sprintf("smtp error: %s", err))
 	}
 

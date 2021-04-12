@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"encoding/base64"
 	"errors"
-	"text/template"
-	"time"
 	"fmt"
 	"github.com/gorilla/securecookie"
 	"github.com/hajimehoshi/go-mp3"
 	"github.com/segmentio/ksuid"
+	templateHtml "html/template"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -19,18 +18,21 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
+	"time"
 )
 
 const littleBoxURI string = "https://litterbox.catbox.moe/resources/internals/api.php"
+const urlAnilist string = "https://anilist.co"
 
 //ls ritorna la path e il nome dei file presenti in una directory.
-func ls(dir string) (files []string, err error ){
+func ls(dir string) (files []string, err error) {
 	err = filepath.Walk(dir,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
-			if !info.IsDir(){
+			if !info.IsDir() {
 				if strings.Contains(path, "/css/") || strings.Contains(path, "/js/") || strings.Contains(path, "/lib/") {
 					files = append(files, path)
 				}
@@ -75,7 +77,7 @@ func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, er
 		keys, err := r.URL.Query()[param.Key]
 
 		if (!err || len(keys[0]) < 1) && param.Required == true {
-			return nil , errors.New(fmt.Sprintf("Url Param \"%s\" is missing", param.Key))
+			return nil, errors.New(fmt.Sprintf("Url Param \"%s\" is missing", param.Key))
 		}
 
 		values[param.Key] = keys[0]
@@ -87,7 +89,7 @@ func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, er
 
 //validateIdAnilist convalida l'id anilist, ritorna true se è corretto altrimenti false.
 func validateIdAnilist(ida int, tipo string) bool {
-	resp, _ := http.Get(fmt.Sprintf("https://anilist.co/%s/%d/", tipo, ida))
+	resp, _ := http.Get(fmt.Sprintf("%s/%s/%d/", urlAnilist, tipo, ida))
 	if resp.StatusCode == 200 {
 		return true
 	}
@@ -96,7 +98,7 @@ func validateIdAnilist(ida int, tipo string) bool {
 }
 
 //Converts pre-existing base64 data (found in example of https://golang.org/pkg/image/#Decode) to test.png
-func base64toPng(strcode string) ([]byte, error){
+func base64toPng(strcode string) ([]byte, error) {
 
 	var bfg bytes.Buffer
 
@@ -196,18 +198,16 @@ func GenerateID() string {
 
 func setCookies(w http.ResponseWriter, token string) error {
 
-	//TODO: METTERE NEL FILE DI CONFIGURAZIONE
-	var hashKey = []byte("very-secret")
-	var s = securecookie.New(hashKey, nil)
+	var s = securecookie.New([]byte(cfg.Password.Cookies), nil)
 
 	value := map[string]string{
 		"RefreshToken": token,
 	}
-	if encoded, err := s.Encode("KaoriStream", value); err == nil {
+	if encoded, err := s.Encode(cfg.Jwt.Iss, value); err == nil {
 		cookie := &http.Cookie{
-			Name:  "KaoriStream",
-			Value: encoded,
-			Secure: true,
+			Name:     cfg.Jwt.Iss,
+			Value:    encoded,
+			Secure:   true,
 			HttpOnly: false,
 		}
 		fmt.Println("COOKIE", cookie)
@@ -221,12 +221,11 @@ func setCookies(w http.ResponseWriter, token string) error {
 
 func getCookies(r *http.Request) (map[string]string, error) {
 
-	var hashKey = []byte("very-secret")
-	var s = securecookie.New(hashKey, nil)
+	var s = securecookie.New([]byte(cfg.Password.Cookies), nil)
 
-	if cookie, err := r.Cookie("KaoriStream"); err == nil {
+	if cookie, err := r.Cookie(cfg.Jwt.Iss); err == nil {
 		value := make(map[string]string)
-		if err = s.Decode("KaoriStream", cookie.Value, &value); err == nil {
+		if err = s.Decode(cfg.Jwt.Iss, cookie.Value, &value); err == nil {
 			return value, nil
 		}
 	}
@@ -282,7 +281,28 @@ func parseTemplate(tmpl string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func existUser(email string ) bool {
+func parseTemplateHtml(tmpl string, data interface{}) (string, error) {
+
+	templatePath, err := filepath.Abs(tmpl)
+	if err != nil {
+		return "", errors.New("invalid template name")
+	}
+
+	t, err := templateHtml.ParseFiles(templatePath)
+	if err != nil {
+		return "", err
+	}
+
+	buf := new(bytes.Buffer)
+
+	if err = t.Execute(buf, data); err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
+func existUser(email string) bool {
 	_, err := kaoriUser.Client.c.Collection("User").Doc(email).Get(kaoriUser.Client.ctx)
 	if err != nil {
 		return false

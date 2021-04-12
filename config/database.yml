@@ -1,0 +1,9 @@
+# Database configuration file
+
+database:
+  #Music database temp
+  - projectId: "kaori-504c3"
+    key: "database/kaori-504c3-firebase-adminsdk-5apba-f66a21203e.json"
+  #User database
+  - projectId: "kaoriuser-fbae1"
+    key: "database/kaoriuser-fbae1-firebase-adminsdk-1dfp8-d23953ad42.json"

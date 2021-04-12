@@ -1,0 +1,5 @@
+# Logger configuration file
+
+logger:
+  connection: "log/connection.log.json"
+  server: "log/server.log.json"

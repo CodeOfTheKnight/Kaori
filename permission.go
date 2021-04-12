@@ -4,11 +4,18 @@ import "errors"
 
 type Permission string
 
-const(
-	UserPerm Permission = "u"
+/*PRIVILEGI: ucta
+u: User = Accesso base
+c: Creator = Accesso alle api di verifica dati aggiunti da utenti
+t: Tester = Accesso alle api di test
+a: Admin = tutti gli accessi
+*/
+
+const (
+	UserPerm    Permission = "u"
 	CreatorPerm Permission = "c"
-	TesterPerm Permission = "t"
-	AdminPerm Permission = "a"
+	TesterPerm  Permission = "t"
+	AdminPerm   Permission = "a"
 )
 
 func (p Permission) ToString() string {
@@ -31,12 +38,17 @@ func (jwt *JWTAccessMetadata) GetPermission() (perms []Permission, err error) {
 }
 
 func runeToPermission(r rune) (Permission, error) {
-	switch(string(r)){
-	case UserPerm.ToString(): return UserPerm, nil
-	case CreatorPerm.ToString(): return CreatorPerm, nil
-	case TesterPerm.ToString(): return TesterPerm, nil
-	case AdminPerm.ToString(): return AdminPerm, nil
-	default: return Permission(""), errors.New("Error, permission not setted!")
+	switch string(r) {
+	case UserPerm.ToString():
+		return UserPerm, nil
+	case CreatorPerm.ToString():
+		return CreatorPerm, nil
+	case TesterPerm.ToString():
+		return TesterPerm, nil
+	case AdminPerm.ToString():
+		return AdminPerm, nil
+	default:
+		return Permission(""), errors.New("Error, permission not setted!")
 	}
 }
 
@@ -52,7 +64,7 @@ func IsAuthorized(perms []Permission, permsRequire ...Permission) bool {
 	}
 
 	for _, preq := range permsRequire {
-		if !myFunc(perms, preq){
+		if !myFunc(perms, preq) {
 			return false
 		}
 	}

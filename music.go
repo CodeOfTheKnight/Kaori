@@ -4,39 +4,41 @@ import (
 	"bytes"
 	"errors"
 	anilist "github.com/kaiserbh/anilistgo/anilist/query"
+	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
 
 //MusicData struct
 type MusicData struct {
-	IdAnilist int `json:"idAnilist"`
-	AnimeName string `json:"-"`
-	Type string `json:"type"`
-	NumSong int `json:"numSong"`
-	IsFull bool `json:"isFull"`
-	Artist string `json:"artist,omitempty"`
-	NameSong string `json:"nameSong,omitempty"`
-	Cover string `json:"cover"`
-	Track string `json:"track"`
-	imgCover []byte
-	track []byte
+	IdAnilist  int    `json:"idAnilist"`
+	AnimeName  string `json:"-"`
+	Type       string `json:"type"`
+	NumSong    int    `json:"numSong"`
+	IsFull     bool   `json:"isFull"`
+	Artist     string `json:"artist,omitempty"`
+	NameSong   string `json:"nameSong,omitempty"`
+	Cover      string `json:"cover"`
+	Track      string `json:"track"`
+	imgCover   []byte
+	track      []byte
 	normalName string
 }
 
 //Music struct
-type Music struct  {
-	OP []Track
-	ED []Track
+type Music struct {
+	OP         []Track
+	ED         []Track
 	SoundTrack []Track
 }
 
 //Track struct
 type Track struct {
-	Name string
-	Artist string
+	Name         string
+	Artist       string
 	IdSoundCloud int
-	Links string
+	Links        string
 }
 
 //CheckError esegue tutti i controlli per verificare che non siano stati inviati al server dati errati.
@@ -53,7 +55,7 @@ func (md *MusicData) CheckError() (err error) {
 	}
 
 	//Check NumSong
-	if md.NumSong <0 {
+	if md.NumSong < 0 {
 		return errors.New(`numSong not valid`)
 	}
 
@@ -158,7 +160,7 @@ func (md *MusicData) NormalizeName() error {
 
 	var buf bytes.Buffer
 
-	const musicName string = `『{{.AnimeName}} {{.Type}}{{with .NumSong}}{{.}}{{end}}{{if .IsFull}} FULL{{end}}』{{if .NameSong}} ◈【{{.NameSong}}{{with .Artist}} by {{.}}{{end}}】{{end}}`
+	musicName, err := os.ReadFile(filepath.Join(cfg.Template.Music.Path, cfg.Template.Music.Fields["file"]))
 
 	if strings.ToLower(md.Type) == "ending" {
 		md.Type = "ED"
@@ -171,9 +173,9 @@ func (md *MusicData) NormalizeName() error {
 	}
 
 	// Create a new template and parse the letter into it.
-	t := template.Must(template.New("musicName").Parse(musicName))
+	t := template.Must(template.New("musicName").Parse(string(musicName)))
 
-	err := t.Execute(&buf, md)
+	err = t.Execute(&buf, md)
 	if err != nil {
 		return err
 	}
@@ -194,7 +196,7 @@ func (md *MusicData) UploadTemporaryFile() error {
 	md.Cover = link
 
 	//UploadTrack
-	md.Track, err = uploadLittleBox(md.track, md.normalName + ".mp3")
+	md.Track, err = uploadLittleBox(md.track, md.normalName+".mp3")
 	if err != nil {
 		return err
 	}
