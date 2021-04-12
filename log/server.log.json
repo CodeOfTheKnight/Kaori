@@ -1,3 +1,87 @@
 {"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-10T23:28:47+02:00","user":"Server"}
 {"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-10T23:28:47+02:00","user":"Server"}
 {"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-10T23:28:47+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:40:02+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:40:02+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:40:02+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:41802","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:07+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41804","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:08+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41806","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:08+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41808","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:09+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41816","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:44:58+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41818","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:00+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41820","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:01+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41822","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:01+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41824","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:01+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41828","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:02+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:45:23+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:45:23+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:45:23+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:41856","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:24+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41858","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:24+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41860","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:24+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41862","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:25+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41864","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:25+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41866","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:26+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41868","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:26+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41870","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:26+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41872","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:27+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41874","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:27+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41876","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:27+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41878","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:28+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41880","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:28+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41882","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:28+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41884","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:29+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41890","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:31+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41892","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:31+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41896","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:32+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41900","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:33+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41906","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:34+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41910","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:35+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41916","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:36+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41918","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:37+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41924","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:38+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41928","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:39+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41932","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:40+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:45:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:45:52+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:45:52+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:41940","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:52+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41942","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:53+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41944","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:53+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41946","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:53+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41948","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:54+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41950","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:54+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41952","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:54+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41956","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:55+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41962","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:56+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41966","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:57+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41972","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:58+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41976","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:59+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:48:09+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:48:09+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:48:09+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:41988","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:11+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41990","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:11+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41992","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:11+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41994","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:12+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41996","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:12+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41998","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:13+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42000","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:13+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42004","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:14+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:48:24+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:48:24+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:48:24+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:42010","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:25+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42012","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:25+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42014","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:25+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42016","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:26+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42022","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:27+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42028","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:28+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42030","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:29+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42034","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:30+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42038","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:31+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T20:09:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T20:09:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-12T20:09:22+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T20:09:22+02:00","user":"Server"}

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
+	"golang.org/x/time/rate"
+
 	//	"google.golang.org/api/gmail/v1"
 	"log"
 	"net/http"
@@ -18,6 +20,7 @@ var cfg *Config
 //Settings
 const indexFile string = "home.html"
 const loginFile string = "login.html"
+var limiter *rate.Limiter
 
 func init() {
 	var err error
@@ -58,6 +61,11 @@ func init() {
 	}
 
 	printLog("Server", "", "init", "Setting Database done", 0)
+
+	//Create limiter middleware
+	limiter = rate.NewLimiter(1, cfg.Server.Limiter)
+
+	printLog("Server", "", "init", "Setting Limiter done", 0)
 }
 
 func main() {
@@ -70,7 +78,7 @@ func main() {
 
 	//Creazione router
 	router := mux.NewRouter()
-	router.Use(limit)
+	router.Use(limitMiddleware)
 	router.Use(enableCors) //CORS middleware
 
 	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()

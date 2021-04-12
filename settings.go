@@ -14,6 +14,7 @@ type Config struct {
 			Certificate string `yaml:"certificate"`
 			Key         string `yaml:"key"`
 		} `yaml:"ssl"`
+		Limiter  int `yaml:"limiter"`
 		Gui      string `yaml:"gui"`
 		Test     string `yaml:"test"`
 		Template string `yaml:"template"`

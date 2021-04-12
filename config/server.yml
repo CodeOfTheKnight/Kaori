@@ -6,6 +6,7 @@ server:
   ssl:
     certificate: "cert/cert.pem"
     key: "cert/key.pem"
+  limiter: 3
   gui: "KaoriGui/"
   test: "tests/"
   template: "template/"
