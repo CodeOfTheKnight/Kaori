@@ -48,7 +48,7 @@ func (amp *AuthMiddlewarePerm) authmiddleware(next http.Handler) http.Handler {
 		}
 
 		if !IsAuthorized(permissions, amp.PermRequired...) {
-			printLog(metadata.Email, ip, "authMiddleware", "Warning permission denied: "+err.Error(), 2)
+			printLog(metadata.Email, ip, "authMiddleware", "Warning permission denied!", 2)
 			http.Error(w, `{"code": 403, "msg": "You need permissions to access the service!"}`, http.StatusForbidden)
 			return
 		}

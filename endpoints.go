@@ -51,6 +51,13 @@ const (
 	endpointAdmin  endpoints = "/api/admin/"
 	adminConfigGet endpoints = "/config/get"
 	adminConfigSet endpoints = "/config/set"
+
+		//ENDPOINT COMMAND
+		adminCommand endpoints = "/command/"
+		commandRestart endpoints = "/restart"
+		commandShutdown endpoints = "/shutdown"
+		commandForcedShutdown endpoints = "/forcedShutdown"
+
 )
 
 func (e endpoints) String() string {

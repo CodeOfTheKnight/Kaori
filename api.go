@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -706,5 +707,20 @@ func ApiConfigSet(w http.ResponseWriter, r *http.Request){
 	//TODO: Change file config
 	//TODO: Reboot
 	fmt.Println(cfg2)
+
+}
+
+//API ADMIN COMMAND
+
+func ApiCommandRestart(w http.ResponseWriter, r *http.Request){
+
+	mappa := r.Context().Value("values").(ContextValues)
+
+	err := syscall.Kill(syscall.Getpid(), syscall.SIGUSR1)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandRestart", "Error to send signal: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
 
 }
