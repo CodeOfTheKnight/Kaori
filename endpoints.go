@@ -21,6 +21,10 @@ const (
 	userSettings endpoints = "/settings" //[GET]
 	userBadge    endpoints = "/badge"    //[GET]
 
+		//Endpoint settings
+		settingsGet endpoints = "/get"
+		settingsSet endpoints = "/set"
+
 	//Endpoint auth
 	endpointAuth      endpoints = "/api/auth/"
 	authRefresh       endpoints = "/refresh"
@@ -42,6 +46,11 @@ const (
 	//Endpoint for tests
 	endpointTest endpoints = "/api/test/"
 	testFiles    endpoints = "/files/"
+
+	//ENDPOINT ADMIN
+	endpointAdmin  endpoints = "/api/admin/"
+	adminConfigGet endpoints = "/config/get"
+	adminConfigSet endpoints = "/config/set"
 )
 
 func (e endpoints) String() string {

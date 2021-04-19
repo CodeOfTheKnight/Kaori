@@ -25,7 +25,7 @@ type HTTPReqInfo struct {
 
 func (ri *HTTPReqInfo) logHTTPReq() {
 	ri.muLogHTTP.Lock()
-	out, err := json.MarshalIndent(ri, "", "  ")
+	out, err := json.Marshal(ri)
 	if err != nil {
 		printLog("Server", "", "logHTTPReq", "Error with JSON: "+err.Error(), 1)
 		return

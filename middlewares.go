@@ -1,11 +1,21 @@
 package main
 
 import (
+	"context"
 	"net/http"
 )
 
 type AuthMiddlewarePerm struct {
 	PermRequired []Permission
+}
+
+type ContextValues struct {
+	m map[string]string
+}
+
+
+func (v ContextValues) Get(key string) string {
+	return v.m[key]
 }
 
 func NewAuthMiddlewarePerm(perms ...Permission) *AuthMiddlewarePerm {
@@ -43,20 +53,15 @@ func (amp *AuthMiddlewarePerm) authmiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		v := ContextValues{map[string]string{
+			"email": metadata.Email,
+			"ip": ip,
+		}}
+		ctx := context.WithValue(r.Context(), "values", v)
+
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r.WithContext(ctx))
 
-	})
-}
-
-func limitMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if limiter.Allow() == false {
-			http.Error(w, `{"code": 429, "msg": "Too many request!"}`, http.StatusTooManyRequests)
-			return
-		}
-
-		next.ServeHTTP(w, r)
 	})
 }
 

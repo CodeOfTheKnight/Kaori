@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
-	"golang.org/x/time/rate"
-
 	//	"google.golang.org/api/gmail/v1"
 	"log"
 	"net/http"
@@ -20,7 +20,7 @@ var cfg *Config
 //Settings
 const indexFile string = "home.html"
 const loginFile string = "login.html"
-var limiter *rate.Limiter
+var lmt *limiter.Limiter
 
 func init() {
 	var err error
@@ -29,6 +29,13 @@ func init() {
 	cfg, err = NewConfig()
 	if err != nil {
 		log.Fatalln(err)
+		return
+	}
+
+	//VALIDATE CONFIG
+	err = cfg.CheckConfig()
+	if err != nil {
+		printLog("Server", "", "init", "Error to validate config: " + err.Error(), 1)
 		return
 	}
 
@@ -63,7 +70,9 @@ func init() {
 	printLog("Server", "", "init", "Setting Database done", 0)
 
 	//Create limiter middleware
-	limiter = rate.NewLimiter(1, cfg.Server.Limiter)
+	lmt = tollbooth.NewLimiter(float64(cfg.Server.Limiter), nil)
+	lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"}).SetMethods([]string{"POST", "GET"})
+	lmt.SetMessage("{\"code\": 429, \"msg\": \"Too many request!\"}\n")
 
 	printLog("Server", "", "init", "Setting Limiter done", 0)
 }
@@ -74,23 +83,34 @@ func main() {
 	userAuthMiddleware := NewAuthMiddlewarePerm(UserPerm)
 	//creatorAuthMiddleware := NewAuthMiddlewarePerm(CreatorPerm)
 	testerAuthMiddleware := NewAuthMiddlewarePerm(TesterPerm)
-	//adminAuthMiddleware := NewAuthMiddlewarePerm(AdminPerm)
+	adminAuthMiddleware := NewAuthMiddlewarePerm(AdminPerm)
 
 	//Creazione router
 	router := mux.NewRouter()
-	router.Use(limitMiddleware)
 	router.Use(enableCors) //CORS middleware
 
+	//Creazione subrouter per api di aggiunta dati
 	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()
 	routerAdd.Use(userAuthMiddleware.authmiddleware)
 
+	//Creazione subrouter per api di test
 	routerTest := router.PathPrefix(endpointTest.String()).Subrouter()
 	routerTest.Use(testerAuthMiddleware.authmiddleware)
 
+	//Creazione subrouter per api di utente
 	routerUser := router.PathPrefix(endpointUser.String()).Subrouter()
 	routerUser.Use(userAuthMiddleware.authmiddleware)
 
+		//Creazione subrouter per api di settings
+		routerSettings := routerUser.PathPrefix(userSettings.String()).Subrouter()
+		routerSettings.Use(userAuthMiddleware.authmiddleware)
+
+	//Creazione subrouter per api di autenticazione
 	routerAuth := router.PathPrefix(endpointAuth.String()).Subrouter()
+
+	//Creazione subrouter per api di amministratore
+	routerAdmin := router.PathPrefix(endpointAdmin.String()).Subrouter()
+	routerAdmin.Use(adminAuthMiddleware.authmiddleware)
 
 	//Rotte base
 	router.HandleFunc(endpointRoot.String(), serveIndex)
@@ -118,8 +138,22 @@ func main() {
 		),
 	).Methods(http.MethodGet, http.MethodOptions)
 
+	//Rotte API user
+	routerUser.Path(userInfo.String()).HandlerFunc(ApiUserInfo).Methods(http.MethodGet)
+
+		//Rotte API settings
+		routerSettings.Path(settingsGet.String()).HandlerFunc(ApiSettingsGet).Methods(http.MethodGet)
+		routerSettings.Path(settingsSet.String()).HandlerFunc(ApiSettingsSet).Methods(http.MethodPost)
+
+	//Rotte API admin
+	routerAdmin.Path(adminConfigGet.String()).HandlerFunc(ApiConfigGet).Methods(http.MethodGet)
+	routerAdmin.Path(adminConfigSet.String()).HandlerFunc(ApiConfigSet).Methods(http.MethodPost)
+
+	fmt.Println("https://" + cfg.Server.Host + cfg.Server.Port + endpointAdmin.String() + adminConfigGet.String())
+
 	//Add logger middleware
 	var handler http.Handler = router
+	handler = tollbooth.LimitHandler(lmt, handler)
 	handler = logRequestHandler(handler)
 
 	server := http.Server{

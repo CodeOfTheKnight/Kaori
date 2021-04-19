@@ -145,17 +145,17 @@ func (cl *ClientFirestore) AddUser(u *User) error {
 	}{
 		Username: u.Username,
 		Password: u.Password,
-		Permission: u.permission,
+		Permission: u.Permission,
 		ProfilePicture: u.ProfilePicture,
-		IsDonator: u.isDonator,
-		IsActive: u.isDonator,
-		AnilistId: u.anilistId,
-		DateSignUp: u.dateSignUp,
-		ItemAdded: u.itemAdded,
-		Credits: u.credits,
-		Level: u.level,
+		IsDonator: u.IsDonator,
+		IsActive: u.IsDonator,
+		AnilistId: u.AnilistId,
+		DateSignUp: u.DateSignUp,
+		ItemAdded: u.ItemAdded,
+		Credits: u.Credits,
+		Level: u.Level,
 		Badges: []string{},
-		Settings: u.settings,
+		Settings: u.Settings,
 	}
 
 	_, err := cl.c.Collection("User").Doc(u.Email).Set(cl.ctx, tmp)

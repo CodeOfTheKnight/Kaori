@@ -1,87 +1,593 @@
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-10T23:28:47+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-10T23:28:47+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-10T23:28:47+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:40:02+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:40:02+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:40:02+02:00","user":"Server"}
-{"function":"ServeHttp","ip":"127.0.0.1:41802","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:07+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41804","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:08+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41806","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:08+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41808","level":"error","msg":"Error to open index file","time":"2021-04-12T18:41:09+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41816","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:44:58+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41818","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:00+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41820","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:01+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41822","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:01+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41824","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:01+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41828","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:02+02:00","user":"General"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:45:23+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:45:23+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:45:23+02:00","user":"Server"}
-{"function":"ServeHttp","ip":"127.0.0.1:41856","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:24+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41858","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:24+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41860","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:24+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41862","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:25+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41864","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:25+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41866","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:26+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41868","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:26+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41870","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:26+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41872","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:27+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41874","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:27+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41876","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:27+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41878","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:28+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41880","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:28+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41882","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:28+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41884","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:29+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41890","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:31+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41892","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:31+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41896","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:32+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41900","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:33+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41906","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:34+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41910","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:35+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41916","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:36+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41918","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:37+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41924","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:38+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41928","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:39+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41932","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:40+02:00","user":"General"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:45:52+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:45:52+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:45:52+02:00","user":"Server"}
-{"function":"ServeHttp","ip":"127.0.0.1:41940","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:52+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41942","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:53+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41944","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:53+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41946","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:53+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41948","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:54+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41950","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:54+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41952","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:54+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41956","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:55+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41962","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:56+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41966","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:57+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41972","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:58+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41976","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:45:59+02:00","user":"General"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:48:09+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:48:09+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:48:09+02:00","user":"Server"}
-{"function":"ServeHttp","ip":"127.0.0.1:41988","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:11+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41990","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:11+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41992","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:11+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41994","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:12+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41996","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:12+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:41998","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:13+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42000","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:13+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42004","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:14+02:00","user":"General"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T18:48:24+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T18:48:24+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T18:48:24+02:00","user":"Server"}
-{"function":"ServeHttp","ip":"127.0.0.1:42010","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:25+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42012","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:25+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42014","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:25+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42016","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:26+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42022","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:27+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42028","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:28+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42030","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:29+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42034","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:30+02:00","user":"General"}
-{"function":"ServeHttp","ip":"127.0.0.1:42038","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-12T18:48:31+02:00","user":"General"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-12T20:09:22+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-12T20:09:22+02:00","user":"Server"}
-{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-12T20:09:22+02:00","user":"Server"}
-{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-12T20:09:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T13:24:38+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T13:24:38+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T13:24:38+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T13:24:38+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:53948","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T13:54:37+02:00","user":"General"}
+{"function":"authMiddleware","ip":"127.0.0.1:53950","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T13:54:53+02:00","user":"General"}
+{"function":"ApiRefresh","ip":"127.0.0.1:53952","level":"warning","msg":"Token not valid","time":"2021-04-13T13:54:58+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiConfigGet","ip":"127.0.0.1:53972","level":"info","msg":"The user has read the settings","time":"2021-04-13T13:58:07+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T13:59:10+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T13:59:10+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T13:59:10+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T13:59:10+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:13:54+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:13:54+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:13:54+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:13:54+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:54098","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:20:25+02:00","user":"General"}
+{"function":"authMiddleware","ip":"127.0.0.1:54114","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:27:13+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:29:58+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:29:58+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:29:58+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:29:58+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:30:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:30:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:30:36+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:30:36+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:54160","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:30:37+02:00","user":"General"}
+{"function":"authMiddleware","ip":"127.0.0.1:54162","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:30:46+02:00","user":"General"}
+{"function":"authMiddleware","ip":"127.0.0.1:54164","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:31:27+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:32:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:32:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:32:27+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:32:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:35:49+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:35:49+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:35:49+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:35:49+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:38:40+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:38:40+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:38:40+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:38:40+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:40:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:40:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:40:15+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:40:15+02:00","user":"Server"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54218","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:40:21+02:00","user":"General"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54220","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:41:48+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:45:45+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:45:45+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:45:45+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:45:45+02:00","user":"Server"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54232","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:46:41+02:00","user":"General"}
+{"function":"authMiddleware","ip":"127.0.0.1:54236","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:47:57+02:00","user":"General"}
+{"function":"authMiddleware","ip":"127.0.0.1:54238","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T14:48:07+02:00","user":"General"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54264","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:48:50+02:00","user":"General"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54266","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:49:04+02:00","user":"General"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54268","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:49:13+02:00","user":"General"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54270","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:49:19+02:00","user":"General"}
+{"function":"ApiConfigSet","ip":"127.0.0.1:54274","level":"error","msg":"Error to create JSON: EOF","time":"2021-04-13T14:50:41+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:52:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:52:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:52:27+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:52:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T14:53:29+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T14:53:29+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T14:53:29+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T14:53:29+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:00:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:00:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:00:12+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:00:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:03:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:03:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:03:12+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:03:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:03:24+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:03:24+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:03:24+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:03:24+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:08:33+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:08:33+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:08:33+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:08:33+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:54420","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T15:08:38+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:27:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:27:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:27:59+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:27:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:28:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:28:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:28:16+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:28:16+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:54778","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-13T15:28:19+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:30:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:30:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:30:30+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:30:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T15:32:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T15:32:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T15:32:22+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T15:32:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T16:01:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T16:01:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T16:01:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T16:05:53+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T16:05:53+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T16:05:53+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T16:05:53+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T16:07:13+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T16:07:13+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T16:07:13+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T16:07:13+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T16:07:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T16:07:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T16:07:25+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T16:07:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T16:28:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T16:28:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T16:28:56+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T16:28:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T16:35:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T16:35:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T16:35:22+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T16:35:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T17:07:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T17:07:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T17:07:25+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T17:07:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T17:08:54+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T17:08:54+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T17:08:54+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T17:08:54+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T18:25:01+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T18:25:01+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T18:25:01+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T18:25:01+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T19:18:07+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T19:18:07+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T19:18:07+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T19:18:07+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T19:47:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T19:47:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T19:47:43+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T19:47:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T20:46:44+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T20:46:44+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T20:46:44+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T20:46:44+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T20:50:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T20:50:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T20:50:56+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T20:50:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T21:05:04+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T21:05:04+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T21:05:04+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T21:05:04+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T21:08:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T21:08:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T21:08:42+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T21:08:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T21:53:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T21:53:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T21:53:59+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T21:53:59+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:34858","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:03+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:34876","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:04+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:34878","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:05+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:35016","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:22+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:35026","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:23+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:35036","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:23+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:35038","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:23+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:35042","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:24+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:35052","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T21:57:24+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:04:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:04:27+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:04:27+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:04:27+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:40518","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:19+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:40652","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:20+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:40806","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:21+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:40964","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:22+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41122","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:23+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41272","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:24+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:41418","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:08:25+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:09:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:09:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:09:59+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:09:59+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:42358","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:01+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42360","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:01+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42362","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:01+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42406","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:02+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42464","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:02+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42512","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:02+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42562","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:03+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42618","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:03+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42976","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:40+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42978","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:40+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:42980","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:40+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:43024","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:41+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:43082","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:41+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:43130","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:41+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:43178","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:10:42+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49170","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:50+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49172","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:50+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49174","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:50+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49218","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:51+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49266","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:51+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49322","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:51+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49372","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:52+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49420","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:52+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49478","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:52+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49530","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:53+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49578","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:53+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49634","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:53+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49684","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:54+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49734","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:54+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49792","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:54+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:49842","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:22:55+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:24:33+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:24:33+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:24:33+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:24:33+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:25:28+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:25:28+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:25:28+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:25:28+02:00","user":"Server"}
+{"function":"ServeHttp","ip":"127.0.0.1:51150","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:25:33+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:51152","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:25:33+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:51154","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:25:33+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:51198","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:25:34+02:00","user":"General"}
+{"function":"ServeHttp","ip":"127.0.0.1:51246","level":"error","msg":"Failed to push: feature not supported","time":"2021-04-13T22:25:34+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:30:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:30:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:30:52+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:30:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:34:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:34:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:34:14+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:34:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:35:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:35:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:35:30+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:35:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:37:02+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:37:02+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:37:02+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:37:02+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-13T22:37:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-13T22:37:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-13T22:37:36+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-13T22:37:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:12:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:12:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:12:46+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:12:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:18:09+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:18:09+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:18:09+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:18:09+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:19:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:19:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:19:43+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:19:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:20:26+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:20:26+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:20:26+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:20:26+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:20:45+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:20:45+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:20:45+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:20:45+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:21:03+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:21:03+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:21:03+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:21:03+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:21:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:21:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:21:12+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:21:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:22:28+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:22:28+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:22:28+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:22:28+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:23:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:23:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:23:08+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:23:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T11:25:23+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T11:25:23+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T11:25:23+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T11:25:23+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T12:06:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T12:06:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T12:06:15+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T12:06:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T12:12:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T12:12:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T12:12:14+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T12:12:14+02:00","user":"Server"}
+{"function":"ApiSignUp","ip":"127.0.0.1:56576","level":"error","msg":"Error to send mail: unable to parse email template","time":"2021-04-16T12:13:30+02:00","user":"General"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T12:57:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T12:57:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T12:57:15+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T12:57:15+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:06:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:06:14+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:06:14+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:06:14+02:00","user":"Server"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57002","level":"error","msg":"Error database: read /home/kiritonya/go/src/github.com/CodeOfTheKnight/Kaori: is a directory","time":"2021-04-16T13:07:31+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:11:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:11:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:11:42+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:11:42+02:00","user":"Server"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57066","level":"warning","msg":"Warning to verify refresh token: Token not valid","time":"2021-04-16T13:11:54+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57082","level":"error","msg":"Error database: read /home/kiritonya/go/src/github.com/CodeOfTheKnight/Kaori: is a directory","time":"2021-04-16T13:12:36+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:14:23+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:14:23+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:14:23+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:14:23+02:00","user":"Server"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57112","level":"error","msg":"Error database: read /home/kiritonya/go/src/github.com/CodeOfTheKnight/Kaori: is a directory","time":"2021-04-16T13:14:49+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:15:03+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:15:03+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:15:03+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:15:03+02:00","user":"Server"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57124","level":"warning","msg":"Warning to verify refresh token: Token not valid","time":"2021-04-16T13:15:25+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57124","level":"warning","msg":"Warning to verify refresh token: Token not valid","time":"2021-04-16T13:15:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:18:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:18:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:18:52+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:18:52+02:00","user":"Server"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57192","level":"error","msg":"Error database: read /home/kiritonya/go/src/github.com/CodeOfTheKnight/Kaori: is a directory","time":"2021-04-16T13:19:23+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:20:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:20:42+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:20:42+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:20:42+02:00","user":"Server"}
+{"function":"ApiConfirmSignup","ip":"127.0.0.1:57220","level":"error","msg":"Error database: read /home/kiritonya/go/src/github.com/CodeOfTheKnight/Kaori: is a directory","time":"2021-04-16T13:21:06+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:21:31+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:21:31+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:21:31+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:21:31+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T13:23:05+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T13:23:05+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T13:23:05+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T13:23:05+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T14:48:41+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T14:48:41+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T14:48:41+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T14:48:41+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:57770","level":"info","msg":"[Start] Change settings","time":"2021-04-16T14:59:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:57772","level":"info","msg":"[Start] Change settings","time":"2021-04-16T14:59:40+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:02:55+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:02:55+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:02:55+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:02:55+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57800","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:03:16+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57800","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:03:16+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:04:24+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:04:24+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:04:24+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:04:24+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57814","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:04:25+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57814","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:04:25+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:05:31+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:05:31+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:05:31+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:05:31+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57830","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:05:33+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57830","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:05:34+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:05:48+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:05:48+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:05:48+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:05:48+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57840","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:05:50+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57840","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:05:51+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:09:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:09:30+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:09:30+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:09:30+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57952","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:09:31+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57952","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:09:32+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:10:07+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:10:07+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:10:07+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:10:07+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57972","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:10:08+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57972","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:10:08+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:10:21+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:10:21+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:10:21+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:10:21+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57980","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:10:22+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57980","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:10:23+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:10:48+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:10:48+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:10:48+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:10:48+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57994","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:10:49+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:57994","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:10:50+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"authMiddleware","ip":"127.0.0.1:58080","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-16T15:21:52+02:00","user":"General"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58088","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:23:02+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58088","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:23:02+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:43:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:43:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:43:36+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:43:36+02:00","user":"Server"}
+{"function":"ApiRefresh","ip":"127.0.0.1:58242","level":"warning","msg":"Token not valid","time":"2021-04-16T15:43:47+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiRefresh","ip":"127.0.0.1:58250","level":"warning","msg":"Token not valid","time":"2021-04-16T15:44:08+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58256","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:45:05+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58256","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:45:05+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:48:05+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:48:05+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:48:05+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:48:05+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:48:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:48:22+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:48:22+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:48:22+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58336","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:48:55+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58336","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:48:55+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58338","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:48:58+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58338","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:48:59+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:49:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:49:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:49:25+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:49:25+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58348","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:49:25+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58348","level":"error","msg":"Error database: rpc error: code = Unauthenticated desc = transport: oauth2: cannot fetch token: Post \"https://oauth2.googleapis.com/token\": dial tcp: lookup oauth2.googleapis.com: no such host","time":"2021-04-16T15:49:44+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58370","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:50:07+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58370","level":"error","msg":"Error database: rpc error: code = Unauthenticated desc = transport: oauth2: cannot fetch token: Post \"https://oauth2.googleapis.com/token\": dial tcp: lookup oauth2.googleapis.com: no such host","time":"2021-04-16T15:50:17+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58372","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:50:32+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58372","level":"error","msg":"Error database: rpc error: code = Unauthenticated desc = transport: oauth2: cannot fetch token: Post \"https://oauth2.googleapis.com/token\": dial tcp: lookup oauth2.googleapis.com: no such host","time":"2021-04-16T15:50:42+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58380","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:52:15+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58380","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:52:18+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:53:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:53:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:53:08+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:53:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:55:17+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:55:17+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:55:17+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:55:17+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:57:21+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:57:21+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:57:21+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:57:21+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58434","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:57:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58434","level":"error","msg":"Error to struct conversion: firestore: nil or not a pointer","time":"2021-04-16T15:57:27+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58438","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:57:31+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58438","level":"error","msg":"Error to struct conversion: firestore: nil or not a pointer","time":"2021-04-16T15:57:31+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:57:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:57:43+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:57:43+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:57:43+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58444","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:57:43+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58444","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:57:44+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T15:59:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T15:59:12+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T15:59:12+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T15:59:12+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58474","level":"info","msg":"[Start] Get settings","time":"2021-04-16T15:59:15+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58474","level":"info","msg":"[Done] Get settings","time":"2021-04-16T15:59:18+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:00:11+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:00:11+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:00:11+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:00:11+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:58488","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-16T16:00:12+02:00","user":"General"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58504","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:00:31+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:01:18+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:01:18+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:01:18+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:01:18+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58520","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:01:20+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58520","level":"error","msg":"Error database: rpc error: code = InvalidArgument desc = Document name \"projects/kaoriuser-fbae1/databases/(default)/documents/User/watashiwayuridaisuki@gmail.com/Settings\" lacks \"/\" at index 99.","time":"2021-04-16T16:01:21+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58704","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:13:46+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58704","level":"error","msg":"Error database: rpc error: code = InvalidArgument desc = Document name \"projects/kaoriuser-fbae1/databases/(default)/documents/User/watashiwayuridaisuki@gmail.com/Settings\" lacks \"/\" at index 99.","time":"2021-04-16T16:13:46+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58706","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:13:48+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58706","level":"error","msg":"Error database: rpc error: code = InvalidArgument desc = Document name \"projects/kaoriuser-fbae1/databases/(default)/documents/User/watashiwayuridaisuki@gmail.com/Settings\" lacks \"/\" at index 99.","time":"2021-04-16T16:13:49+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:13:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:13:59+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:13:59+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:13:59+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58714","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:13:59+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58714","level":"info","msg":"[Done] Get settings","time":"2021-04-16T16:14:01+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"authMiddleware","ip":"127.0.0.1:58730","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-16T16:17:53+02:00","user":"General"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58734","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:18:01+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58734","level":"info","msg":"[Done] Get settings","time":"2021-04-16T16:18:02+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58758","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:19:09+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58758","level":"info","msg":"[Done] Change settings","time":"2021-04-16T16:19:09+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:21:26+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:21:26+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:21:26+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:21:26+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:22:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:22:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:22:16+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:22:16+02:00","user":"Server"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58884","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:31:48+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58884","level":"info","msg":"[Done] Get settings","time":"2021-04-16T16:31:49+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58886","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:31:56+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58886","level":"info","msg":"[Done] Change settings","time":"2021-04-16T16:31:56+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58920","level":"info","msg":"[Start] Get settings","time":"2021-04-16T16:35:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsGet","ip":"127.0.0.1:58920","level":"info","msg":"[Done] Get settings","time":"2021-04-16T16:35:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58922","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:35:35+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58922","level":"info","msg":"[Done] Change settings","time":"2021-04-16T16:35:36+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:37:40+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:37:40+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:37:40+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:37:40+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58954","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:38:32+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:45:18+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:45:18+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:45:18+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:45:18+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59046","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:45:21+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:47:06+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:47:06+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:47:06+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:47:06+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59070","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:47:08+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:48:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:48:52+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:48:52+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:48:52+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59108","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:48:52+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:53:35+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:53:35+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:53:35+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:53:35+02:00","user":"Server"}
+{"function":"authMiddleware","ip":"127.0.0.1:59142","level":"error","msg":"Error to get access token metadata: Token is expired","time":"2021-04-16T16:53:35+02:00","user":"General"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59148","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:53:48+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T16:55:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T16:55:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T16:55:46+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T16:55:46+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59164","level":"info","msg":"[Start] Change settings","time":"2021-04-16T16:55:49+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T17:01:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T17:01:08+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T17:01:08+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T17:01:08+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59232","level":"info","msg":"[Start] Change settings","time":"2021-04-16T17:01:10+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:59232","level":"info","msg":"[Done] Change settings","time":"2021-04-16T17:01:11+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T17:16:53+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T17:16:53+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T17:16:53+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T17:16:53+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-16T17:19:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-16T17:19:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-16T17:19:16+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-16T17:19:16+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:14:18+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:14:18+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:14:18+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:14:18+02:00","user":"Server"}
+{"function":"ApiRefresh","ip":"127.0.0.1:58476","level":"warning","msg":"Token not valid","time":"2021-04-19T18:20:35+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiRefresh","ip":"127.0.0.1:58480","level":"error","msg":"Error to get cookies: Cookies not valid!","time":"2021-04-19T18:20:44+02:00","user":"General"}
+{"function":"ApiRefresh","ip":"127.0.0.1:58482","level":"warning","msg":"Token not valid","time":"2021-04-19T18:21:04+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58490","level":"info","msg":"[Start] Change settings","time":"2021-04-19T18:24:03+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58490","level":"error","msg":"Data is invalid: Graphics Settings background not valid.","time":"2021-04-19T18:24:03+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:28:21+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:28:21+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:28:21+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:28:21+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58526","level":"info","msg":"[Start] Change settings","time":"2021-04-19T18:28:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58526","level":"info","msg":"[Done] Change settings","time":"2021-04-19T18:28:26+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:29:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:29:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:29:25+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:29:25+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:29:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:29:36+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:29:36+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:29:36+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58538","level":"info","msg":"[Start] Change settings","time":"2021-04-19T18:29:38+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58538","level":"info","msg":"[Done] Change settings","time":"2021-04-19T18:29:38+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:31:37+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:31:37+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:31:37+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:31:37+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58546","level":"info","msg":"[Start] Change settings","time":"2021-04-19T18:31:38+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58546","level":"info","msg":"[Done] Change settings","time":"2021-04-19T18:31:38+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:31:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:31:56+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:31:56+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:31:56+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58554","level":"info","msg":"[Start] Change settings","time":"2021-04-19T18:31:59+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58554","level":"info","msg":"[Done] Change settings","time":"2021-04-19T18:31:59+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-04-19T18:36:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-04-19T18:36:46+02:00","user":"Server"}
+{"function":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-04-19T18:36:46+02:00","user":"Server"}
+{"function":"main","ip":"","level":"info","msg":"Start Server","time":"2021-04-19T18:36:46+02:00","user":"Server"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58568","level":"info","msg":"[Start] Change settings","time":"2021-04-19T18:36:48+02:00","user":"watashiwayuridaisuki@gmail.com"}
+{"function":"ApiSettingsSet","ip":"127.0.0.1:58568","level":"error","msg":"Data is invalid: Graphics Settings error not valid.","time":"2021-04-19T18:36:49+02:00","user":"watashiwayuridaisuki@gmail.com"}

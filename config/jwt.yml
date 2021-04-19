@@ -3,3 +3,6 @@
 jwt:
   iss: "KaoriStream.com"
   company: "CodeOfTheKnight"
+  exp:
+    accessToken: 15
+    refreshToken: 155

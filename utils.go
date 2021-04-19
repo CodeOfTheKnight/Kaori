@@ -17,6 +17,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -309,4 +311,37 @@ func existUser(email string) bool {
 	} else {
 		return true
 	}
+}
+
+func passwordValid(pws string) error {
+	if len(pws) < 8 {
+		return fmt.Errorf("password len is < 9")
+	}
+	if b, err := regexp.MatchString(`[0-9]{1}`, pws); !b || err != nil {
+		return fmt.Errorf("password need num")
+	}
+	if b, err := regexp.MatchString(`[a-z]{1}`, pws); !b || err != nil {
+		return fmt.Errorf("password need a_z")
+	}
+	if b, err := regexp.MatchString(`[A-Z]{1}`, pws); !b || err != nil {
+		return fmt.Errorf("password need A_Z")
+	}
+	return nil
+}
+
+func portValid(port string) error {
+	portInt, err := strconv.Atoi(strings.Trim(port, ":"))
+	if err != nil {
+		return errors.New("Invalid Port: Conversion of port to int not valid")
+	}
+
+	if portInt < 1024 || portInt > 49151 {
+		return errors.New("Port not valid. [1024-49151]")
+	}
+	return nil
+}
+
+func checkHash(hash string) bool {
+	ok, _ := regexp.MatchString(`^#[0-9A-F]{6}$`, hash)
+	return ok
 }
