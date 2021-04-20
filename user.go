@@ -6,62 +6,92 @@ import (
 	"time"
 )
 
+//User è una struttura con tutti i dati dell'utente.
 type User struct {
 	Email          string `json:"email"`
 	Username       string `json:"username"`
-	Password       string `json:"password"`
-	permission     string //[u]ser,[c]reator,[t]ester,[a]admin
-	ProfilePicture string `json:"profilePicture,omitempty"`
-	isDonator      bool
-	isActive       bool
-	anilistId      int //-1 se anilist non è stato collegato.
-	dateSignUp     int64
-	itemAdded      int //Numero di item aggiunti al database
-	credits        int //Punti utili per guardare anime. Si guadagnano guardando pubblicità, donando o aggiungendo item al database.
-	level          int //Si incrementa in base ai minuti passati sull'applicazione.
-	badges         []Badge
-	settings       Settings
-	notifications  Notifications
-	refreshToken   map[string]int64
+	Password       string `json:"-"`
+	ProfilePicture string `json:"profilePicture"`
+	Permission     string `json:"permission"`//[u]ser,[c]reator,[t]ester,[a]admin
+	IsDonator      bool   `json:"is_donator"`
+	IsActive       bool   `json:"is_active"`
+	AnilistId      int    `json:"anilist_id"`//-1 se anilist non è stato collegato.
+	DateSignUp     int64  `json:"date_sign_up"`
+	ItemAdded      int    `json:"item_added" `//Numero di item aggiunti al database
+	Credits        int    `json:"credits"` //Punti utili per guardare anime. Si guadagnano guardando pubblicità, donando o aggiungendo item al database.
+	Level          int    `json:"level"` //Si incrementa in base ai minuti passati sull'applicazione.
+	Badges         []Badge `json:"badges"`
+	Settings       Settings `json:"settings"`
+	Notifications  Notifications `json:"notifications"`
+	RefreshToken   map[string]int64 `json:"-"`
 }
 
+//Settings è una struttura con tutte le preferenze dell'utente.
 type Settings struct {
-	Graphics      GraphicSettings
-	ShowBadge     bool
-	IsPervert     bool
-	ShowListAnime bool
-	ShowListManga bool
+	Graphics      GraphicSettings `json:"graphics,omitempty"`
+	ShowBadge     bool `json:"show_badge,omitempty"`
+	IsPervert     bool `json:"is_pervert,omitempty"`
+	ShowListAnime bool `json:"show_list_anime,omitempty"`
+	ShowListManga bool `json:"show_list_manga,omitempty"`
 }
 
+//GraphicSettings è una struttura con tutte le preferenze grafiche dell'utente.
 type GraphicSettings struct {
-	ThemePrimary       string
-	ThemeSecondary     string
-	ThemeFontPrimary   string
-	ThemeFontSecondary string
-	ThemeShadow        string
-	Error              string
-	FontError          string
+	Background		   string `json:"background,omitempty"`
+	OnBackground	   string `json:"on_background,omitempty"`
+	Surface1		   string `json:"surface_1,omitempty"`
+	Surface2		   string `json:"surface_2,omitempty"`
+	Surface3		   string `json:"surface_3,omitempty"`
+	Surface4		   string `json:"surface_4,omitempty"`
+	Surface6		   string `json:"surface_6,omitempty"`
+	Surface8		   string `json:"surface_8,omitempty"`
+	Surface12		   string `json:"surface_12,omitempty"`
+	Surface16		   string `json:"surface_16,omitempty"`
+	Surface24		   string `json:"surface_24,omitempty"`
+	OnSurface		   string `json:"on_surface,omitempty"`
+	Primary   		   string `json:"primary,omitempty"`
+	PrimaryDark		   string `json:"primary_dark,omitempty"`
+	OnPrimary		   string `json:"on_primary,omitempty"`
+	Secondary          string `json:"secondary,omitempty"`
+	SecondaryDark      string `json:"secondary_dark,omitempty"`
+	OnSecondary        string `json:"on_secondary,omitempty"`
+	Error			   string `json:"error,omitempty"`
+	OnError            string `json:"on_error,omitempty"`
 }
 
+//NewUser è il costruttore dell'oggetto User.
 func (u *User) NewUser() {
-	u.permission = "u"
-	u.isDonator = false
-	u.isActive = false
-	u.anilistId = -1 //Non connesso ad anilist
-	u.dateSignUp = time.Now().Unix()
-	u.itemAdded = 0
-	u.credits = 20
-	u.level = 1
-	u.badges = []Badge{}
-	u.settings = Settings{
+	u.Permission = "u"
+	u.IsDonator = false
+	u.IsActive = false
+	u.AnilistId = -1 //Non connesso ad anilist
+	u.DateSignUp = time.Now().Unix()
+	u.ItemAdded = 0
+	u.Credits = 20
+	u.Level = 1
+	u.Badges = []Badge{}
+	u.Settings = Settings{
 		Graphics: GraphicSettings{
-			ThemePrimary:       "",
-			ThemeSecondary:     "",
-			ThemeFontPrimary:   "",
-			ThemeFontSecondary: "",
-			ThemeShadow:        "",
-			Error:              "",
-			FontError:          "",
+			Background:    "",
+			OnBackground:  "",
+			Surface1:      "",
+			Surface2:      "",
+			Surface3:      "",
+			Surface4:      "",
+			Surface6:      "",
+			Surface8:      "",
+			Surface12:     "",
+			Surface16:     "",
+			Surface24:     "",
+			OnSurface:     "",
+			Primary:       "",
+			PrimaryDark:   "",
+			OnPrimary:     "",
+			Secondary:     "",
+			SecondaryDark: "",
+			OnSecondary:   "",
+			Error:         "",
+			OnError:       "",
 		},
 		ShowBadge:     true,
 		IsPervert:     false,
@@ -70,6 +100,7 @@ func (u *User) NewUser() {
 	}
 }
 
+//AddNewUser aggiunge un nuovo utente al database.
 func (u *User) AddNewUser() error {
 
 	err := kaoriUser.Client.AddUser(u)
@@ -80,6 +111,7 @@ func (u *User) AddNewUser() error {
 	return nil
 }
 
+//IsValid verifica che i dati utente inviati dal client in fase di registrazione siano corretti.
 func (u *User) IsValid() error {
 
 	//Check email
@@ -93,6 +125,144 @@ func (u *User) IsValid() error {
 	//Check Username
 	if u.Username == "" {
 		return errors.New("Username not valid")
+	}
+
+	return nil
+}
+
+//IsValid verifica che i dati delle preferenze inviati dall'utente siano corretti.
+func (s *Settings) IsValid() error {
+
+	//Controllo le impostazioni grafiche
+	if err := s.Graphics.IsValid(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//IsValid verifica che i dati delle preferenze grafiche inviati dall'utente siano corretti.
+func (gs *GraphicSettings) IsValid() error {
+
+	if !checkHash(gs.Background) {
+		if gs.Background != "" {
+			return errors.New("Graphics Settings background not valid.")
+		}
+	}
+
+	if !checkHash(gs.OnBackground) {
+		if gs.OnBackground != "" {
+			return errors.New("Graphics Settings onBackground not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface1) {
+		if gs.Surface1 != "" {
+			return errors.New("Graphics Settings surface1 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface2) {
+		if gs.Surface2 != "" {
+			return errors.New("Graphics Settings surface2 not valid.")
+		}
+
+	}
+
+	if !checkHash(gs.Surface3) {
+		if gs.Surface3 != "" {
+			return errors.New("Graphics Settings surface3 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface4) {
+		if gs.Surface4 != "" {
+			return errors.New("Graphics Settings surface4 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface6) {
+		if gs.Surface6 != "" {
+			return errors.New("Graphics Settings surface6 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface8) {
+		if gs.Surface8 != "" {
+			return errors.New("Graphics Settings surface8 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface12) {
+		if gs.Surface12 != "" {
+			return errors.New("Graphics Settings surface12 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface16) {
+		if gs.Surface16 != "" {
+			return errors.New("Graphics Settings surface16 not valid.")
+		}
+	}
+
+	if !checkHash(gs.Surface24) {
+		if gs.Surface24 != "" {
+			return errors.New("Graphics Settings surface24 not valid.")
+		}
+	}
+
+	if !checkHash(gs.OnSurface) {
+		if gs.OnSurface != "" {
+			return errors.New("Graphics Settings onSurface not valid.")
+		}
+	}
+
+	if !checkHash(gs.Primary) {
+		if gs.Primary != "" {
+			return errors.New("Graphics Settings primary not valid.")
+		}
+	}
+
+	if !checkHash(gs.PrimaryDark) {
+		if gs.PrimaryDark != "" {
+			return errors.New("Graphics Settings primaryDark not valid.")
+		}
+	}
+
+	if !checkHash(gs.OnPrimary) {
+		if gs.OnPrimary != "" {
+			return errors.New("Graphics Settings onPrimary not valid.")
+		}
+	}
+
+	if !checkHash(gs.Secondary) {
+		if gs.Secondary != "" {
+			return errors.New("Graphics Settings secondary not valid.")
+		}
+	}
+
+	if !checkHash(gs.SecondaryDark) {
+		if gs.SecondaryDark != "" {
+			return errors.New("Graphics Settings secondaryDark not valid.")
+		}
+	}
+
+	if !checkHash(gs.OnSecondary) {
+		if gs.OnSecondary != "" {
+			return errors.New("Graphics Settings onSecondary not valid.")
+		}
+	}
+
+	if !checkHash(gs.Error) {
+		if gs.Error != "" {
+			return errors.New("Graphics Settings error not valid.")
+		}
+	}
+
+	if !checkHash(gs.OnError) {
+		if gs.OnError != "" {
+			return errors.New("Graphics Settings onError not valid.")
+		}
 	}
 
 	return nil

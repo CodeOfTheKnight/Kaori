@@ -1,10 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
 	logger "github.com/sirupsen/logrus"
-	"golang.org/x/time/rate"
+	"net"
+	"os/exec"
+	"os/signal"
+	"sync"
+	"syscall"
 
 	//	"google.golang.org/api/gmail/v1"
 	"log"
@@ -20,16 +26,46 @@ var cfg *Config
 //Settings
 const indexFile string = "home.html"
 const loginFile string = "login.html"
-var limiter *rate.Limiter
+var lmt *limiter.Limiter
+
+type Server struct {
+	server   http.Server
+	listener *net.TCPListener
+	wg       sync.WaitGroup
+	sig chan os.Signal
+}
+
+func NewServer(handler http.Handler) *Server {
+	var s Server
+	s.sig = make(chan os.Signal, 1)
+	s.server = http.Server{
+		Addr:           "0.0.0.0" + cfg.Server.Port,
+		Handler:        handler,
+		ReadTimeout:    10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	return &s
+}
 
 func init() {
 	var err error
+
+	//Check and change precedent Settings
+	err = CheckPrecedentConfig()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	//READ CONFIG
 	cfg, err = NewConfig()
 	if err != nil {
 		log.Fatalln(err)
-		return
+	}
+
+	//VALIDATE CONFIG
+	err = cfg.CheckConfig()
+	if err != nil {
+		log.Fatalln(err)
 	}
 
 	//SET LOGGER
@@ -63,80 +99,145 @@ func init() {
 	printLog("Server", "", "init", "Setting Database done", 0)
 
 	//Create limiter middleware
-	limiter = rate.NewLimiter(1, cfg.Server.Limiter)
+	lmt = tollbooth.NewLimiter(float64(cfg.Server.Limiter), nil)
+	lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"}).SetMethods([]string{"POST", "GET"})
+	lmt.SetMessage("{\"code\": 429, \"msg\": \"Too many request!\"}\n")
 
 	printLog("Server", "", "init", "Setting Limiter done", 0)
 }
 
 func main() {
 
-	//Setting auth middleware
-	userAuthMiddleware := NewAuthMiddlewarePerm(UserPerm)
-	//creatorAuthMiddleware := NewAuthMiddlewarePerm(CreatorPerm)
-	testerAuthMiddleware := NewAuthMiddlewarePerm(TesterPerm)
-	//adminAuthMiddleware := NewAuthMiddlewarePerm(AdminPerm)
+	pid := os.Getpid()
 
-	//Creazione router
-	router := mux.NewRouter()
-	router.Use(limitMiddleware)
-	router.Use(enableCors) //CORS middleware
-
-	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()
-	routerAdd.Use(userAuthMiddleware.authmiddleware)
-
-	routerTest := router.PathPrefix(endpointTest.String()).Subrouter()
-	routerTest.Use(testerAuthMiddleware.authmiddleware)
-
-	routerUser := router.PathPrefix(endpointUser.String()).Subrouter()
-	routerUser.Use(userAuthMiddleware.authmiddleware)
-
-	routerAuth := router.PathPrefix(endpointAuth.String()).Subrouter()
-
-	//Rotte base
-	router.HandleFunc(endpointRoot.String(), serveIndex)
-	router.HandleFunc(endpointLogin.String(), serveLogin)
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir(cfg.Server.Gui)))
-
-	//Rotte API AddData
-	routerAdd.Path(addDataMusic.String()).HandlerFunc(ApiAddMusic).Methods(http.MethodPost)
-
-	//Rotte API Auth
-	routerAuth.Path(authLogin.String()).HandlerFunc(ApiLogin).Methods(http.MethodPost)
-	routerAuth.Path(authRefresh.String()).HandlerFunc(ApiRefresh).Methods(http.MethodGet)
-	routerAuth.Path(authSignUp.String()).HandlerFunc(ApiSignUp).Methods(http.MethodPost)
-	routerAuth.Path(authConfirmSignUp.String()).HandlerFunc(ApiConfirmSignUp).Methods(http.MethodGet)
-	routerAuth.Path(authUserExist.String()).HandlerFunc(ApiUserExist).Methods(http.MethodGet)
-
-	//Rotte API test
-	routerTest.PathPrefix(testFiles.String()).Handler(
-		http.StripPrefix(
-			path.Join(
-				endpointTest.String(),
-				testFiles.String(),
-			),
-			http.FileServer(http.Dir(cfg.Server.Test)),
-		),
-	).Methods(http.MethodGet, http.MethodOptions)
+	//Create router with endpoints setted
+	router := RouterInit()
 
 	//Add logger middleware
 	var handler http.Handler = router
+	handler = tollbooth.LimitHandler(lmt, handler)
 	handler = logRequestHandler(handler)
 
-	server := http.Server{
-		Addr:           "0.0.0.0" + cfg.Server.Port,
-		Handler:        handler,
-		ReadTimeout:    10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
+	// We need to shut down gracefully when the user hits Ctrl-C.
+	serv := NewServer(handler)
+	signal.Notify(serv.sig, syscall.SIGINT, syscall.SIGUSR1, syscall.SIGTERM)
+
+	serv.wg.Add(1)
+	go serv.Start()
+
+	// Wait for the interrupt signal.
+	s := <-serv.sig
+	switch s {
+	case syscall.SIGTERM:
+
+		// Go for the program exit. Don't wait for the server to finish.
+		fmt.Println(pid, "Received SIGTERM, exiting without waiting for the web server to shut down")
+		return
+
+	case syscall.SIGINT:
+
+		// Stop the server gracefully.
+		fmt.Println(pid, "Received SIGINT")
+
+	case syscall.SIGUSR1:
+
+		// Spawn a child process.
+		fmt.Println(pid, "Received SIGUSR1")
+		var args []string
+		if len(os.Args) > 1 {
+			args = os.Args[1:]
+		}
+		file, err := serv.listener.File()
+		if err != nil {
+			fmt.Printf("%d Listener did not return file, not forking: %s\n", pid, err)
+		} else {
+			cmd := exec.Command(os.Args[0], args...)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			cmd.ExtraFiles = []*os.File{file}
+			cmd.Env = append(os.Environ(), "FORKED_SERVER=1")
+			if err := cmd.Start(); err != nil {
+				fmt.Printf("%d Fork did not succeed: %s\n", pid, err)
+			}
+			fmt.Printf("%d Started child process %d, waiting for its ready signal\n", pid, cmd.Process.Pid)
+
+			// We have a child process. A SIGTERM means the child process is ready to
+			// start its server.
+			<-serv.sig
+		}
 	}
 
-	go mailDetector()
+	// Force the server to shut down.
+	fmt.Println(pid, "Shutting down web server and waiting for requests to finish...")
+	defer fmt.Println(pid, "Requests have finished")
+	if err := serv.server.Shutdown(context.Background()); err != nil {
+		log.Println(fmt.Errorf("Shutdown failed: %s", err))
+		return
+	}
+	serv.wg.Wait()
 
-	printLog("Server", "", "main", "Start Server", 0)
+	return
+}
 
-	err := server.ListenAndServeTLS(cfg.Server.Ssl.Certificate, cfg.Server.Ssl.Key)
+func (s *Server) Start() {
+	defer s.wg.Done()
+
+	var (
+		ln  net.Listener
+		err error
+	)
+
+	pid := os.Getpid()
+	address := cfg.Server.Host + cfg.Server.Port
+
+	// If this is a forked child process, we'll use its connection.
+	isFork := os.Getenv("FORKED_SERVER") != ""
+
+	if isFork {
+
+		// It's a fork. Get the file that was handed over.
+		printLog("Server", "", "Start", fmt.Sprintf("%d Getting existing listener for %s\n", pid, address), 0)
+		file := os.NewFile(3, "")
+		ln, err = net.FileListener(file)
+		if err != nil {
+			printLog("Server", "", "Start", fmt.Sprintf("%d Cannot use existing listener: %s\n", pid, err), 1)
+			s.sig <- syscall.SIGTERM
+			return
+		}
+
+		// Tell the parent to stop the server now.
+		parent := syscall.Getppid()
+
+		printLog("Server", "", "Start", fmt.Sprintf("%d Telling parent process (%d) to stop server\n", pid, parent), 0)
+		syscall.Kill(parent, syscall.SIGTERM)
+
+		// Give the parent some time.
+		time.Sleep(100 * time.Millisecond)
+
+	} else {
+
+		// It's a new server.
+		printLog("Server", "", "Start", fmt.Sprintf("%d Starting web server on %s\n", pid, address), 0)
+		ln, err = net.Listen("tcp", address)
+		if err != nil {
+			printLog("Server", "", "Start", fmt.Sprintf("%d Cannot listen to %s: %s\n", pid, address, err), 1)
+			s.sig <- syscall.SIGTERM
+			return
+		}
+
+	}
+
+	// We can start the server now.
+	printLog("Server", "", "Start", 	fmt.Sprint(pid, " Serving requests..."), 0)
+
+	s.listener = ln.(*net.TCPListener)
+
+	err = s.server.ServeTLS(tcpKeepAliveListener{s.listener}, cfg.Server.Ssl.Certificate, cfg.Server.Ssl.Key)
 	if err != nil {
-		printLog("Server", "", "main", "Server crash", 1)
+		printLog("Server", "", "Start", 	fmt.Sprintf("%d Web server was shut down: %s\n", pid, err), 2)
 	}
+
+	printLog("Server", "", "Start", 	fmt.Sprint(pid, "Web server has finished"), 0)
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
@@ -146,7 +247,7 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 		ip := GetIP(r)
 
 		//Server push
-		files, err := ls(filepath.ToSlash(cfg.Server.Gui))
+		files, err := lsGui(filepath.ToSlash(cfg.Server.Gui))
 
 		if pusher, ok := w.(http.Pusher); ok {
 			// Push is supported.

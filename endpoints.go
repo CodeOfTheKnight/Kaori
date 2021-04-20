@@ -21,6 +21,10 @@ const (
 	userSettings endpoints = "/settings" //[GET]
 	userBadge    endpoints = "/badge"    //[GET]
 
+		//Endpoint settings
+		settingsGet endpoints = "/get"
+		settingsSet endpoints = "/set"
+
 	//Endpoint auth
 	endpointAuth      endpoints = "/api/auth/"
 	authRefresh       endpoints = "/refresh"
@@ -42,6 +46,20 @@ const (
 	//Endpoint for tests
 	endpointTest endpoints = "/api/test/"
 	testFiles    endpoints = "/files/"
+
+	//ENDPOINT ADMIN
+	endpointAdmin  endpoints = "/api/admin/"
+	adminConfigGet endpoints = "/config/get" //[GET]
+	adminConfigSet endpoints = "/config/set" //[POST] Parametri: JSON con la stessa struttura delle configurazioni ottenute dalla get.
+	adminLogServer endpoints = "/log/server" //[GET] Parametri: ip, functions, user, level, msg, time
+	adminLogConnection endpoints = "/log/connection"
+
+		//ENDPOINT COMMAND
+		adminCommand endpoints = "/command/"
+		commandRestart endpoints = "/restart"
+		commandShutdown endpoints = "/shutdown"
+		commandForcedShutdown endpoints = "/forcedShutdown"
+
 )
 
 func (e endpoints) String() string {

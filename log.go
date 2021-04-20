@@ -10,6 +10,15 @@ import (
 	"time"
 )
 
+type ServerLog struct {
+	Func string
+	Ip string
+	Level string
+	Msg string
+	Time time.Time
+	User string
+}
+
 type HTTPReqInfo struct {
 	Method    string        `json:"method"`
 	Url       string        `json:"url"`
@@ -25,7 +34,7 @@ type HTTPReqInfo struct {
 
 func (ri *HTTPReqInfo) logHTTPReq() {
 	ri.muLogHTTP.Lock()
-	out, err := json.MarshalIndent(ri, "", "  ")
+	out, err := json.Marshal(ri)
 	if err != nil {
 		printLog("Server", "", "logHTTPReq", "Error with JSON: "+err.Error(), 1)
 		return
@@ -77,19 +86,19 @@ func printLog(user, ip, function, msg string, lvl int) {
 		logger.WithFields(logger.Fields{
 			"user":     user,
 			"ip":       ip,
-			"function": function,
+			"func": function,
 		}).Info(msg)
 	case 1: //Error type log
 		logger.WithFields(logger.Fields{
 			"user":     user,
 			"ip":       ip,
-			"function": function,
+			"func": function,
 		}).Error(msg)
 	case 2:
 		logger.WithFields(logger.Fields{
 			"user":     user,
 			"ip":       ip,
-			"function": function,
+			"func": function,
 		}).Warn(msg)
 	}
 }

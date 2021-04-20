@@ -5,7 +5,6 @@ import (
 	"errors"
 	anilist "github.com/kaiserbh/anilistgo/anilist/query"
 	"os"
-	"path/filepath"
 	"strings"
 	"text/template"
 )
@@ -160,7 +159,7 @@ func (md *MusicData) NormalizeName() error {
 
 	var buf bytes.Buffer
 
-	musicName, err := os.ReadFile(filepath.Join(cfg.Template.Music.Path, cfg.Template.Music.Fields["file"]))
+	musicName, err := os.ReadFile(cfg.Template.Music["file"])
 
 	if strings.ToLower(md.Type) == "ending" {
 		md.Type = "ED"

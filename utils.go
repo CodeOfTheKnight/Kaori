@@ -17,6 +17,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -25,8 +27,8 @@ import (
 const littleBoxURI string = "https://litterbox.catbox.moe/resources/internals/api.php"
 const urlAnilist string = "https://anilist.co"
 
-//ls ritorna la path e il nome dei file presenti in una directory.
-func ls(dir string) (files []string, err error) {
+//lsGui ritorna la path e il nome dei file presenti nella cartella KaoriGui.
+func lsGui(dir string) (files []string, err error) {
 	err = filepath.Walk(dir,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -44,6 +46,25 @@ func ls(dir string) (files []string, err error) {
 	}
 	return files, nil
 }
+
+//ls ritorna la path e il nome dei file presenti in una directory.
+func ls(dir string) (files []string, err error) {
+	err = filepath.Walk(dir,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				files = append(files, path)
+			}
+			return nil
+		})
+	if err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
 
 //Restituisce l'IP del client che ha effettuato la richiesta.
 func GetIP(r *http.Request) string {
@@ -74,10 +95,19 @@ func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, er
 	values := make(map[string]interface{})
 
 	for _, param := range params {
+
+		fmt.Println(param)
+
 		keys, err := r.URL.Query()[param.Key]
+
+		fmt.Println(err)
 
 		if (!err || len(keys[0]) < 1) && param.Required == true {
 			return nil, errors.New(fmt.Sprintf("Url Param \"%s\" is missing", param.Key))
+		}
+
+		if err == false || len(keys[0]) < 1 {
+			continue
 		}
 
 		values[param.Key] = keys[0]
@@ -309,4 +339,37 @@ func existUser(email string) bool {
 	} else {
 		return true
 	}
+}
+
+func passwordValid(pws string) error {
+	if len(pws) < 8 {
+		return fmt.Errorf("password len is < 9")
+	}
+	if b, err := regexp.MatchString(`[0-9]{1}`, pws); !b || err != nil {
+		return fmt.Errorf("password need num")
+	}
+	if b, err := regexp.MatchString(`[a-z]{1}`, pws); !b || err != nil {
+		return fmt.Errorf("password need a_z")
+	}
+	if b, err := regexp.MatchString(`[A-Z]{1}`, pws); !b || err != nil {
+		return fmt.Errorf("password need A_Z")
+	}
+	return nil
+}
+
+func portValid(port string) error {
+	portInt, err := strconv.Atoi(strings.Trim(port, ":"))
+	if err != nil {
+		return errors.New("Invalid Port: Conversion of port to int not valid")
+	}
+
+	if portInt < 1024 || portInt > 49151 {
+		return errors.New("Port not valid. [1024-49151]")
+	}
+	return nil
+}
+
+func checkHash(hash string) bool {
+	ok, _ := regexp.MatchString(`^#[0-9A-F]{6}$`, hash)
+	return ok
 }

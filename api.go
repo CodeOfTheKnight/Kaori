@@ -1,12 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"cloud.google.com/go/firestore"
 	"encoding/json"
 	"fmt"
+	"github.com/mitchellh/mapstructure"
+	"io"
+	"log"
 	"net/http"
-	"path/filepath"
 	"strconv"
+	"strings"
+	"syscall"
 	"time"
 )
 
@@ -35,6 +40,154 @@ func ApiUserExist(w http.ResponseWriter, r *http.Request) {
 	exist := existUser(params["email"].(string))
 
 	w.Write([]byte(fmt.Sprintf(`{"exist": "%v"}`, exist)))
+}
+
+func ApiUserInfo(w http.ResponseWriter, r *http.Request){
+
+	mappa := r.Context().Value("values").(ContextValues)
+	fmt.Println(mappa)
+
+	//Get document
+	document, err := kaoriUser.Client.c.Collection("User").
+										Doc(mappa.Get("email")).
+										Get(kaoriUser.Client.ctx)
+
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error database: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	userData := document.Data()
+
+	data, err := json.Marshal(userData)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error create JSON: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	w.Write(data)
+}
+
+//API USER SETTINGS
+
+func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
+
+	var s Settings
+
+	mappa := r.Context().Value("values").(ContextValues)
+	fmt.Println(mappa)
+
+	printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "[Start] Get settings", 0)
+
+	//Get document
+	document, err := kaoriUser.Client.c.Collection("User").
+		Doc(mappa.Get("email")).
+		Get(kaoriUser.Client.ctx)
+
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "Error database: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	userData := document.Data()
+
+	err = mapstructure.Decode(userData["Settings"], &s)
+	if err != nil {
+		log.Println(err)
+	}
+
+	data, err := json.Marshal(s)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "Error create JSON: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "[Done] Get settings", 0)
+
+	w.Write(data)
+
+}
+
+func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
+
+	//var s Settings
+	var u User
+	var m map[string]interface{}
+
+	mappa := r.Context().Value("values").(ContextValues)
+	fmt.Println(mappa)
+
+	printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "[Start] Change settings", 0)
+
+	//Read precedent settings
+	document, err := kaoriUser.Client.c.Collection("User").
+										Doc(mappa.Get("email")).
+										Get(kaoriUser.Client.ctx)
+
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error database: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	//Parse document firebase in users struct
+	err = document.DataTo(&u)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to conversion in settings: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	//Merge with the form submitted by users.
+	err = json.NewDecoder(r.Body).Decode(&u.Settings)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	//Conversion struct settings in a map
+	err = mapstructure.Decode(u.Settings, &m)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to conversion in a map: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	fmt.Println("Settings:", u.Settings)
+
+	//Check settings value
+	if err = u.Settings.IsValid(); err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Data is invalid: " + err.Error(), 1)
+		printErr(w, err.Error())
+		return
+	}
+
+	//Send map to the database
+	_, err =  kaoriUser.Client.c.Collection("User").
+		Doc(mappa.Get("email")).
+		Set(kaoriUser.Client.ctx, m, firestore.MergeAll)
+
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error database: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	//Make JSON response
+	data, err := json.Marshal(u.Settings)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to create JSON: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "[Done] Change settings", 0)
+
+	w.Write(data)
 }
 
 //API AUTH
@@ -248,18 +401,30 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request) {
 
 func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
-	// Declare a new MusicData struct.
 	var u User
+
+	// Declare a new MusicData struct.
+	user := struct {
+		Email          string `json:"email"`
+		Username       string `json:"username"`
+		Password       string `json:"password"`
+		ProfilePicture string `json:"profilePicture,omitempty"`
+	}{}
 
 	ip := GetIP(r)
 
 	// Try to decode the request body into the struct. If there is an error,
 	// respond to the client with the error message and a 400 status code.
-	err := json.NewDecoder(r.Body).Decode(&u)
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		printErr(w, err.Error())
 		return
 	}
+
+	u.Email = user.Email
+	u.Username = user.Username
+	u.Password = user.Password
+	u.ProfilePicture = user.ProfilePicture
 
 	err = u.IsValid()
 	if err != nil {
@@ -330,8 +495,8 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Send mails
-	signupField := cfg.Template.Mail.Fields["registration"]
-	err = sendEmail(u.Email, signupField.Object, c, filepath.Join(cfg.Template.Mail.Path, signupField.File))
+	signupField := cfg.Template.Mail["registration"]
+	err = sendEmail(u.Email, signupField.Object, c, signupField.File)
 	if err != nil {
 		printLog("General", ip, "ApiSignUp", "Error to send mail: "+err.Error(), 1)
 		return
@@ -376,10 +541,16 @@ func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 	_, err = kaoriUser.Client.c.Collection("User").Doc(p["email"].(string)).
 		Set(kaoriUser.Client.ctx, map[string]bool{"IsActive": true}, firestore.MergeAll)
 
-	//Redirect to login
-	data, err := parseTemplateHtml(cfg.Template.Html.Redirect, "https://"+cfg.Server.Host+cfg.Server.Port+endpointLogin.String())
 	if err != nil {
 		printLog(p["email"].(string), ip, "ApiConfirmSignup", "Error database: "+err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+	//Redirect to login
+	data, err := parseTemplateHtml(cfg.Template.Html["redirect"], "https://"+cfg.Server.Host+cfg.Server.Port+endpointLogin.String())
+	if err != nil {
+		printLog(p["email"].(string), ip, "ApiConfirmSignup", "Error to create template: "+err.Error(), 1)
 		printInternalErr(w)
 		return
 	}
@@ -397,6 +568,7 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 	tokenString := ExtractToken(r)
 	metadata, err := ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
 	if err != nil {
+		printLog("General", ip, "ApiConfigGet", "Error to extract access token metadata: " + err.Error(), 1)
 		printErr(w, err.Error())
 		return
 	}
@@ -453,6 +625,235 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 	err = md.AddDataToTmpDatabase()
 	if err != nil {
 		printLog(metadata.Email, ip, "ApiAddMusic", "Error to add music data to the temp database: "+err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+}
+
+//API ADMIN
+
+func ApiConfigGet(w http.ResponseWriter, r *http.Request){
+
+	ip := GetIP(r)
+
+	//Extract token JWT
+	tokenString := ExtractToken(r)
+	metadata, err := ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
+	if err != nil {
+		printLog("General", ip, "ApiConfigGet", "Error to extract access token metadata: " + err.Error(), 1)
+		printErr(w, err.Error())
+		return
+	}
+
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		printLog(metadata.Email, ip, "ApiConfigGet", "Error to create JSON of config struct: " + err.Error(), 1)
+	}
+
+	w.Write(data)
+
+	printLog(metadata.Email, ip, "ApiConfigGet", "The user has read the settings", 0)
+}
+
+func ApiConfigSet(w http.ResponseWriter, r *http.Request){
+
+	var cfg2 Config
+	cfg2 = *cfg
+
+	mappa := r.Context().Value("values").(ContextValues)
+	data, _ := io.ReadAll(r.Body)
+
+	err := json.NewDecoder(bytes.NewReader(data)).Decode(&cfg2)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiConfigSet", "Error to create JSON: " + err.Error(), 1)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	//Check configuration validity
+	if err = cfg2.CheckConfig(); err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiConfigSet", "Config not valid: " + err.Error(), 1)
+		printErr(w, "Config not valid: " + err.Error())
+		return
+	}
+
+	wdone, err := cfg2.WriteConfig()
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiConfigSet", "Error to write config: "+err.Error(), 1)
+		http.Error(w, fmt.Sprintf("{\"code\": 500, \"msg\": \"%s\"}\n", strings.Join(wdone, "\n")), http.StatusInternalServerError)
+		return
+	}
+
+	//TODO: Change file config
+	//TODO: Reboot
+	fmt.Println(cfg2)
+
+	w.Write([]byte(fmt.Sprintf("{\"code\": 200, \"msg\": \"\n%s\"}\n", strings.Join(wdone, "\n"))))
+}
+
+/*func ApiLogServer(w http.ResponseWriter, r *http.Request){
+
+	var logs []*ServerLog
+
+	mappa := r.Context().Value("values").(ContextValues)
+
+	set := []ParamsInfo{
+		{Key: "func", Required: false},
+		{Key: "ip", Required: false},
+		{Key: "user", Required: false},
+		{Key: "msg", Required: false},
+		{Key: "level", Required: false},
+		{Key: "time", Required: false},
+		{Key: "order", Required: false},
+	}
+
+	params, err := getParams(set, r)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to get params: "+err.Error(), 1)
+		printErr(w, err.Error())
+		return
+	}
+
+	fmt.Println(params)
+
+	f, err := os.Open("log/server.log.json")
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to open log file: "+ err.Error(),1 )
+		printInternalErr(w)
+		return
+	}
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+
+		var logSrv ServerLog
+
+		err = json.Unmarshal(scanner.Bytes(), &logSrv)
+		if err != nil {
+			log.Println(err)
+			printInternalErr(w)
+			return
+		}
+
+		orderSlice := strings.Split(params["order"].(string), ",")
+		for _, value := range orderSlice {
+
+			var find bool
+
+			switch value {
+			case "func":
+				if logSrv.Func == params["func"].(string){
+					logs = append(logs, &logSrv)
+					find = true
+				}
+			case "ip":
+				if logSrv.Ip == params["ip"].(string){
+					logs = append(logs, &logSrv)
+					find = true
+				}
+			case "level":
+				if logSrv.Level == params["level"].(string){
+					logs = append(logs, &logSrv)
+					find = true
+				}
+			case "msg":
+				if strings.Contains(logSrv.Msg, params["msg"].(string)) {
+					logs = append(logs, &logSrv)
+					find = true
+				}
+			case "time":
+				dateString := params["time"].(string)
+				if strings.Contains(params["time"].(string), "-") {
+
+					dateMatrix := strings.Split(dateString, "-")
+
+					i, err := strconv.ParseInt(dateMatrix[0], 10, 64)
+					if err != nil {
+						log.Println(err)
+						printInternalErr(w)
+						return
+					}
+					date1 := time.Unix(i, 0)
+
+					i, err = strconv.ParseInt(dateMatrix[1], 10, 64)
+					if err != nil {
+						log.Println(err)
+						printInternalErr(w)
+						return
+					}
+					date2 := time.Unix(i, 0)
+
+					if logSrv.Time.Unix() >= date1.Unix() && logSrv.Time.Unix() <= date2.Unix() {
+						logs = append(logs, &logSrv)
+						find = true
+					}
+				} else {
+
+					i, err := strconv.ParseInt(dateString, 10, 64)
+					if err != nil {
+						log.Println(err)
+						printInternalErr(w)
+						return
+					}
+					date := time.Unix(i, 0)
+
+					if logSrv.Time.Unix() == date.Unix() {
+						logs = append(logs, &logSrv)
+						find = true
+					}
+				}
+			case "user":
+				if logSrv.User == params["user"].(string) {
+					logs = append(logs, &logSrv)
+					find = true
+				}
+			}
+
+			if find {
+				break
+			}
+
+		}
+	}
+
+	for _, log := range logs{
+		fmt.Println(log)
+	}
+
+}*/
+
+//API ADMIN COMMAND
+
+func ApiCommandRestart(w http.ResponseWriter, r *http.Request){
+
+	mappa := r.Context().Value("values").(ContextValues)
+
+	err := syscall.Kill(syscall.Getpid(), syscall.SIGUSR1)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandRestart", "Error to send signal: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+
+}
+
+func ApiCommandShutdown(w http.ResponseWriter, r *http.Request) {
+	mappa := r.Context().Value("values").(ContextValues)
+
+	err := syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandShutdown", "Error to send signal: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
+}
+
+func ApiCommandForcedShutdown(w http.ResponseWriter, r *http.Request) {
+	mappa := r.Context().Value("values").(ContextValues)
+
+	err := syscall.Kill(syscall.Getpid(), syscall.SIGTERM)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandForcedShutdown", "Error to send signal: " + err.Error(), 1)
 		printInternalErr(w)
 		return
 	}
