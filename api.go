@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"cloud.google.com/go/firestore"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"syscall"
@@ -691,30 +693,57 @@ func ApiConfigSet(w http.ResponseWriter, r *http.Request){
 	w.Write([]byte(fmt.Sprintf("{\"code\": 200, \"msg\": \"\n%s\"}\n", strings.Join(wdone, "\n"))))
 }
 
-/*func ApiLogServer(w http.ResponseWriter, r *http.Request){
+func ApiLogServer(w http.ResponseWriter, r *http.Request){
 
 	var logs []*ServerLog
+	var err error
+	var params map[string]interface{}
+	var logsString []string
 
 	mappa := r.Context().Value("values").(ContextValues)
 
-	set := []ParamsInfo{
-		{Key: "func", Required: false},
-		{Key: "ip", Required: false},
-		{Key: "user", Required: false},
-		{Key: "msg", Required: false},
-		{Key: "level", Required: false},
-		{Key: "time", Required: false},
-		{Key: "order", Required: false},
+
+	if r.Method == http.MethodGet{
+		set := []ParamsInfo{
+			{Key: "func", Required: false},
+			{Key: "ip", Required: false},
+			{Key: "user", Required: false},
+			{Key: "msg", Required: false},
+			{Key: "level", Required: false},
+			{Key: "time", Required: false},
+			{Key: "order", Required: false},
+		}
+
+		params, err = getParams(set, r)
+		if err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to get params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
+
+		if err = checkFiltersLogGet(set, params); err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
+
+	} else {
+
+		err = json.NewDecoder(r.Body).Decode(&params)
+		if err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to get JSON params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
+
+		if err = checkFiltersLogPost(params); err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
+
 	}
 
-	params, err := getParams(set, r)
-	if err != nil {
-		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to get params: "+err.Error(), 1)
-		printErr(w, err.Error())
-		return
-	}
-
-	fmt.Println(params)
 
 	f, err := os.Open("log/server.log.json")
 	if err != nil {
@@ -723,104 +752,198 @@ func ApiConfigSet(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
+	orderSlice := strings.Split(params["order"].(string), ",")
+
+	//Primo grande filtro
+
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 
-		var logSrv ServerLog
+		val := scanner.Bytes()
 
-		err = json.Unmarshal(scanner.Bytes(), &logSrv)
+		var objmap map[string]json.RawMessage
+		err = json.Unmarshal(val, &objmap)
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
+			return
+		}
+
+		str, err := objmap[orderSlice[0]].MarshalJSON()
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+
+		if strings.Trim(string(str), "\"") == params[orderSlice[0]].(string) {
+			logsString = append(logsString, string(val))
+		}
+
+
+	}
+
+	if len(orderSlice) != 1 {
+
+		//Other filters
+		for _, filter := range orderSlice[1:] {
+			logsString, err = filterLog(logsString, filter, params[filter].(string))
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}
+	}
+
+	for _, item := range logsString {
+
+		var sl ServerLog
+
+		err = json.Unmarshal([]byte(item), &sl)
+		if err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to create JSON of single log: "+ err.Error(),1 )
 			printInternalErr(w)
 			return
 		}
 
-		orderSlice := strings.Split(params["order"].(string), ",")
-		for _, value := range orderSlice {
+		logs = append(logs, &sl)
 
-			var find bool
+	}
 
-			switch value {
-			case "func":
-				if logSrv.Func == params["func"].(string){
-					logs = append(logs, &logSrv)
-					find = true
-				}
-			case "ip":
-				if logSrv.Ip == params["ip"].(string){
-					logs = append(logs, &logSrv)
-					find = true
-				}
-			case "level":
-				if logSrv.Level == params["level"].(string){
-					logs = append(logs, &logSrv)
-					find = true
-				}
-			case "msg":
-				if strings.Contains(logSrv.Msg, params["msg"].(string)) {
-					logs = append(logs, &logSrv)
-					find = true
-				}
-			case "time":
-				dateString := params["time"].(string)
-				if strings.Contains(params["time"].(string), "-") {
+	data, err := json.Marshal(logs)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to create JSON of slice log: "+ err.Error(),1 )
+		printInternalErr(w)
+		return
+	}
 
-					dateMatrix := strings.Split(dateString, "-")
+	w.Write(data)
+}
 
-					i, err := strconv.ParseInt(dateMatrix[0], 10, 64)
-					if err != nil {
-						log.Println(err)
-						printInternalErr(w)
-						return
-					}
-					date1 := time.Unix(i, 0)
+func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 
-					i, err = strconv.ParseInt(dateMatrix[1], 10, 64)
-					if err != nil {
-						log.Println(err)
-						printInternalErr(w)
-						return
-					}
-					date2 := time.Unix(i, 0)
+	var logsString []string
+	var logs []*HTTPReqInfo
+	var err error
+	var params map[string]interface{}
 
-					if logSrv.Time.Unix() >= date1.Unix() && logSrv.Time.Unix() <= date2.Unix() {
-						logs = append(logs, &logSrv)
-						find = true
-					}
-				} else {
+	mappa := r.Context().Value("values").(ContextValues)
 
-					i, err := strconv.ParseInt(dateString, 10, 64)
-					if err != nil {
-						log.Println(err)
-						printInternalErr(w)
-						return
-					}
-					date := time.Unix(i, 0)
+	if r.Method == http.MethodGet {
+		set := []ParamsInfo{
+			{Key: "method", Required: false},
+			{Key: "url", Required: false},
+			{Key: "ref", Required: false},
+			{Key: "ip", Required: false},
+			{Key: "code", Required: false},
+			{Key: "size", Required: false},
+			{Key: "duration", Required: false},
+			{Key: "data", Required: false},
+			{Key: "agent", Required: false},
+			{Key: "order", Required: true},
+		}
 
-					if logSrv.Time.Unix() == date.Unix() {
-						logs = append(logs, &logSrv)
-						find = true
-					}
-				}
-			case "user":
-				if logSrv.User == params["user"].(string) {
-					logs = append(logs, &logSrv)
-					find = true
-				}
-			}
+		params, err = getParams(set, r)
+		if err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to get params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
 
-			if find {
-				break
-			}
+		if err = checkFiltersLogGet(set, params); err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
 
+	} else {
+		err = json.NewDecoder(r.Body).Decode(&params)
+		if err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to get JSON params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
+		}
+
+		if err = checkFiltersLogPost(params); err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error params: "+err.Error(), 1)
+			printErr(w, err.Error())
+			return
 		}
 	}
 
-	for _, log := range logs{
-		fmt.Println(log)
+
+	f, err := os.Open("log/connection.log.json")
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to open log file: "+ err.Error(),1 )
+		printInternalErr(w)
+		return
 	}
 
-}*/
+	orderSlice := strings.Split(params["order"].(string), ",")
+
+	//Primo grande filtro
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+
+		val := scanner.Bytes()
+
+		var objmap map[string]json.RawMessage
+		err = json.Unmarshal(val, &objmap)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+
+		str, err := objmap[orderSlice[0]].MarshalJSON()
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+
+		if strings.Trim(string(str), "\"") == params[orderSlice[0]].(string) {
+			logsString = append(logsString, string(val))
+		}
+
+
+	}
+
+	if len(orderSlice) != 1 {
+
+		//Other filters
+		for _, filter := range orderSlice[1:] {
+			logsString, err = filterLog(logsString, filter, params[filter].(string))
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}
+	}
+
+
+	for _, item := range logsString {
+
+		var hl HTTPReqInfo
+
+		err = json.Unmarshal([]byte(item), &hl)
+		if err != nil {
+			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to create JSON of single log: "+ err.Error(),1 )
+			printInternalErr(w)
+			return
+		}
+
+		logs = append(logs, &hl)
+
+	}
+
+	data, err := json.Marshal(logs)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to create JSON of slice log: "+ err.Error(),1 )
+		printInternalErr(w)
+		return
+	}
+
+	w.Write(data)
+
+}
 
 //API ADMIN COMMAND
 

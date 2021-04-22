@@ -22,13 +22,13 @@ type ServerLog struct {
 type HTTPReqInfo struct {
 	Method    string        `json:"method"`
 	Url       string        `json:"url"`
-	Referer   string        `json:"referer"`
-	Ipaddr    string        `json:"ipaddr"`
+	Referer   string        `json:"ref"`
+	Ipaddr    string        `json:"ip"`
 	Code      int           `json:"code"` //Response Code 200, 400 ecc.
 	Size      int64         `json:"size"` //Numero byte della risposta
 	Duration  time.Duration `json:"duration"`
 	Data      int64         `json:"data"`
-	UserAgent string        `json:"userAgent"`
+	UserAgent string        `json:"agent"`
 	muLogHTTP sync.Mutex
 }
 
@@ -101,4 +101,8 @@ func printLog(user, ip, function, msg string, lvl int) {
 			"func": function,
 		}).Warn(msg)
 	}
+}
+
+func (srvLog *ServerLog) Filter(filter string){
+
 }

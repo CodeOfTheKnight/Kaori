@@ -81,8 +81,9 @@ func RouterInit() *mux.Router {
 	//Rotte API admin
 	routerAdmin.Path(adminConfigGet.String()).HandlerFunc(ApiConfigGet).Methods(http.MethodGet)
 	routerAdmin.Path(adminConfigSet.String()).HandlerFunc(ApiConfigSet).Methods(http.MethodPost)
-	//routerAdmin.Path(adminLogServer.String()).HandlerFunc(ApiLogServer).Methods(http.MethodGet)
-	//routerAdmin.Path(adminLogConnection.String()).HandlerFunc(ApiLogConnection).Methods(http.MethodGet)
+	routerAdmin.Path(adminLogServer.String()).HandlerFunc(ApiLogServer).Methods(http.MethodGet, http.MethodPost)
+	//TODO: Da fare anche l'API per il log delle connessioni.
+	routerAdmin.Path(adminLogConnection.String()).HandlerFunc(ApiLogConnection).Methods(http.MethodGet, http.MethodPost)
 
 		//Rotte API command
 		routerCommand.Path(commandRestart.String()).HandlerFunc(ApiCommandRestart).Methods(http.MethodGet)

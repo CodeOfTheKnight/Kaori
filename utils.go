@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gorilla/securecookie"
@@ -13,6 +14,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -372,4 +374,133 @@ func portValid(port string) error {
 func checkHash(hash string) bool {
 	ok, _ := regexp.MatchString(`^#[0-9A-F]{6}$`, hash)
 	return ok
+}
+
+func filterLog(rows []string, filter string, filterValue string) (r []string, err error) {
+
+	for _, row := range rows {
+
+		var objmap map[string]json.RawMessage
+		err = json.Unmarshal([]byte(row), &objmap)
+		if err != nil {
+			log.Fatal(err)
+			return nil, err
+		}
+
+		str, err := objmap[filter].MarshalJSON()
+		if err != nil {
+			log.Fatal(err)
+			return nil, err
+		}
+
+
+		switch filter {
+		case "msg":
+			if strings.Contains(strings.Trim(string(str), "\""), filterValue) {
+				r = append(r, row)
+			}
+		case "time":
+
+			if strings.Contains(filterValue, "-") {
+				dateMatrix := strings.Split(filterValue, "-")
+
+				i, err := strconv.ParseInt(dateMatrix[0], 10, 64)
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+				date1 := time.Unix(i, 0)
+
+				i, err = strconv.ParseInt(dateMatrix[1], 10, 64)
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+				date2 := time.Unix(i, 0)
+
+				dateLog, err := time.Parse(time.RFC3339, strings.Trim(string(str), "\""))
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+
+				if (dateLog.Unix() >= date1.Unix()) && (dateLog.Unix() <= date2.Unix()){
+					r = append(r, row)
+				}
+			} else {
+
+				i, err := strconv.ParseInt(filterValue, 10, 64)
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+				date := time.Unix(i, 0)
+
+				dateLog, err := time.Parse(time.RFC3339, strings.Trim(string(str), "\""))
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+
+				if dateLog.Unix() >= date.Unix() {
+					r = append(r, row)
+				}
+			}
+
+		default:
+			if strings.Trim(string(str), "\"") == filterValue {
+				r = append(r, row)
+			}
+		}
+
+	}
+	return r, err
+}
+
+func checkFiltersLogGet(params []ParamsInfo, values map[string]interface{}) error {
+
+	 keys := strings.Split(values["order"].(string), ",")
+
+	 myFunc := func(params []ParamsInfo, key string) bool {
+	 	for _, param := range params {
+	 		if param.Key == key {
+	 			return true
+			}
+		}
+		return false
+	 }
+
+	 for _, key := range keys {
+	 	if !myFunc(params, key) {
+	 		return errors.New("Params in order filed not valid!")
+		}
+	 }
+
+	 return nil
+}
+
+func checkFiltersLogPost(values map[string]interface{}) error {
+	var keys []string
+	orders := strings.Split(values["order"].(string), ",")
+
+	for key, _ := range values {
+		keys = append(keys, key)
+	}
+
+	myFunc := func(keys []string, order string) bool {
+		for _, key := range keys {
+			if key == order {
+				return true
+			}
+		}
+		return false
+	}
+
+	for _, order := range orders {
+		if !myFunc(keys, order) {
+			return errors.New("Params in order filed not valid!")
+		}
+	}
+
+	return nil
 }
