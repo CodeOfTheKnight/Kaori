@@ -2,14 +2,10 @@
 
 template:
   mail:
-    path: "template/email"
-    fields:
-      registration:
-        file: "registrazione.txt"
-        object: "CONFERMA REGISTRAZIONE"
+    registration:
+      file: "template/email/registrazione.txt"
+      object: "CONFERMA REGISTRAZIONE"
   music:
-    path: "template/music"
-    fields:
-      name: "name.tmpl"
+    name: "template/music/name.tmpl"
   html:
     redirect: "template/html/redirect.html"
