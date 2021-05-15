@@ -7,3 +7,6 @@ database:
   #User database
   - projectId: "kaoriuser-fbae1"
     key: "database/kaoriuser-fbae1-firebase-adminsdk-1dfp8-d23953ad42.json"
+  #Data database
+  - projectId: "kaori2-54a5b"
+    key: "database/kaori2-54a5b-firebase-adminsdk-dacva-759b34a9f4.json"
