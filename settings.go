@@ -78,8 +78,8 @@ type JWTConfig struct {
 
 //JWTExpConfig è una struttura con le impostazioni di scadenza dei JWT.
 type JWTExpConfig struct {
-	AccessToken string `yaml:"accessToken" json:"accessToken,omitempty"`
-	RefreshToken string `yaml:"refreshToken" json:"refreshToken,omitempty"`
+	AccessToken int `yaml:"accessToken" json:"accessToken,omitempty"`
+	RefreshToken int `yaml:"refreshToken" json:"refreshToken,omitempty"`
 }
 
 //SSLConfig è una struttura con le impostazioni dei certificati SSL.

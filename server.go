@@ -96,6 +96,12 @@ func init() {
 		panic(err)
 	}
 
+	kaoriDataDB, err = NewDatabase(cfg.Database[2].ProjectId, cfg.Database[2].Key)
+	if err != nil {
+		printLog("Server", "", "init", err.Error(), 1)
+		panic(err)
+	}
+
 	printLog("Server", "", "init", "Setting Database done", 0)
 
 	//Create limiter middleware
@@ -188,7 +194,7 @@ func (s *Server) Start() {
 	)
 
 	pid := os.Getpid()
-	address := cfg.Server.Host + cfg.Server.Port
+	address := "0.0.0.0" + cfg.Server.Port
 
 	// If this is a forked child process, we'll use its connection.
 	isFork := os.Getenv("FORKED_SERVER") != ""

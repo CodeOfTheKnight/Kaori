@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -143,6 +144,8 @@ func (s *Settings) IsValid() error {
 
 //IsValid verifica che i dati delle preferenze grafiche inviati dall'utente siano corretti.
 func (gs *GraphicSettings) IsValid() error {
+
+	fmt.Println("PRIMARY", gs.Primary)
 
 	if !checkHash(gs.Background) {
 		if gs.Background != "" {

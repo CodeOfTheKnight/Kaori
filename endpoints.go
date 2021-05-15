@@ -9,7 +9,7 @@ const (
 
 	//Endpoint per servizio
 	endpointService endpoints = "/api/service/"
-	serviceAnime    endpoints = "/anime"   //[GET] Parametri: IdAnilist
+	serviceAnime    endpoints = "/anime/{id:[0-9]+}"   //[GET] Parametri: IdAnilist
 	serviceManga    endpoints = "/manga"   //[GET] Parametri: IdAnilist
 	serviceChapter  endpoints = "/chapter" //[GET] Parametri: IdAnilist, numEpisodio, sito
 	serviceEpisode  endpoints = "/episode" //[GET] Parametri: IdAnilist, numCapitolo, sito
@@ -20,10 +20,6 @@ const (
 	userInfo     endpoints = "/info"     //[GET]
 	userSettings endpoints = "/settings" //[GET]
 	userBadge    endpoints = "/badge"    //[GET]
-
-		//Endpoint settings
-		settingsGet endpoints = "/get"
-		settingsSet endpoints = "/set"
 
 	//Endpoint auth
 	endpointAuth      endpoints = "/api/auth/"
@@ -49,10 +45,10 @@ const (
 
 	//ENDPOINT ADMIN
 	endpointAdmin  endpoints = "/api/admin/"
-	adminConfigGet endpoints = "/config/get" //[GET]
-	adminConfigSet endpoints = "/config/set" //[POST] Parametri: JSON con la stessa struttura delle configurazioni ottenute dalla get.
+	adminConfig endpoints = "/config" //[GET]
 	adminLogServer endpoints = "/log/server" //[GET] Parametri: ip, functions, user, level, msg, time
 	adminLogConnection endpoints = "/log/connection"
+	adminAnimeInsert endpoints = "/anime/insert" // [POST] Serve per caricare un anime nel database
 
 		//ENDPOINT COMMAND
 		adminCommand endpoints = "/command/"

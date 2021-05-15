@@ -15,6 +15,7 @@ import (
 	"image/png"
 	"io"
 	"log"
+	"mime"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -237,10 +238,11 @@ func setCookies(w http.ResponseWriter, token string) error {
 	}
 	if encoded, err := s.Encode(cfg.Jwt.Iss, value); err == nil {
 		cookie := &http.Cookie{
-			Name:     cfg.Jwt.Iss,
+			Name: cfg.Jwt.Iss,
 			Value:    encoded,
-			Secure:   true,
+			Secure:   false,
 			HttpOnly: false,
+			Path: "/",
 		}
 		fmt.Println("COOKIE", cookie)
 		http.SetCookie(w, cookie)
@@ -372,7 +374,7 @@ func portValid(port string) error {
 }
 
 func checkHash(hash string) bool {
-	ok, _ := regexp.MatchString(`^#[0-9A-F]{6}$`, hash)
+	ok, _ := regexp.MatchString(`^#(?:[0-9a-fA-F]{3}){1,2}$`, hash)
 	return ok
 }
 
@@ -503,4 +505,22 @@ func checkFiltersLogPost(values map[string]interface{}) error {
 	}
 
 	return nil
+}
+
+func hasContentType(r *http.Request, mimetype string) bool {
+	contentType := r.Header.Get("Content-type")
+	if contentType == "" {
+		return mimetype == "application/octet-stream"
+	}
+
+	for _, v := range strings.Split(contentType, ",") {
+		t, _, err := mime.ParseMediaType(v)
+		if err != nil {
+			break
+		}
+		if t == mimetype {
+			return true
+		}
+	}
+	return false
 }

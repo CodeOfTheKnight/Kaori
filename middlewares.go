@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	logger "github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -65,12 +66,94 @@ func (amp *AuthMiddlewarePerm) authmiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func refreshMiddleware(next http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		ip := GetIP(r)
+
+		//Get token from cookies
+		cookieData, err := getCookies(r)
+		if err != nil {
+			printLog("General", ip, "ApiRefresh", "Error to get cookies: "+err.Error(), 1)
+			redirect, err := parseTemplate(cfg.Template.Html["redirect"], "https://" + cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			if err != nil {
+				logger.WithFields(logger.Fields{
+					"function": "refreshMiddleware",
+					"ip": ip,
+				}).Error("Unable to parse email template")
+				printInternalErr(w)
+				return
+			}
+			w.Write([]byte(redirect))
+			return
+		}
+
+		token := cookieData["RefreshToken"]
+
+		//Extract data from token
+		data, err := ExtractRefreshTokenMetadata(token, cfg.Password.RefreshToken)
+		if err != nil {
+			printLog("General", ip, "ApiRefresh", "Extract refresh token error: "+err.Error(), 1)
+			redirect, err := parseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			if err != nil {
+				logger.WithFields(logger.Fields{
+					"function": "refreshMiddleware",
+					"ip": ip,
+				}).Error("Unable to parse email template")
+				printInternalErr(w)
+				return
+			}
+			w.Write([]byte(redirect))
+			return
+		}
+
+		//Check validity
+		if !VerifyRefreshToken(data.Email, data.RefreshId) {
+			printLog(data.Email, ip, "ApiRefresh", "Token not valid", 2)
+			redirect, err := parseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			if err != nil {
+				logger.WithFields(logger.Fields{
+					"function": "refreshMiddleware",
+					"ip": ip,
+				}).Error("Unable to parse email template")
+				printInternalErr(w)
+				return
+			}
+			w.Write([]byte(redirect))
+			return
+		}
+
+		if !VerifyExpireDate(data.Exp) {
+			printLog(data.Email, ip, "ApiRefresh", "Token expired", 2)
+			redirect, err := parseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			if err != nil {
+				logger.WithFields(logger.Fields{
+					"function": "refreshMiddleware",
+					"ip": ip,
+				}).Error("Unable to parse email template")
+				printInternalErr(w)
+				return
+			}
+			w.Write([]byte(redirect))
+			return
+		}
+
+		w.Write([]byte(`{"code": 200, "msg": "OK"}`))
+
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
+
+	})
+}
+
 func enableCors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers:", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "*")
 		w.Header().Set("Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		next.ServeHTTP(w, r)
 	})
 }

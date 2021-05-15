@@ -6,11 +6,13 @@ import (
 	"cloud.google.com/go/firestore"
 	"encoding/json"
 	"fmt"
+	"github.com/CodeOfTheKnight/kaoriData"
 	"github.com/mitchellh/mapstructure"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"syscall"
@@ -24,27 +26,9 @@ type ParamsInfo struct {
 
 //API USER
 
-func ApiUserExist(w http.ResponseWriter, r *http.Request) {
-
-	ip := GetIP(r)
-
-	set := []ParamsInfo{
-		{Key: "email", Required: true},
-	}
-
-	params, err := getParams(set, r)
-	if err != nil {
-		printLog("General", ip, "ApiUserExist", "Error to get params: "+err.Error(), 1)
-		printErr(w, err.Error())
-		return
-	}
-
-	exist := existUser(params["email"].(string))
-
-	w.Write([]byte(fmt.Sprintf(`{"exist": "%v"}`, exist)))
-}
-
 func ApiUserInfo(w http.ResponseWriter, r *http.Request){
+
+	var u User
 
 	mappa := r.Context().Value("values").(ContextValues)
 	fmt.Println(mappa)
@@ -60,9 +44,14 @@ func ApiUserInfo(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	userData := document.Data()
+	err = document.DataTo(&u)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error to create user struct: " + err.Error(), 1)
+		printInternalErr(w)
+		return
+	}
 
-	data, err := json.Marshal(userData)
+	data, err := json.Marshal(u)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error create JSON: " + err.Error(), 1)
 		printInternalErr(w)
@@ -193,6 +182,26 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 }
 
 //API AUTH
+
+func ApiUserExist(w http.ResponseWriter, r *http.Request) {
+
+	ip := GetIP(r)
+
+	set := []ParamsInfo{
+		{Key: "email", Required: true},
+	}
+
+	params, err := getParams(set, r)
+	if err != nil {
+		printLog("General", ip, "ApiUserExist", "Error to get params: "+err.Error(), 1)
+		printErr(w, err.Error())
+		return
+	}
+
+	exist := existUser(params["email"].(string))
+
+	w.Write([]byte(fmt.Sprintf(`{"exist": "%v"}`, exist)))
+}
 
 func ApiLogin(w http.ResponseWriter, r *http.Request) {
 
@@ -560,6 +569,33 @@ func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(data))
 }
 
+//API SERVICE
+
+func ApiServiceAnime(w http.ResponseWriter, r *http.Request) {
+
+	var a kaoriData.Anime
+	//var eps []*Episode
+
+	//GetIP
+	//ip := GetIP(r)
+
+	//Get anime id
+	u := r.URL.Path
+	id := filepath.Base(u)
+
+	fmt.Println("ID:", id)
+
+	a.Id = id
+
+	err := a.GetAnimeFromDb(kaoriDataDB.Client.c, kaoriDataDB.Client.ctx)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Println(a)
+}
+
 //API ADD-DATA
 
 func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
@@ -711,7 +747,7 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 			{Key: "msg", Required: false},
 			{Key: "level", Required: false},
 			{Key: "time", Required: false},
-			{Key: "order", Required: false},
+			{Key: "order", Required: true},
 		}
 
 		params, err = getParams(set, r)
@@ -943,6 +979,32 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 
 	w.Write(data)
 
+}
+
+func ApiAnimeInsert(w http.ResponseWriter, r *http.Request) {
+
+	var a kaoriData.Anime
+
+	mappa := r.Context().Value("values").(ContextValues)
+
+	//Read client data
+	err := json.NewDecoder(r.Body).Decode(&a)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
+		printErr(w, err.Error())
+		return
+	}
+
+
+
+	err = a.SendToDb(kaoriDataDB.Client.c, kaoriDataDB.Client.ctx)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
+		printErr(w, err.Error())
+		return
+	}
+
+	fmt.Println("ARCHIVE:", a.Episodes[0].Videos)
 }
 
 //API ADMIN COMMAND

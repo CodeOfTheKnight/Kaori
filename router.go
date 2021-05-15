@@ -19,6 +19,9 @@ func RouterInit() *mux.Router {
 	router := mux.NewRouter()
 	router.Use(enableCors) //CORS middleware
 
+	//Creazione router di servizio
+	routerService := router.PathPrefix(endpointService.String()).Subrouter()
+
 	//Creazione subrouter per api di aggiunta dati
 	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()
 	routerAdd.Use(userAuthMiddleware.authmiddleware)
@@ -31,10 +34,6 @@ func RouterInit() *mux.Router {
 	routerUser := router.PathPrefix(endpointUser.String()).Subrouter()
 	routerUser.Use(userAuthMiddleware.authmiddleware)
 
-	//Creazione subrouter per api di settings
-	routerSettings := routerUser.PathPrefix(userSettings.String()).Subrouter()
-	routerSettings.Use(userAuthMiddleware.authmiddleware)
-
 	//Creazione subrouter per api di autenticazione
 	routerAuth := router.PathPrefix(endpointAuth.String()).Subrouter()
 
@@ -46,10 +45,12 @@ func RouterInit() *mux.Router {
 		routerCommand := routerAdmin.PathPrefix(adminCommand.String()).Subrouter()
 
 	//Rotte base
-	router.HandleFunc(endpointRoot.String(), serveIndex)
+	router.Handle(endpointRoot.String(), refreshMiddleware(http.HandlerFunc(serveIndex)))
 	router.HandleFunc(endpointLogin.String(), serveLogin)
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir(cfg.Server.Gui)))
+	router.PathPrefix("/KaoriGui/").Handler(http.StripPrefix("/KaoriGui/", http.FileServer(http.Dir(cfg.Server.Gui))))
 
+	//Rotte service
+	routerService.PathPrefix(serviceAnime.String()).HandlerFunc(ApiServiceAnime)
 	//Rotte API AddData
 	routerAdd.Path(addDataMusic.String()).HandlerFunc(ApiAddMusic).Methods(http.MethodPost)
 
@@ -73,17 +74,15 @@ func RouterInit() *mux.Router {
 
 	//Rotte API user
 	routerUser.Path(userInfo.String()).HandlerFunc(ApiUserInfo).Methods(http.MethodGet)
-
-	//Rotte API settings
-	routerSettings.Path(settingsGet.String()).HandlerFunc(ApiSettingsGet).Methods(http.MethodGet)
-	routerSettings.Path(settingsSet.String()).HandlerFunc(ApiSettingsSet).Methods(http.MethodPost)
+	routerUser.Path(userSettings.String()).HandlerFunc(ApiSettingsGet).Methods(http.MethodGet)
+	routerUser.Path(userSettings.String()).HandlerFunc(ApiSettingsSet).Methods(http.MethodPut)
 
 	//Rotte API admin
-	routerAdmin.Path(adminConfigGet.String()).HandlerFunc(ApiConfigGet).Methods(http.MethodGet)
-	routerAdmin.Path(adminConfigSet.String()).HandlerFunc(ApiConfigSet).Methods(http.MethodPost)
+	routerAdmin.Path(adminConfig.String()).HandlerFunc(ApiConfigGet).Methods(http.MethodGet)
+	routerAdmin.Path(adminConfig.String()).HandlerFunc(ApiConfigSet).Methods(http.MethodPut)
 	routerAdmin.Path(adminLogServer.String()).HandlerFunc(ApiLogServer).Methods(http.MethodGet, http.MethodPost)
-	//TODO: Da fare anche l'API per il log delle connessioni.
 	routerAdmin.Path(adminLogConnection.String()).HandlerFunc(ApiLogConnection).Methods(http.MethodGet, http.MethodPost)
+	routerAdmin.Path(adminAnimeInsert.String()).HandlerFunc(ApiAnimeInsert).Methods(http.MethodPost)
 
 		//Rotte API command
 		routerCommand.Path(commandRestart.String()).HandlerFunc(ApiCommandRestart).Methods(http.MethodGet)

@@ -25,6 +25,7 @@ type ClientFirestore struct {
 var (
 	kaoriTmp *database
 	kaoriUser *database
+	kaoriDataDB *database
 )
 
 func NewDatabase(projId, db string) (*database, error) {

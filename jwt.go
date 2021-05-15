@@ -33,7 +33,7 @@ type JWTContainer struct {
 
 func GenerateTokenPair(email string) (map[string]JWTContainer, error) {
 
-	expire := time.Now().Add(time.Minute * 15).Unix()
+	expire := time.Now().Add(time.Minute * time.Duration(cfg.Jwt.Exp.AccessToken)).Unix()
 
 	//Get permissions
 	document, err := kaoriUser.Client.c.Collection("User").Doc(email).Get(kaoriUser.Client.ctx)
@@ -60,7 +60,7 @@ func GenerateTokenPair(email string) (map[string]JWTContainer, error) {
 	rtClaims := jwt.MapClaims{}
 	rtClaims["refreshId"] = GenerateID()
 	rtClaims["email"] = email
-	rtClaims["exp"] = time.Now().Add(168 * time.Hour) //7 days
+	rtClaims["exp"] = time.Now().Add(time.Duration(cfg.Jwt.Exp.RefreshToken) * time.Minute) //7 days
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
 	refreshToken, err := rt.SignedString([]byte(cfg.Password.RefreshToken))
 	if err != nil {
