@@ -16,8 +16,8 @@ type NoSqlDb struct {
 }
 
 type ClientFirestore struct {
-	c *firestore.Client
-	ctx context.Context
+	C *firestore.Client
+	Ctx context.Context
 }
 
 func NewNoSqlDb(projId, db string) (*NoSqlDb, error) {
@@ -34,18 +34,18 @@ func NewNoSqlDb(projId, db string) (*NoSqlDb, error) {
 }
 
 func (d *NoSqlDb) Connect() error {
-	d.Client.ctx = context.Background()
+	d.Client.Ctx = context.Background()
 
 	conf := &firebase.Config{ProjectID: d.ProjectId}
-	app, err := firebase.NewApp(d.Client.ctx, conf, option.WithCredentialsFile(d.Database))
+	app, err := firebase.NewApp(d.Client.Ctx, conf, option.WithCredentialsFile(d.Database))
 	if err != nil {
 		return errors.New(fmt.Sprintf("error initializing app: %v\n", err.Error()))
 	}
 
-	client, err := app.Firestore(d.Client.ctx)
+	client, err := app.Firestore(d.Client.Ctx)
 	if err != nil {
 		return err
 	}
-	d.Client.c = client
+	d.Client.C = client
 	return nil
 }
