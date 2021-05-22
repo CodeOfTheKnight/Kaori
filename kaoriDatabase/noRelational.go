@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-type database struct {
+type NoSqlDb struct {
 	ProjectId string
 	Database string
 	Client ClientFirestore
@@ -20,8 +20,8 @@ type ClientFirestore struct {
 	ctx context.Context
 }
 
-func NewNoSqlDb(projId, db string) (*database, error) {
-	var d database
+func NewNoSqlDb(projId, db string) (*NoSqlDb, error) {
+	var d NoSqlDb
 
 	d.ProjectId = projId
 	d.Database = db
@@ -33,7 +33,7 @@ func NewNoSqlDb(projId, db string) (*database, error) {
 	return &d, nil
 }
 
-func (d *database) Connect() error {
+func (d *NoSqlDb) Connect() error {
 	d.Client.ctx = context.Background()
 
 	conf := &firebase.Config{ProjectID: d.ProjectId}

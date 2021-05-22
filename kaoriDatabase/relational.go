@@ -16,6 +16,25 @@ type SqlDb struct {
 	client *sql.DB
 }
 
+func NewSqlDb(user, key, host, port, db, driver string) (*SqlDb, error) {
+	d := &SqlDb{
+		Username: user,
+		Password: key,
+		Host:     host,
+		Port:     port,
+		Db:       db,
+		Driver:   driver,
+		client:   nil,
+	}
+
+	err := d.Connect()
+	if err != nil {
+		return nil, err
+	}
+
+	return d, nil
+}
+
 func (sdb *SqlDb) Connect() (err error) {
 
 	sdb.client, err = sql.Open(sdb.Driver, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", sdb.Username, sdb.Password, sdb.Host, sdb.Port, sdb.Db))
