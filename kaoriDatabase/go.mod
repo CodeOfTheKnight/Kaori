@@ -1,4 +1,4 @@
-module github.com/CodeOfTheKnight/Kaori/pkg/kaoriDatabase
+module github.com/CodeOfTheKnight/Kaori/kaoriDatabase
 
 go 1.16
 
