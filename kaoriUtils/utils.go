@@ -37,7 +37,7 @@ const LittleBoxURI string = "https://litterbox.catbox.moe/resources/internals/ap
 const UrlAnilist string = "https://anilist.co"
 
 //Ls ritorna la path e il nome dei file presenti in una directory.
-func ls(dir string) (files []string, err error) {
+func Ls(dir string) (files []string, err error) {
 	err = filepath.Walk(dir,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
