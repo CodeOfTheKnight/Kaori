@@ -27,7 +27,7 @@ func (jm *JWTRefreshMetadata)  GenerateToken(refreshPass string) (string, error)
 	}
 
 	rtClaims := jwt.MapClaims{}
-	rtClaims["refreshId"] = kaoriUtils.GenerateID()
+	rtClaims["refreshId"] = jm.RefreshId
 	rtClaims["email"] = jm.Email
 	rtClaims["exp"] = jm.Exp
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)

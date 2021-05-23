@@ -92,7 +92,7 @@ func (jm *JWTAccessMetadata) GenerateToken(jwtPass string) (string, error) {
 	//Generate Access token
 	atClaims := jwt.MapClaims{}
 	atClaims["iss"] = jm.Iss
-	atClaims["iat"] = time.Now().Unix()
+	atClaims["iat"] = jm.Iat
 	atClaims["exp"] = jm.Exp
 	atClaims["company"] = jm.Company
 	atClaims["email"] = jm.Email
