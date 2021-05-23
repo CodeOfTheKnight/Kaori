@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/CodeOfTheKnight/Kaori/kaoriData"
+	"github.com/CodeOfTheKnight/Kaori/kaoriDatabase"
 	"github.com/fatih/structs"
 	_ "github.com/go-sql-driver/mysql"
 	"google.golang.org/api/iterator"
@@ -41,7 +42,7 @@ func (a *Anime) CheckAnime() error {
 	return nil
 }
 
-func (a *Anime) SendToDb(c *firestore.Client, ctx context.Context) error {
+func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error {
 
 	var eps []*Episode
 	var l string
@@ -50,9 +51,9 @@ func (a *Anime) SendToDb(c *firestore.Client, ctx context.Context) error {
 	eps = a.Episodes
 
 	//Write season info to database
-	_, err := c.Collection("Anime").
+	_, err := db.Client.C.Collection("Anime").
 				Doc(strconv.Itoa(a.Id)).
-				Set(ctx, map[string]string{
+				Set(db.Client.Ctx, map[string]string{
 					"Name": a.Name,
 				}, firestore.MergeAll)
 
@@ -73,7 +74,7 @@ func (a *Anime) SendToDb(c *firestore.Client, ctx context.Context) error {
 			}
 
 			//Send streamLinks and create all collections
-			_, err = c.Collection("Anime").
+			_, err = db.Client.C.Collection("Anime").
 				Doc(strconv.Itoa(a.Id)).
 				Collection("Languages").
 				Doc(video.Language).
@@ -83,17 +84,17 @@ func (a *Anime) SendToDb(c *firestore.Client, ctx context.Context) error {
 				Doc(q).
 				Collection("Servers").
 				Doc(video.Server).
-				Set(ctx, structs.Map(video.StreamLink), firestore.MergeAll)
+				Set(db.Client.Ctx, structs.Map(video.StreamLink), firestore.MergeAll)
 
 			if err != nil {
 				return err
 			}
 
 			//Send language info
-			_, err = c.Collection("Anime").
+			_, err = db.Client.C.Collection("Anime").
 				Doc(strconv.Itoa(a.Id)).
 				Collection("Languages").
-				Doc(video.Language).Set(ctx, map[string]string{
+				Doc(video.Language).Set(db.Client.Ctx, map[string]string{
 				"Modality": video.Modality,
 			}, firestore.MergeAll)
 
@@ -103,7 +104,7 @@ func (a *Anime) SendToDb(c *firestore.Client, ctx context.Context) error {
 			}
 
 			//Send quality info
-			_, err = c.Collection("Anime").
+			_, err = db.Client.C.Collection("Anime").
 				Doc(strconv.Itoa(a.Id)).
 				Collection("Languages").
 				Doc(video.Language).
@@ -111,18 +112,18 @@ func (a *Anime) SendToDb(c *firestore.Client, ctx context.Context) error {
 				Doc(strconv.Itoa(ep.Number)).
 				Collection("Quality").
 				Doc(q).
-				Set(ctx, structs.Map(video.Quality), firestore.MergeAll)
+				Set(db.Client.Ctx, structs.Map(video.Quality), firestore.MergeAll)
 
 		}
 
 		//Send episode data
-		_, err = c.Collection("Anime").
+		_, err = db.Client.C.Collection("Anime").
 										Doc(strconv.Itoa(a.Id)).
 										Collection("Languages").
 										Doc(l).
 										Collection("Episodes").
 										Doc(strconv.Itoa(ep.Number)).
-										Set(ctx, map[string]string{
+										Set(db.Client.Ctx, map[string]string{
 											"Title": ep.Title,
 										}, firestore.MergeAll)
 
@@ -354,11 +355,11 @@ func (a *Anime) GetAnimeEpisodeDb(c *firestore.Client, ctx context.Context) erro
 }
 
 func (a *Anime) SendToKaori(kaoriUrl, token string) error {
-	return kaoriData.sendToKaori(a, kaoriUrl, token)
+	return kaoriData.SendToKaori(a, kaoriUrl, token)
 }
 
 func (a *Anime) AppendFile(filePath string) error {
-	return kaoriData.appendFile(a, filePath)
+	return kaoriData.AppendFile(a, filePath)
 }
 
 func (a *Anime) checkID() error {

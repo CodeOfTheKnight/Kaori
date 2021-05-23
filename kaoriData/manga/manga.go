@@ -28,7 +28,7 @@ type Page struct {
 }
 
 func (m *Manga) SendToKaori(kaoriServer, token string) error {
-	return kaoriData.sendToKaori(m, kaoriServer, token)
+	return kaoriData.SendToKaori(m, kaoriServer, token)
 }
 
 func (m *Manga) SendToDatabase(c *firestore.Client, ctx context.Context) error {
@@ -82,5 +82,5 @@ func (m *Manga) SendToDatabase(c *firestore.Client, ctx context.Context) error {
 }
 
 func (m *Manga) AppendFile(filePath string) error {
-	return kaoriData.appendFile(m, filePath)
+	return kaoriData.AppendFile(m, filePath)
 }

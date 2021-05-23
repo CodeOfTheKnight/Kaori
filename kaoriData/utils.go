@@ -29,7 +29,7 @@ func NormalizeEpNumber(eps []float64) (name string) {
 	return name
 }
 
-func sendToKaori(obj interface{}, kaoriUrl string, token string) error {
+func SendToKaori(obj interface{}, kaoriUrl string, token string) error {
 
 	//Create JSON
 	data, err := json.MarshalIndent(obj, " ", "\t")
@@ -67,7 +67,7 @@ func sendToKaori(obj interface{}, kaoriUrl string, token string) error {
 	return nil
 }
 
-func appendFile(obj interface{}, filePath string) error {
+func AppendFile(obj interface{}, filePath string) error {
 
 	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
