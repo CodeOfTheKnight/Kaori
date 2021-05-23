@@ -1,11 +1,9 @@
 package kaoriSettings
 
-import "github.com/CodeOfTheKnight/Kaori/kaoriDatabase"
-
 //DatabaseConfig è una struttura con le impostazioni del database.
 type DatabaseConfig struct {
-	Relational []kaoriDatabase.SqlDb `yaml:"relational" json:"relational"`
-	NonRelational []kaoriDatabase.NoSqlDb `yaml:"nonRelational" json:"nonRelational"`
+	Relational []DBRelational `yaml:"relational" json:"relational"`
+	NonRelational []DBNonRealtional `yaml:"nonRelational" json:"nonRelational"`
 }
 
 type DBRelational struct {
