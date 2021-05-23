@@ -1,0 +1,5 @@
+# Logger configuration file
+
+logger:
+  connection: "kaoriSrc/log/connection.log.json"
+  server: "kaoriSrc/log/server.log.json"

@@ -1,0 +1,22 @@
+# Database configuration file
+
+database:
+  relational:
+    - username: "KiritoNya"
+      password: "Goghetto1106"
+      host: "127.0.0.1"
+      port: "3306"
+      db: "Kaori"
+  nonRelational:
+    #Music database temp
+    - projectId: "kaori-504c3"
+      key: "kaoriSrc/database/kaori-504c3-firebase-adminsdk-5apba-f66a21203e.json"
+    #User database
+    - projectId: "kaoriuser-fbae1"
+      key: "kaoriSrc/database/kaoriuser-fbae1-firebase-adminsdk-1dfp8-d23953ad42.json"
+    #Data database
+    - projectId: "kaori2-54a5b"
+      key: "kaoriSrc/database/kaori2-54a5b-firebase-adminsdk-dacva-759b34a9f4.json"
+    #Manga database
+    - projectId: "kaorimanga-984f4"
+      key: "kaoriSrc/database/kaorimanga-984f4-firebase-adminsdk-hblzn-e22fde538b.json"

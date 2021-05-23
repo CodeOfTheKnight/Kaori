@@ -1,0 +1,68 @@
+{"func":"Start","ip":"","level":"warning","msg":"860573 Web server was shut down: http: Server closed\n","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"860573Web server has finished","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"872287 Starting web server on 0.0.0.0:8013\n","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"872287 Serving requests...","time":"2021-05-23T23:27:23+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-23T23:36:43+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-23T23:36:43+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-23T23:36:43+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"879976 Starting web server on 0.0.0.0:8013\n","time":"2021-05-23T23:36:43+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"error","msg":"879976 Cannot listen to 0.0.0.0:8013: listen tcp 0.0.0.0:8013: bind: address already in use\n","time":"2021-05-23T23:36:43+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"872287 Web server was shut down: http: Server closed\n","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"872287Web server has finished","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"879999 Starting web server on 0.0.0.0:8013\n","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"879999 Serving requests...","time":"2021-05-23T23:36:47+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"879999 Web server was shut down: http: Server closed\n","time":"2021-05-23T23:59:38+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"879999Web server has finished","time":"2021-05-23T23:59:38+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-24T00:04:11+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-24T00:04:11+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-24T00:04:11+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"895482 Starting web server on 0.0.0.0:8013\n","time":"2021-05-24T00:04:11+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"895482 Serving requests...","time":"2021-05-24T00:04:11+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"895482 Web server was shut down: http: Server closed\n","time":"2021-05-24T00:05:06+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"895482Web server has finished","time":"2021-05-24T00:05:06+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-24T00:05:07+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-24T00:05:07+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-24T00:05:07+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896154 Starting web server on 0.0.0.0:8013\n","time":"2021-05-24T00:05:07+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896154 Serving requests...","time":"2021-05-24T00:05:07+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"896154 Web server was shut down: http: Server closed\n","time":"2021-05-24T00:05:14+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896154Web server has finished","time":"2021-05-24T00:05:14+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-24T00:05:15+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-24T00:05:15+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-24T00:05:15+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896186 Starting web server on 0.0.0.0:8013\n","time":"2021-05-24T00:05:15+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896186 Serving requests...","time":"2021-05-24T00:05:15+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"896186 Web server was shut down: http: Server closed\n","time":"2021-05-24T00:05:17+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896186Web server has finished","time":"2021-05-24T00:05:17+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-24T00:06:02+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-24T00:06:02+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-24T00:06:02+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896901 Starting web server on 0.0.0.0:8013\n","time":"2021-05-24T00:06:02+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896901 Serving requests...","time":"2021-05-24T00:06:02+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"896901 Web server was shut down: http: Server closed\n","time":"2021-05-24T00:06:06+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"896901Web server has finished","time":"2021-05-24T00:06:06+02:00","user":"Server"}
+{"func":"ApiRefresh","ip":"127.0.0.1:49842","level":"error","msg":"Error to get cookies: Cookies not valid!","time":"2021-05-24T00:26:14+02:00","user":"General"}
+{"func":"logHTTPReq","ip":"","level":"error","msg":"Error to open file log/connection.log.json","time":"2021-05-24T00:26:14+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-24T00:27:48+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-24T00:27:48+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-24T00:27:48+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"913184 Starting web server on 0.0.0.0:8013\n","time":"2021-05-24T00:27:48+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"913184 Serving requests...","time":"2021-05-24T00:27:48+02:00","user":"Server"}
+{"func":"logHTTPReq","ip":"","level":"error","msg":"Error to open file log/connection.log.json","time":"2021-05-24T00:27:57+02:00","user":"Server"}
+{"func":"logHTTPReq","ip":"","level":"error","msg":"Error to open file log/connection.log.json","time":"2021-05-24T00:28:05+02:00","user":"Server"}
+{"func":"logHTTPReq","ip":"","level":"error","msg":"Error to open file log/connection.log.json","time":"2021-05-24T00:28:16+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"913184 Web server was shut down: http: Server closed\n","time":"2021-05-24T00:30:33+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"913184Web server has finished","time":"2021-05-24T00:30:33+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database start","time":"2021-05-24T00:30:34+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Database done","time":"2021-05-24T00:30:34+02:00","user":"Server"}
+{"func":"init","ip":"","level":"info","msg":"Setting Limiter done","time":"2021-05-24T00:30:34+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"915483 Starting web server on 0.0.0.0:8013\n","time":"2021-05-24T00:30:34+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"915483 Serving requests...","time":"2021-05-24T00:30:34+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"warning","msg":"915483 Web server was shut down: http: Server closed\n","time":"2021-05-24T00:30:54+02:00","user":"Server"}
+{"func":"Start","ip":"","level":"info","msg":"915483Web server has finished","time":"2021-05-24T00:30:54+02:00","user":"Server"}

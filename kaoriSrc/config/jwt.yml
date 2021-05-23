@@ -1,0 +1,8 @@
+# Jwt configuration file of Kaori
+
+jwt:
+  iss: "KaoriStream.com"
+  company: "CodeOfTheKnight"
+  exp:
+    accessToken: 15
+    refreshToken: 10080

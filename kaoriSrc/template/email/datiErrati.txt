@@ -1,0 +1,41 @@
+Ciao, sono Kaori!! 
+Mi spiace ma i dati inseriti avevano qualche problema!!
+La mail deve seguire questi standard:
+
+==============================
+
+Subject: ADD_DATA | Music
+
+Body:
+
+{
+    "idAnilist": 97832, 
+    "type": "OP", 
+    "numSong": 0, 
+    "isFull": true, 
+    "artist": "nano.RIPE", 
+    "nameSong": "Azalea"
+}
+
+
+Allegati: cover.jpg, audio.mp3
+
+===============================
+
+NOTE:
+
+NB. I nomi degli allegati possono essere diversi basta che siano un'immagine .jpg che sarà la copertina del file mp3 e il file.mp3 che corrisponde alla canzone.
+
+LEGGENDA:
+
+idAnilist: È il codice che trovi nell'URL di una scheda anime del sito "anilist.co"
+
+type: Il tipo di canzone. Può essere "OS, OP, OST, SoundTrack"
+
+numSong: Il numero della cazone. È 0 se non ha altre canzoni oppure settare il numero partendo da 1.
+
+isFull: Scrivere "true" se è una versione FULL oppure "false" se è TvSize.
+
+artist: Parametro non obbligatorio, indica l'artista. Se è più di uno scrivere "&" tra i due nomi.
+
+nameSong: Parametro non obbligatorio, indica il nome della canzone.

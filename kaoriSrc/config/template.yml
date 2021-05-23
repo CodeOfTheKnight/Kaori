@@ -1,0 +1,11 @@
+# Template config of Kaori
+
+template:
+  mail:
+    registration:
+      file: "kaoriSrc/template/email/registrazione.txt"
+      object: "CONFERMA REGISTRAZIONE"
+  music:
+    name: "kaoriSrc/template/music/name.tmpl"
+  html:
+    redirect: "kaoriSrc/template/html/redirect.html"

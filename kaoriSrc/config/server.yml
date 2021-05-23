@@ -1,0 +1,12 @@
+# Server configuration of Kaori
+
+server:
+  host: "127.0.0.1"
+  port: ":8013"
+  ssl:
+    certificate: "kaoriSrc/cert/cert.pem"
+    key: "kaoriSrc/cert/key.pem"
+  limiter: 3
+  gui: "KaoriGui/"
+  test: "kaoriSrc/tests/"
+  template: "kaoriSrc/template/"
