@@ -9,7 +9,7 @@ import (
 )
 
 //configFolder è una costante che definisce la path dove risiedono i file di configurazione.
-const configFolder string = "../config/"
+const configFolder string = "../config"
 
 type error interface {
 	Error() string
