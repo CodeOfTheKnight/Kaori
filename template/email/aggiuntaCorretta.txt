@@ -1,4 +1,0 @@
-Ciao, sono Kaori! 
-L'anime con id {{.IdAnilist}} è stato aggiunto correttamente!!
-
-Grazie per l'aiuto, i dati verranno verificati e convalidati al più presto da un nostro collaboratore. Nel caso in cui tutti dati fossero corretti riceverai una notifica e dei gettoni come premio.

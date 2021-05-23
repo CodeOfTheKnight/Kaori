@@ -1,9 +1,0 @@
-Benvenuto {{.Username}},
-
-Manca un semplice passo per accedere al tuo account KaoriAnime, clicca sul seguente link.
-
-{{.Link}}
-
-Ti ricordiamo che puoi accedere a {{.Login}} utilizzando username e password o l'account Facebook o Google+ che hai utilizzato al momento dell’iscrizione.
-
-Ti aspettiamo su KaoriAnime!

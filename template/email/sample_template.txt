@@ -1,1 +1,0 @@
-Okay ho aggiunto la canzone dell'anime con ID {{.IdAnilist}}!
