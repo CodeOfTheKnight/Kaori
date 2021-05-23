@@ -11,16 +11,13 @@ func RouterInit() *mux.Router {
 
 	//Setting auth middleware
 	userAuthMiddleware := NewAuthMiddlewarePerm(UserPerm)
-	//creatorAuthMiddleware := NewAuthMiddlewarePerm(CreatorPerm)
+	creatorAuthMiddleware := NewAuthMiddlewarePerm(CreatorPerm)
 	testerAuthMiddleware := NewAuthMiddlewarePerm(TesterPerm)
 	adminAuthMiddleware := NewAuthMiddlewarePerm(AdminPerm)
 
 	//Creazione router
 	router := mux.NewRouter()
 	router.Use(enableCors) //CORS middleware
-
-	//Creazione router di servizio
-	routerService := router.PathPrefix(endpointService.String()).Subrouter()
 
 	//Creazione subrouter per api di aggiunta dati
 	routerAdd := router.PathPrefix(endpointAddData.String()).Subrouter()
@@ -48,9 +45,11 @@ func RouterInit() *mux.Router {
 	router.Handle(endpointRoot.String(), refreshMiddleware(http.HandlerFunc(serveIndex)))
 	router.HandleFunc(endpointLogin.String(), serveLogin)
 	router.PathPrefix("/KaoriGui/").Handler(http.StripPrefix("/KaoriGui/", http.FileServer(http.Dir(cfg.Server.Gui))))
+	router.Handle(endpointAnime.String(), creatorAuthMiddleware.authmiddleware(http.HandlerFunc(ApiAnimeInsert))).Methods(http.MethodPut)
+	router.Path(endpointAnime.String()).HandlerFunc(ApiServiceAnime).Methods(http.MethodGet)
+	router.Handle(endpointManga.String(), creatorAuthMiddleware.authmiddleware(http.HandlerFunc(ApiMangaInsert))).Methods(http.MethodPut)
+	router.Path(endpointManga.String()).HandlerFunc(ApiServiceManga).Methods(http.MethodGet)
 
-	//Rotte service
-	routerService.PathPrefix(serviceAnime.String()).HandlerFunc(ApiServiceAnime)
 	//Rotte API AddData
 	routerAdd.Path(addDataMusic.String()).HandlerFunc(ApiAddMusic).Methods(http.MethodPost)
 
@@ -82,7 +81,6 @@ func RouterInit() *mux.Router {
 	routerAdmin.Path(adminConfig.String()).HandlerFunc(ApiConfigSet).Methods(http.MethodPut)
 	routerAdmin.Path(adminLogServer.String()).HandlerFunc(ApiLogServer).Methods(http.MethodGet, http.MethodPost)
 	routerAdmin.Path(adminLogConnection.String()).HandlerFunc(ApiLogConnection).Methods(http.MethodGet, http.MethodPost)
-	routerAdmin.Path(adminAnimeInsert.String()).HandlerFunc(ApiAnimeInsert).Methods(http.MethodPost)
 
 		//Rotte API command
 		routerCommand.Path(commandRestart.String()).HandlerFunc(ApiCommandRestart).Methods(http.MethodGet)

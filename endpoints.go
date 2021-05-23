@@ -6,13 +6,11 @@ const (
 	endpointRoot  endpoints = "/"
 	endpointGui   endpoints = "/KaoriGui/"
 	endpointLogin endpoints = "/login"
+	endpointAnime    endpoints = "/anime/{id:[0-9]+}"   //[GET] Parametri: IdAnilist
+	endpointManga    endpoints = "/manga/{id:[0-9]+}"   //[GET] Parametri: IdAnilist
 
 	//Endpoint per servizio
 	endpointService endpoints = "/api/service/"
-	serviceAnime    endpoints = "/anime/{id:[0-9]+}"   //[GET] Parametri: IdAnilist
-	serviceManga    endpoints = "/manga"   //[GET] Parametri: IdAnilist
-	serviceChapter  endpoints = "/chapter" //[GET] Parametri: IdAnilist, numEpisodio, sito
-	serviceEpisode  endpoints = "/episode" //[GET] Parametri: IdAnilist, numCapitolo, sito
 	serviceMusic    endpoints = "/music"   //[GET] Parametri: IdAnilist, [tipo](OP, ED, OST)
 
 	//Endpoint utenti

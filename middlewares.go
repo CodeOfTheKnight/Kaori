@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/CodeOfTheKnight/Kaori/kaoriJwt"
 	logger "github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -30,21 +31,21 @@ func NewAuthMiddlewarePerm(perms ...Permission) *AuthMiddlewarePerm {
 func (amp *AuthMiddlewarePerm) authmiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		ip := GetIP(r)
+		ip := kaoriUtils.GetIP(r)
 
 		//Extract token JWT
-		tokenString := ExtractToken(r)
-		metadata, err := ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
+		tokenString := kaoriJwt.ExtractToken(r)
+		metadata, err := kaoriJwt.ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
 		if err != nil {
 			printLog("General", ip, "authMiddleware", "Error to get access token metadata: "+err.Error(), 1)
-			printErr(w, "Token not valid")
+			kaoriUtils.PrintErr(w, "Token not valid")
 			return
 		}
 
 		permissions, err := metadata.GetPermission()
 		if err != nil {
 			printLog(metadata.Email, ip, "authMiddleware", "Error to get permissions: "+err.Error(), 1)
-			printInternalErr(w)
+			kaoriUtils.PrintInternalErr(w)
 			return
 		}
 
@@ -70,19 +71,19 @@ func refreshMiddleware(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		ip := GetIP(r)
+		ip := kaoriUtils.GetIP(r)
 
 		//Get token from cookies
-		cookieData, err := getCookies(r)
+		cookieData, err := kaoriUtils.GetCookies(r, cfg.Jwt.Iss, cfg.Password.Cookies)
 		if err != nil {
 			printLog("General", ip, "ApiRefresh", "Error to get cookies: "+err.Error(), 1)
-			redirect, err := parseTemplate(cfg.Template.Html["redirect"], "https://" + cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			redirect, err := kaoriUtils.ParseTemplate(cfg.Template.Html["redirect"], "https://" + cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
 			if err != nil {
 				logger.WithFields(logger.Fields{
 					"function": "refreshMiddleware",
 					"ip": ip,
 				}).Error("Unable to parse email template")
-				printInternalErr(w)
+				kaoriUtils.PrintInternalErr(w)
 				return
 			}
 			w.Write([]byte(redirect))
@@ -95,13 +96,13 @@ func refreshMiddleware(next http.Handler) http.Handler {
 		data, err := ExtractRefreshTokenMetadata(token, cfg.Password.RefreshToken)
 		if err != nil {
 			printLog("General", ip, "ApiRefresh", "Extract refresh token error: "+err.Error(), 1)
-			redirect, err := parseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			redirect, err := kaoriUtils.ParseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
 			if err != nil {
 				logger.WithFields(logger.Fields{
 					"function": "refreshMiddleware",
 					"ip": ip,
 				}).Error("Unable to parse email template")
-				printInternalErr(w)
+				kaoriUtils.PrintInternalErr(w)
 				return
 			}
 			w.Write([]byte(redirect))
@@ -111,13 +112,13 @@ func refreshMiddleware(next http.Handler) http.Handler {
 		//Check validity
 		if !VerifyRefreshToken(data.Email, data.RefreshId) {
 			printLog(data.Email, ip, "ApiRefresh", "Token not valid", 2)
-			redirect, err := parseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			redirect, err := kaoriUtils.ParseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
 			if err != nil {
 				logger.WithFields(logger.Fields{
 					"function": "refreshMiddleware",
 					"ip": ip,
 				}).Error("Unable to parse email template")
-				printInternalErr(w)
+				kaoriUtils.PrintInternalErr(w)
 				return
 			}
 			w.Write([]byte(redirect))
@@ -126,13 +127,13 @@ func refreshMiddleware(next http.Handler) http.Handler {
 
 		if !VerifyExpireDate(data.Exp) {
 			printLog(data.Email, ip, "ApiRefresh", "Token expired", 2)
-			redirect, err := parseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
+			redirect, err := kaoriUtils.ParseTemplate(cfg.Template.Html["redirect"], cfg.Server.Host + cfg.Server.Port + endpointLogin.String())
 			if err != nil {
 				logger.WithFields(logger.Fields{
 					"function": "refreshMiddleware",
 					"ip": ip,
 				}).Error("Unable to parse email template")
-				printInternalErr(w)
+				kaoriUtils.PrintInternalErr(w)
 				return
 			}
 			w.Write([]byte(redirect))

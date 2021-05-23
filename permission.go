@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"github.com/CodeOfTheKnight/Kaori/kaoriJwt"
 )
 
 type Permission string
@@ -24,7 +25,8 @@ func (p Permission) ToString() string {
 	return string(p)
 }
 
-func (jwt *JWTAccessMetadata) GetPermission() (perms []Permission, err error) {
+
+func (jwt *kaoriJwt.JWTAccessMetadata) GetPermission() (perms []Permission, err error) {
 
 	runes := []rune(jwt.Permission)
 

@@ -1,0 +1,2052 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Kaori è un server che mette a disposizione API di servizio utili per gestire i servizi richiesti dal proprio client. Il server è utilizzabile anche da altri client ma non è pensato per essi per cui potrebbe non adempire in modo consono al servizio richiesto.",
+    "version": "1.0.0",
+    "title": "Kaori API",
+    "termsOfService": "",
+    "contact": {
+      "email": "brignoli.diego.studente@itispaleocapa.it"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "waifuai.dd-dns.de:8012",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Api di autenticazione"
+    },
+    {
+      "name": "admin",
+      "description": "Api di amministratore"
+    },
+    {
+      "name": "user",
+      "description": "Api utente"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/KaoriGui/{nomeFile}": {
+      "get": {
+        "summary": "File per l'interfaccia grafica",
+        "description": "L'API KaoriGui funziona tramite metodo GET. È stata realizzata per servire i file dell'interfaccia grafica.",
+        "operationId": "kaoriGui",
+        "parameters": [
+          {
+            "name": "nomeFile",
+            "in": "path",
+            "description": "Nome del file",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "404": {
+            "description": "File non trovato"
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "summary": "Pagina di login",
+        "description": "L'API \"login\" funziona tramite metodo GET. È stata realizzata con lo scopo di rendere l'URL più bello per l'utente. Si occupa di servire il file \"login.html\" al client.",
+        "operationId": "loginPage",
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "404": {
+            "description": "File non trovato"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Effettua il login",
+        "description": "L'API di login funziona per metodo POST e prende in input un JSON che ha come parametri \"email\" e \"password\". Se l'autenticazione va a buon fine ritornerà un JSON di risposta con l'access token e la relativa data di scadenza in formato \"Unix timestamp\".",
+        "operationId": "login",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Le credenziali necessarie per l'accesso",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "yuri@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "Password11"
+                    }
+                  }
+                }
+              ],
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "AccessToken": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55IjoiQ29kZU9mVGhlS25pZ2h0IiwiZW1haWwiOiJ3YXRhc2hpd2F5dXJpZGFpc3VraUBnbWFpbC5jb20iLCJleHAiOjE2MjEwNzAxNjYsImlhdCI6MTYyMTA2OTI2NiwiaXNzIjoiS2FvcmlTdHJlYW0uY29tIiwicGVybWlzc2lvbiI6InVjdGEifQ.KkvK5XoBofs2HWSarlWdAdoaxjvnbKaoJmgwSn96QbY"
+                },
+                "Expiration": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1621070166
+                }
+              }
+            },
+            "headers": {
+              "Set-cookie": {
+                "type": "string",
+                "description": "contiene il refresh token in un cookie cifrato."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Account inactive",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Effettua la registrazione",
+        "description": "L'API di signup funziona per metodo POST e prende in input un JSON con i parametri di registrazione. Dopo la registrazione sarà necessaria una verifica tramite email di conferma.",
+        "operationId": "signup",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Parametri necessari per la registrazione",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "utente@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "Password11"
+                    },
+                    "username": {
+                      "type": "string",
+                      "example": "yuri"
+                    },
+                    "profilePicture": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ],
+              "required": [
+                "email",
+                "password",
+                "username"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/auth/confirm": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Conferma l'account",
+        "description": "L'API di confirm funziona per metodo GET. Prende come parametro un id che è stato generato dal server in fase di signup e inviato incorporato nel link cliccabile via email.",
+        "operationId": "confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "L'id generato dal server",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "L'email dell'utente che deve convalidare l'account",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "$ref": "#/definitions/Redirect"
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refresh dei token",
+        "description": "L'API di refresh funziona per metodo GET. Effettua il refresh dell'access token e del refresh token. Inoltre cotrolla nel database se ci sono refresh token dell'utente scaduti da eliminare.",
+        "operationId": "refresh",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Cookie",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "AccessToken": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55IjoiQ29kZU9mVGhlS25pZ2h0IiwiZW1haWwiOiJ3YXRhc2hpd2F5dXJpZGFpc3VraUBnbWFpbC5jb20iLCJleHAiOjE2MjEwNzAxNjYsImlhdCI6MTYyMTA2OTI2NiwiaXNzIjoiS2FvcmlTdHJlYW0uY29tIiwicGVybWlzc2lvbiI6InVjdGEifQ.KkvK5XoBofs2HWSarlWdAdoaxjvnbKaoJmgwSn96QbY"
+                },
+                "Expiration": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1621070166
+                }
+              }
+            },
+            "headers": {
+              "Set-cookie": {
+                "type": "string",
+                "description": "contiene il refresh token in un cookie cifrato."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Token not valid",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/auth/exist": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "User exist",
+        "description": "L'API di user exist funziona per metodo GET. Prende come parametro l'email dell'utente di cui si vuole sapere l'esistenza. Risponde con un semplice JSON che definisce se l'utente esiste \"true\" oppure non esiste \"false\".",
+        "operationId": "exist",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "L'email dell'utente",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "exist": {
+                  "type": "string",
+                  "example": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/user/info": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Informazioni utente",
+        "description": "L'API di informazioni utente funziona per metodo GET. Preleva dal database tutte le informazioni dell'utente e le invia al client tramite JSON.",
+        "operationId": "userInfo",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dateSignUp": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1620382010
+                },
+                "level": {
+                  "type": "integer",
+                  "format": "int32",
+                  "example": 1
+                },
+                "password": {
+                  "type": "string",
+                  "example": "898642b9087095abd1cc23f7c2725c1573c4d6f2afbccb10ccc8a8555f0c3e76"
+                },
+                "anilistId": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1254
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "permission": {
+                  "type": "string",
+                  "example": "ucta"
+                },
+                "profilePicture": {
+                  "type": "string",
+                  "example": "https://kaori.com/profile/img/1254.jpg"
+                },
+                "isDonator": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "itemAdded": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 10
+                },
+                "credits": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1542
+                },
+                "username": {
+                  "type": "string",
+                  "example": "Yuri"
+                },
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "graphics": {
+                      "type": "object",
+                      "properties": {
+                        "primary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ce93d8"
+                        },
+                        "surface24": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#383838"
+                        },
+                        "surface6": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#2c2c2c"
+                        },
+                        "surface8": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#2e2e2e"
+                        },
+                        "onBackground": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ffffff"
+                        },
+                        "onSecondary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#000000"
+                        },
+                        "surface16": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#343434"
+                        },
+                        "surface2": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#222222"
+                        },
+                        "surface3": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#242424"
+                        },
+                        "error": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#cf6679"
+                        },
+                        "surface12": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#333333"
+                        },
+                        "secondary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ffcc80"
+                        },
+                        "secondaryDark": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ca9b52"
+                        },
+                        "surface1": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#1e1e1e "
+                        },
+                        "surface4": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#272727"
+                        },
+                        "onError": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#000000"
+                        },
+                        "onSurface": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ffffff"
+                        },
+                        "primaryDark": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#9c64a6"
+                        },
+                        "background": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#121212"
+                        },
+                        "onPrimary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#000000"
+                        }
+                      }
+                    },
+                    "isPervert": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "showBadge": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "showListAnime": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "showListManga": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/user/settings": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Impostazioni utente",
+        "description": "L'API per ottenere le impostazioni dell'utente funziona per metodo GET. Preleva dal database tutte le impostazioni dell'utente e le invia al client tramite JSON.",
+        "operationId": "userSettingsGet",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "graphics": {
+                  "type": "object",
+                  "properties": {
+                    "primary": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#ce93d8"
+                    },
+                    "surface24": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#383838"
+                    },
+                    "surface6": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#2c2c2c"
+                    },
+                    "surface8": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#2e2e2e"
+                    },
+                    "onBackground": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#ffffff"
+                    },
+                    "onSecondary": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#000000"
+                    },
+                    "surface16": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#343434"
+                    },
+                    "surface2": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#222222"
+                    },
+                    "surface3": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#242424"
+                    },
+                    "error": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#cf6679"
+                    },
+                    "surface12": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#333333"
+                    },
+                    "secondary": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#ffcc80"
+                    },
+                    "secondaryDark": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#ca9b52"
+                    },
+                    "surface1": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#1e1e1e "
+                    },
+                    "surface4": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#272727"
+                    },
+                    "onError": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#000000"
+                    },
+                    "onSurface": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#ffffff"
+                    },
+                    "primaryDark": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#9c64a6"
+                    },
+                    "background": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#121212"
+                    },
+                    "onPrimary": {
+                      "type": "string",
+                      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                      "example": "#000000"
+                    }
+                  }
+                },
+                "isPervert": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "showBadge": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "showListAnime": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "showListManga": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Modifica impostazioni utente",
+        "description": "L'API di modifica delle impostazioni utente funziona per metodo PUT e prende in input un JSON con i parametri di configurazione. Dopo aver effettuato il controllo dei parametri setta la configurazione nel database al corrispettivo record dell'utente.",
+        "operationId": "userSettingsPut",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Parametri necessari per la configurazione",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "graphics": {
+                      "type": "object",
+                      "properties": {
+                        "primary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ce93d8"
+                        },
+                        "surface24": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#383838"
+                        },
+                        "surface6": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#2c2c2c"
+                        },
+                        "surface8": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#2e2e2e"
+                        },
+                        "onBackground": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ffffff"
+                        },
+                        "onSecondary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#000000"
+                        },
+                        "surface16": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#343434"
+                        },
+                        "surface2": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#222222"
+                        },
+                        "surface3": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#242424"
+                        },
+                        "error": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#cf6679"
+                        },
+                        "surface12": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#333333"
+                        },
+                        "secondary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ffcc80"
+                        },
+                        "secondaryDark": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ca9b52"
+                        },
+                        "surface1": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#1e1e1e "
+                        },
+                        "surface4": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#272727"
+                        },
+                        "onError": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#000000"
+                        },
+                        "onSurface": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#ffffff"
+                        },
+                        "primaryDark": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#9c64a6"
+                        },
+                        "background": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#121212"
+                        },
+                        "onPrimary": {
+                          "type": "string",
+                          "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+                          "example": "#000000"
+                        }
+                      }
+                    },
+                    "isPervert": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "showBadge": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "showListAnime": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "showListManga": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi insufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/config": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ottieni configurazioni",
+        "description": "L'API \"configuration get\" funziona per metodo GET. Risponde con un JSON con all'interno la configurazione attuale del server.",
+        "operationId": "configGet",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "server": {
+                      "type": "object",
+                      "properties": {
+                        "host": {
+                          "type": "string",
+                          "example": "kaori.com"
+                        },
+                        "port": {
+                          "type": "string",
+                          "example": ":8012"
+                        },
+                        "ssl": {
+                          "type": "object",
+                          "properties": {
+                            "certificate": {
+                              "type": "string",
+                              "example": "cert/cert.pem"
+                            },
+                            "key": {
+                              "type": "string",
+                              "example": "cert/key.pem"
+                            }
+                          }
+                        },
+                        "limiter": {
+                          "type": "integer",
+                          "format": "int32",
+                          "example": 3
+                        },
+                        "gui": {
+                          "type": "string",
+                          "example": "KaoriGui/"
+                        },
+                        "test": {
+                          "type": "string",
+                          "example": "tests/"
+                        },
+                        "template": {
+                          "type": "string",
+                          "example": "template/"
+                        }
+                      }
+                    },
+                    "logger": {
+                      "type": "object",
+                      "properties": {
+                        "connection": {
+                          "type": "string",
+                          "example": "log/connection.log.json"
+                        },
+                        "server": {
+                          "type": "string",
+                          "example": "log/server.log.json"
+                        }
+                      }
+                    },
+                    "database": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "projectId": {
+                            "type": "string",
+                            "example": "kaori-504c3"
+                          },
+                          "key": {
+                            "type": "string",
+                            "example": "database/kaori-504c3-firebase-adminsdk-5apba-f66a21203e.json"
+                          }
+                        }
+                      }
+                    },
+                    "password": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "AccessTokenSecret11"
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "example": "RefreshTokenSecret11"
+                        },
+                        "cookie": {
+                          "type": "string",
+                          "example": "CookieSecret11"
+                        },
+                        "mail": {
+                          "type": "string",
+                          "example": "cdchbdhcdhchd"
+                        }
+                      }
+                    },
+                    "mail": {
+                      "type": "object",
+                      "properties": {
+                        "address": {
+                          "type": "string",
+                          "example": "no.reply.kaorianimestream@gmail.com"
+                        },
+                        "smtpServer": {
+                          "type": "object",
+                          "properties": {
+                            "host": {
+                              "type": "string",
+                              "example": "smtp.gmail.com"
+                            },
+                            "port": {
+                              "type": "string",
+                              "example": ":587"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "template": {
+                      "type": "object",
+                      "properties": {
+                        "mail": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "properties": {
+                              "file": {
+                                "type": "string",
+                                "example": "template/email/registrazione.txt"
+                              },
+                              "object": {
+                                "type": "string",
+                                "example": "CONFERMA REGISTRAZIONE"
+                              }
+                            }
+                          }
+                        },
+                        "music": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "example": "template/music/name.tmpl"
+                          }
+                        },
+                        "html": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "example": "template/html/redirect.html"
+                          }
+                        }
+                      }
+                    },
+                    "jwt": {
+                      "type": "object",
+                      "properties": {
+                        "iss": {
+                          "type": "string",
+                          "example": "KaoriStream.com"
+                        },
+                        "company": {
+                          "type": "string",
+                          "example": "CodeOfTheKnight"
+                        },
+                        "exp": {
+                          "type": "object",
+                          "properties": {
+                            "accessToken": {
+                              "type": "integer",
+                              "format": "int32",
+                              "example": 15
+                            },
+                            "refreshToken": {
+                              "type": "integer",
+                              "format": "int32",
+                              "example": 10080
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Modifica configurazioni server",
+        "description": "L'API di config set funziona per metodo PUT e prende in input un JSON con i parametri di configurazione. Dopo aver effettuato il controllo dei parametri setta la configurazione e riavvia il server mediante graceful reboot.",
+        "operationId": "configSet",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Parametri necessari per la configurazione",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "server": {
+                      "type": "object",
+                      "properties": {
+                        "host": {
+                          "type": "string",
+                          "example": "kaori.com"
+                        },
+                        "port": {
+                          "type": "string",
+                          "example": ":8012"
+                        },
+                        "ssl": {
+                          "type": "object",
+                          "properties": {
+                            "certificate": {
+                              "type": "string",
+                              "example": "cert/cert.pem"
+                            },
+                            "key": {
+                              "type": "string",
+                              "example": "cert/key.pem"
+                            }
+                          }
+                        },
+                        "limiter": {
+                          "type": "integer",
+                          "format": "int32",
+                          "example": 3
+                        },
+                        "gui": {
+                          "type": "string",
+                          "example": "KaoriGui/"
+                        },
+                        "test": {
+                          "type": "string",
+                          "example": "tests/"
+                        },
+                        "template": {
+                          "type": "string",
+                          "example": "template/"
+                        }
+                      }
+                    },
+                    "logger": {
+                      "type": "object",
+                      "properties": {
+                        "connection": {
+                          "type": "string",
+                          "example": "log/connection.log.json"
+                        },
+                        "server": {
+                          "type": "string",
+                          "example": "log/server.log.json"
+                        }
+                      }
+                    },
+                    "database": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "projectId": {
+                            "type": "string",
+                            "example": "kaori-504c3"
+                          },
+                          "key": {
+                            "type": "string",
+                            "example": "database/kaori-504c3-firebase-adminsdk-5apba-f66a21203e.json"
+                          }
+                        }
+                      }
+                    },
+                    "password": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "AccessTokenSecret11"
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "example": "RefreshTokenSecret11"
+                        },
+                        "cookie": {
+                          "type": "string",
+                          "example": "CookieSecret11"
+                        },
+                        "mail": {
+                          "type": "string",
+                          "example": "cdchbdhcdhchd"
+                        }
+                      }
+                    },
+                    "mail": {
+                      "type": "object",
+                      "properties": {
+                        "address": {
+                          "type": "string",
+                          "example": "no.reply.kaorianimestream@gmail.com"
+                        },
+                        "smtpServer": {
+                          "type": "object",
+                          "properties": {
+                            "host": {
+                              "type": "string",
+                              "example": "smtp.gmail.com"
+                            },
+                            "port": {
+                              "type": "string",
+                              "example": ":587"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "template": {
+                      "type": "object",
+                      "properties": {
+                        "mail": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "properties": {
+                              "file": {
+                                "type": "string",
+                                "example": "template/email/registrazione.txt"
+                              },
+                              "object": {
+                                "type": "string",
+                                "example": "CONFERMA REGISTRAZIONE"
+                              }
+                            }
+                          }
+                        },
+                        "music": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "example": "template/music/name.tmpl"
+                          }
+                        },
+                        "html": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "example": "template/html/redirect.html"
+                          }
+                        }
+                      }
+                    },
+                    "jwt": {
+                      "type": "object",
+                      "properties": {
+                        "iss": {
+                          "type": "string",
+                          "example": "KaoriStream.com"
+                        },
+                        "company": {
+                          "type": "string",
+                          "example": "CodeOfTheKnight"
+                        },
+                        "exp": {
+                          "type": "object",
+                          "properties": {
+                            "accessToken": {
+                              "type": "integer",
+                              "format": "int32",
+                              "example": 15
+                            },
+                            "refreshToken": {
+                              "type": "integer",
+                              "format": "int32",
+                              "example": 10080
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/log/server": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ottieni log del server",
+        "description": "L'API di ottenimento dei log del server funziona per metodo GET/POST(json). Risponde con un JSON contenente tutti i log riscontrati dall'applicazione dei filtri.",
+        "operationId": "logServerGet",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "func",
+            "in": "query",
+            "description": "La funzione che si vuole ricercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ip",
+            "in": "query",
+            "description": "L'ip che si vuole cercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "L'utente che si vuole cercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "msg",
+            "in": "query",
+            "description": "Il messaggio che si vuole cercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "description": "Il livello di errore \"0=Info,1=Error,2=Warning\"",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "description": "La data del log che si vuole cercare.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "L'ordine di priorità da applicare ai filtri.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "func": {
+                    "type": "string",
+                    "example": "ApiLogin"
+                  },
+                  "ip": {
+                    "type": "string",
+                    "example": "192.168.1.4"
+                  },
+                  "level": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "msg": {
+                    "type": "string",
+                    "example": "Username o password errati"
+                  },
+                  "time": {
+                    "type": "string",
+                    "example": "2012-04-23T18:25:43.511Z"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "yuri"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ottieni log del server",
+        "description": "L'API di ottenimento dei log del server funziona per metodo GET/POST(json). Risponde con un JSON contenente tutti i log riscontrati dall'applicazione dei filtri.",
+        "operationId": "logServerPost",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "I filtri da applicare alla ricerca di record di log.",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "func": {
+                      "type": "string",
+                      "example": "ApiLogin"
+                    },
+                    "ip": {
+                      "type": "string",
+                      "example": "192.168.1.4"
+                    },
+                    "level": {
+                      "type": "string",
+                      "example": "1"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Username o password errati"
+                    },
+                    "time": {
+                      "type": "string",
+                      "example": "2012-04-23T18:25:43.511Z"
+                    },
+                    "user": {
+                      "type": "string",
+                      "example": "yuri"
+                    },
+                    "order": {
+                      "type": "string",
+                      "example": "ip,msg,time,user,level,func"
+                    }
+                  }
+                }
+              ],
+              "required": [
+                "order"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "func": {
+                    "type": "string",
+                    "example": "ApiLogin"
+                  },
+                  "ip": {
+                    "type": "string",
+                    "example": "192.168.1.4"
+                  },
+                  "level": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "msg": {
+                    "type": "string",
+                    "example": "Username o password errati"
+                  },
+                  "time": {
+                    "type": "string",
+                    "example": "2012-04-23T18:25:43.511Z"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "yuri"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/log/connection": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ottieni log delle connessioni",
+        "description": "L'API di ottenimento dei log delle connessioni funziona per metodo GET/POST(json). Risponde con un JSON contenente tutti i log riscontrati dall'applicazione dei filtri.",
+        "operationId": "logConnectionGet",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "method",
+            "in": "query",
+            "description": "Il metodo che si vuole ricercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "description": "L'url che si vuole cercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ref",
+            "in": "query",
+            "description": "Il referer che si vuole cercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ip",
+            "in": "query",
+            "description": "L'ip che si vuole cercare nel log.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Il codice di risposta che si vuole cercare nel log.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "La dimensione della richiesta che si vuole cercare nel file di log.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "La durata della connessione della richiesta del log che si vuole cercare.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "data",
+            "in": "query",
+            "description": "La data della richiesta del log che si vuole cercare.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "agent",
+            "in": "query",
+            "description": "Lo User-Agent della richiesta del log che si vuole cercare.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "L'ordine di priorità da applicare ai filtri.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "example": "GET"
+                  },
+                  "url": {
+                    "type": "string",
+                    "example": "/api/auth/login"
+                  },
+                  "ref": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ip": {
+                    "type": "string",
+                    "example": "85.43.125.251"
+                  },
+                  "code": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 200
+                  },
+                  "size": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 40
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 4332660
+                  },
+                  "data": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2012-04-23T18:25:43.511Z"
+                  },
+                  "agent": {
+                    "type": "string",
+                    "example": "curl/7.75.0"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ottieni log del server",
+        "description": "L'API di ottenimento dei log delle connessioni funziona per metodo GET/POST(json). Risponde con un JSON contenente tutti i log riscontrati dall'applicazione dei filtri.",
+        "operationId": "logConnectionPost",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "I filtri da applicare alla ricerca di record di log.",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "example": "GET"
+                    },
+                    "url": {
+                      "type": "string",
+                      "example": "/api/auth/login"
+                    },
+                    "ref": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "ip": {
+                      "type": "string",
+                      "example": "85.43.125.251"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "format": "int32",
+                      "example": 200
+                    },
+                    "size": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 40
+                    },
+                    "duration": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 4332660
+                    },
+                    "data": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2012-04-23T18:25:43.511Z"
+                    },
+                    "agent": {
+                      "type": "string",
+                      "example": "curl/7.75.0"
+                    },
+                    "order": {
+                      "type": "string",
+                      "example": "agent,data,duration,size,code,ip,ref,url,method"
+                    }
+                  }
+                }
+              ],
+              "required": [
+                "order"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "example": "GET"
+                  },
+                  "url": {
+                    "type": "string",
+                    "example": "/api/auth/login"
+                  },
+                  "ref": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ip": {
+                    "type": "string",
+                    "example": "85.43.125.251"
+                  },
+                  "code": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 200
+                  },
+                  "size": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 40
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 4332660
+                  },
+                  "data": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2012-04-23T18:25:43.511Z"
+                  },
+                  "agent": {
+                    "type": "string",
+                    "example": "curl/7.75.0"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametri errati",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/command/restart": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Restart del server",
+        "description": "L'API di restart funziona per metodo GET. Tramite un segnale di SIGUSR2 inviato al sistema operativo attua il \"graceful reboot\".",
+        "operationId": "commandRestart",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/command/shutdown": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Shutdown del server",
+        "description": "L'API di shutdown funziona per metodo GET. Tramite un segnale di SIGINT inviato al sistema operativo attua il \"graceful shutdown\".",
+        "operationId": "commandShutdown",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/command/forcedShutdown": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Forced shutdown del server",
+        "description": "L'API di shutdown forzato funziona per metodo GET. Tramite un segnale di SIGTERM inviato al sistema operativo attua il \"graceful shutdown\".",
+        "operationId": "commandForcedShutdown",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operazione completata con successo"
+          },
+          "403": {
+            "description": "Permessi non sufficenti",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "definitions": {
+    "Redirect": {
+      "type": "string",
+      "example": "<HTML template redirect to login>"
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "msg": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

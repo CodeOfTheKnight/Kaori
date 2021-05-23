@@ -3,12 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/CodeOfTheKnight/Kaori/kaoriSettings"
+	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
+	"github.com/CodeOfTheKnight/Kaori/kaoriDatabase"
 	"github.com/didip/tollbooth"
 	"github.com/didip/tollbooth/limiter"
 	logger "github.com/sirupsen/logrus"
 	"net"
 	"os/exec"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"syscall"
 
@@ -16,12 +20,16 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
-	"path/filepath"
 	"time"
 )
 
-var cfg *Config
+var (
+	kaoriTmpDB *kaoriDatabase.NoSqlDb
+	kaoriUserDB *kaoriDatabase.NoSqlDb
+	kaoriDataDB *kaoriDatabase.NoSqlDb
+	kaoriMangaDB *kaoriDatabase.NoSqlDb
+	cfg *kaoriSettings.Config
+)
 
 //Settings
 const indexFile string = "home.html"
@@ -48,25 +56,29 @@ func NewServer(handler http.Handler) *Server {
 }
 
 func init() {
+
 	var err error
 
 	//Check and change precedent Settings
-	err = CheckPrecedentConfig()
+	err = kaoriSettings.CheckPrecedentConfig("config/")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	//READ CONFIG
-	cfg, err = NewConfig()
+	cfg, err = kaoriSettings.NewConfig("config/")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+//TODO: add
+/*
 	//VALIDATE CONFIG
 	err = cfg.CheckConfig()
 	if err != nil {
 		log.Fatalln(err)
 	}
+*/
 
 	//SET LOGGER
 	file, err := os.OpenFile(cfg.Logger.Server, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
@@ -84,19 +96,33 @@ func init() {
 	printLog("Server", "", "init", "Setting Database start", 0)
 
 	//SET DATABASES
-	kaoriTmp, err = NewDatabase(cfg.Database[0].ProjectId, cfg.Database[0].Key)
+	kaoriTmpDB, err = kaoriDatabase.NewNoSqlDb(cfg.Database.NonRelational[0].ProjectId, cfg.Database.NonRelational[0].Key)
 	if err != nil {
 		printLog("Server", "", "init", err.Error(), 1)
 		panic(err)
 	}
 
-	kaoriUser, err = NewDatabase(cfg.Database[1].ProjectId, cfg.Database[1].Key)
+	kaoriUserDB, err = kaoriDatabase.NewNoSqlDb(cfg.Database.NonRelational[1].ProjectId, cfg.Database.NonRelational[1].Key)
 	if err != nil {
 		printLog("Server", "", "init", err.Error(), 1)
 		panic(err)
 	}
 
-	kaoriDataDB, err = NewDatabase(cfg.Database[2].ProjectId, cfg.Database[2].Key)
+	kaoriDataDB, err = kaoriDatabase.NewNoSqlDb(cfg.Database.NonRelational[2].ProjectId, cfg.Database.NonRelational[2].Key)
+	if err != nil {
+		printLog("Server", "", "init", err.Error(), 1)
+		panic(err)
+	}
+
+	kaoriMangaDB, err = kaoriDatabase.NewNoSqlDb(cfg.Database.NonRelational[3].ProjectId, cfg.Database.NonRelational[3].Key)
+	if err != nil {
+		printLog("Server", "", "init", err.Error(), 1)
+		panic(err)
+	}
+
+	//SET DATABASE RELAZIONALE
+
+	_, err = kaoriDatabase.NewSqlDb("root", "Goghetto1106", "192.168.1.4", "3306", "KaoriAnime", "mysql")
 	if err != nil {
 		printLog("Server", "", "init", err.Error(), 1)
 		panic(err)
@@ -250,44 +276,31 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		ip := GetIP(r)
-
-		//Server push
-		files, err := lsGui(filepath.ToSlash(cfg.Server.Gui))
-
-		if pusher, ok := w.(http.Pusher); ok {
-			// Push is supported.
-			for _, file := range files {
-				if err := pusher.Push(filepath.ToSlash(path.Join("/", file)), nil); err != nil {
-					printLog("General", ip, "ServeHttp", fmt.Sprint("Failed to push: ", err), 1)
-					return
-				}
-			}
-		}
+		ip := kaoriUtils.GetIP(r)
 
 		content, err := os.ReadFile(filepath.ToSlash(filepath.Join(cfg.Server.Gui, indexFile)))
 		if err != nil {
 			printLog("General", ip, "ServeHttp", "Error to open index file", 1)
-			printInternalErr(w)
+			kaoriUtils.PrintInternalErr(w)
 			return
 		}
 
 		w.Write(content)
 
 	} else {
-		printErr(w, "")
+		kaoriUtils.PrintErr(w, "")
 		return
 	}
 }
 
 func serveLogin(w http.ResponseWriter, r *http.Request) {
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	data, err := os.ReadFile(filepath.Join(cfg.Server.Gui, loginFile))
 	if err != nil {
 		printLog("General", ip, "serveLogin", "Error to open file: "+loginFile, 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 

@@ -6,6 +6,11 @@ import (
 	"cloud.google.com/go/firestore"
 	"encoding/json"
 	"fmt"
+	kaoriUser "github.com/CodeOfTheKnight/Kaori/kaoriData/user"
+	"github.com/CodeOfTheKnight/Kaori/kaoriJwt"
+	"github.com/CodeOfTheKnight/Kaori/kaoriMail"
+	"github.com/CodeOfTheKnight/Kaori/kaoriSettings"
+	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"github.com/CodeOfTheKnight/kaoriData"
 	"github.com/mitchellh/mapstructure"
 	"io"
@@ -19,42 +24,37 @@ import (
 	"time"
 )
 
-type ParamsInfo struct {
-	Key      string
-	Required bool
-}
-
 //API USER
 
 func ApiUserInfo(w http.ResponseWriter, r *http.Request){
 
-	var u User
+	var u kaoriUser.User
 
 	mappa := r.Context().Value("values").(ContextValues)
 	fmt.Println(mappa)
 
 	//Get document
-	document, err := kaoriUser.Client.c.Collection("User").
+	document, err := kaoriUserDB.Client.C.Collection("User").
 										Doc(mappa.Get("email")).
-										Get(kaoriUser.Client.ctx)
+										Get(kaoriUserDB.Client.Ctx)
 
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error database: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	err = document.DataTo(&u)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error to create user struct: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	data, err := json.Marshal(u)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiUserInfo", "Error create JSON: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -65,7 +65,7 @@ func ApiUserInfo(w http.ResponseWriter, r *http.Request){
 
 func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
 
-	var s Settings
+	var s kaoriUser.Settings
 
 	mappa := r.Context().Value("values").(ContextValues)
 	fmt.Println(mappa)
@@ -73,15 +73,17 @@ func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
 	printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "[Start] Get settings", 0)
 
 	//Get document
-	document, err := kaoriUser.Client.c.Collection("User").
+	document, err := kaoriUserDB.Client.C.Collection("User").
 		Doc(mappa.Get("email")).
-		Get(kaoriUser.Client.ctx)
+		Get(kaoriUserDB.Client.Ctx)
 
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "Error database: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
+
+	fmt.Println("STRUCT:", document.Data())
 
 	userData := document.Data()
 
@@ -90,10 +92,12 @@ func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
+	fmt.Println("SETTING:", s)
+
 	data, err := json.Marshal(s)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "Error create JSON: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -106,7 +110,7 @@ func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
 func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 
 	//var s Settings
-	var u User
+	var u kaoriUser.User
 	var m map[string]interface{}
 
 	mappa := r.Context().Value("values").(ContextValues)
@@ -115,13 +119,13 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 	printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "[Start] Change settings", 0)
 
 	//Read precedent settings
-	document, err := kaoriUser.Client.c.Collection("User").
+	document, err := kaoriUserDB.Client.C.Collection("User").
 										Doc(mappa.Get("email")).
-										Get(kaoriUser.Client.ctx)
+										Get(kaoriUserDB.Client.Ctx)
 
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error database: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -129,7 +133,7 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 	err = document.DataTo(&u)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to conversion in settings: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -144,27 +148,29 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 	err = mapstructure.Decode(u.Settings, &m)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to conversion in a map: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
+
+	fmt.Println("MAPPA:", m)
 
 	fmt.Println("Settings:", u.Settings)
 
 	//Check settings value
 	if err = u.Settings.IsValid(); err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Data is invalid: " + err.Error(), 1)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
 	//Send map to the database
-	_, err =  kaoriUser.Client.c.Collection("User").
+	_, err =  kaoriUserDB.Client.C.Collection("User").
 		Doc(mappa.Get("email")).
-		Set(kaoriUser.Client.ctx, m, firestore.MergeAll)
+		Set(kaoriUserDB.Client.Ctx, map[string]interface{}{"Settings": m}, firestore.MergeAll)
 
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error database: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -172,7 +178,7 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 	data, err := json.Marshal(u.Settings)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to create JSON: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -185,27 +191,27 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 
 func ApiUserExist(w http.ResponseWriter, r *http.Request) {
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
-	set := []ParamsInfo{
+	set := []kaoriUtils.ParamsInfo{
 		{Key: "email", Required: true},
 	}
 
-	params, err := getParams(set, r)
+	params, err := kaoriUtils.GetParams(set, r)
 	if err != nil {
 		printLog("General", ip, "ApiUserExist", "Error to get params: "+err.Error(), 1)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
-	exist := existUser(params["email"].(string))
+	exist := kaoriUtils.ExistUser(kaoriUserDB, params["email"].(string))
 
 	w.Write([]byte(fmt.Sprintf(`{"exist": "%v"}`, exist)))
 }
 
 func ApiLogin(w http.ResponseWriter, r *http.Request) {
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	var params struct {
 		Email    string
@@ -219,7 +225,7 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Verify password and email
-	isValid, err := verifyAuth(params.Email, params.Password)
+	isValid, err := kaoriUtils.VerifyAuth(kaoriUserDB, params.Email, params.Password)
 	if err != nil {
 		if err.Error() == "inactive" {
 			http.Error(w, `{"code": 401, "msg": "Account unactivated!"}`, http.StatusUnauthorized)
@@ -227,29 +233,29 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//Nel caso in cui non è corretto perchè non c'è nel database
-		printErr(w, "Incorrect username or password")
+		kaoriUtils.PrintErr(w, "Incorrect username or password")
 		return
 	}
 
 	if isValid == false {
 		//Nel caso in cui c'è nel database ma non è corretta la password
-		printErr(w, "Incorrect username or password")
+		kaoriUtils.PrintErr(w, "Incorrect username or password")
 		return
 	}
 
 	//Generate tokens
-	tokens, err := GenerateTokenPair(params.Email)
+	tokens, err := kaoriJwt.GenerateTokenPair(params.Email)
 	if err != nil {
 		printLog("General", ip, "ApiLogin", "Error to generate token pair: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Set Cookies
-	err = setCookies(w, tokens["RefreshToken"].Token)
+	err = kaoriUtils.SetCookies(w, tokens["RefreshToken"].Token, cfg.Jwt.Iss, cfg.Password.Cookies)
 	if err != nil {
 		printLog("General", ip, "ApiLogin", "Error to set cookies: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -260,17 +266,17 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 	rf, ok := data["refreshId"].(string)
 	if !ok {
 		printLog("General", ip, "ApiLogin", "Error, the field with \"refreshId\" key doesn't exist", 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
-	_, err = kaoriUser.Client.c.Collection("User").Doc(params.Email).
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(params.Email).
 		Collection("RefreshToken").Doc(rf).
-		Set(kaoriUser.Client.ctx, map[string]int64{"exp": exp})
+		Set(kaoriUserDB.Client.Ctx, map[string]int64{"exp": exp})
 
 	if err != nil {
 		printLog("General", ip, "ApiLogin", "Database operation error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -279,7 +285,7 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 	exp, ok = fields["exp"].(int64)
 	if !ok {
 		printLog("General", ip, "ApiLogin", "Error, the field with \"AccessToken\" key doesn't exist", 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -289,7 +295,7 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		printLog("General", ip, "ApiLogin", "Error to create AccessToken JSON: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -298,71 +304,71 @@ func ApiLogin(w http.ResponseWriter, r *http.Request) {
 
 func ApiRefresh(w http.ResponseWriter, r *http.Request) {
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	//Get token from cookies
-	cookieData, err := getCookies(r)
+	cookieData, err := kaoriUtils.GetCookies(r, cfg.Jwt.Iss, cfg.Password.Cookies)
 	if err != nil {
 		printLog("General", ip, "ApiRefresh", "Error to get cookies: "+err.Error(), 1)
-		printErr(w, "")
+		kaoriUtils.PrintErr(w, "")
 		return
 	}
 
 	token := cookieData["RefreshToken"]
 
 	//Extract data from token
-	data, err := ExtractRefreshTokenMetadata(token, cfg.Password.RefreshToken)
+	data, err := kaoriJwt.ExtractRefreshTokenMetadata(token, cfg.Password.RefreshToken)
 	if err != nil {
 		printLog("General", ip, "ApiRefresh", "Extract refresh token error: "+err.Error(), 1)
-		printErr(w, "Cookies Not valid")
+		kaoriUtils.PrintErr(w, "Cookies Not valid")
 		return
 	}
 
 	//Check validity
-	if !VerifyRefreshToken(data.Email, data.RefreshId) {
+	if !kaoriJwt.VerifyRefreshToken(data.Email, data.RefreshId) {
 		printLog(data.Email, ip, "ApiRefresh", "Token not valid", 2)
-		printErr(w, "Token not valid")
+		kaoriUtils.PrintErr(w, "Token not valid")
 		return
 	}
 
-	if !VerifyExpireDate(data.Exp) {
+	if !kaoriJwt.VerifyExpireDate(data.Exp) {
 		printLog(data.Email, ip, "ApiRefresh", "Token expired", 2)
 		http.Error(w, `{"code": 401, "msg": "Token expired! Login required!"}`, http.StatusUnauthorized)
 		return
 	}
 
 	//Remove old refresh token
-	_, err = kaoriUser.Client.c.Collection("User").Doc(data.Email).
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(data.Email).
 		Collection("RefreshToken").Doc(data.RefreshId).
-		Delete(kaoriUser.Client.ctx)
+		Delete(kaoriUserDB.Client.Ctx)
 
 	if err != nil {
 		printLog(data.Email, ip, "ApiRefresh", "Database connection error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Check token expired
-	err = CheckOldsToken(data.Email)
+	err = kaoriJwt.CheckOldsToken(data.Email)
 	if err != nil {
 		printLog(data.Email, ip, "ApiRefresh", "Check old tokens error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Generate new token pair
-	tokens, err := GenerateTokenPair(data.Email)
+	tokens, err := kaoriJwt.GenerateTokenPair(data.Email)
 	if err != nil {
 		printLog(data.Email, ip, "ApiRefresh", "Generate token pair error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Set Cookies
-	err = setCookies(w, tokens["RefreshToken"].Token)
+	err = kaoriUtils.SetCookies(w, tokens["RefreshToken"].Token, cfg.Jwt.Iss, cfg.Password.Cookies)
 	if err != nil {
 		printLog(data.Email, ip, "ApiRefresh", "Set cookie error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -373,17 +379,17 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request) {
 	rf, ok := data2["refreshId"].(string)
 	if !ok {
 		printLog(data.Email, ip, "ApiRefresh", `The field with key "refreshId" doesn't exist'`, 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
-	_, err = kaoriUser.Client.c.Collection("User").Doc(data.Email).
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(data.Email).
 		Collection("RefreshToken").Doc(rf).
-		Set(kaoriUser.Client.ctx, map[string]int64{"exp": exp})
+		Set(kaoriUserDB.Client.Ctx, map[string]int64{"exp": exp})
 
 	if err != nil {
 		printLog(data.Email, ip, "ApiRefresh", "Database connection error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -392,7 +398,7 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request) {
 	exp, ok = fields["exp"].(int64)
 	if !ok {
 		printLog(data.Email, ip, "ApiRefresh", `The field with key "exp" doesn't exist'`, 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -403,7 +409,7 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		printLog(data.Email, ip, "ApiRefresh", "Create JSON error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -412,7 +418,7 @@ func ApiRefresh(w http.ResponseWriter, r *http.Request) {
 
 func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
-	var u User
+	var u kaoriUser.User
 
 	// Declare a new MusicData struct.
 	user := struct {
@@ -422,13 +428,13 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 		ProfilePicture string `json:"profilePicture,omitempty"`
 	}{}
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	// Try to decode the request body into the struct. If there is an error,
 	// respond to the client with the error message and a 400 status code.
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
@@ -439,30 +445,30 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
 	err = u.IsValid()
 	if err != nil {
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
-	if existUser(u.Email) {
-		printErr(w, "A user with this email already exists")
+	if kaoriUtils.ExistUser(kaoriUserDB, u.Email) {
+		kaoriUtils.PrintErr(w, "A user with this email already exists")
 		return
 	}
 
 	u.NewUser() //Set default value
 
 	//Add in the database
-	err = u.AddNewUser()
+	err = u.AddNewUser(kaoriUserDB)
 	if err != nil {
 		printLog("General", ip, "ApiSignUp", "AddNewUser error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Generate tokens
-	tokens, err := GenerateTokenPair(u.Email)
+	tokens, err := kaoriJwt.GenerateTokenPair(u.Email)
 	if err != nil {
 		printLog("General", ip, "ApiSignUp", "Error to generate token pair: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -479,17 +485,17 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 	rf, ok := data["refreshId"].(string)
 	if !ok {
 		printLog("General", ip, "ApiSignUp", `The field with key "refreshId" doesn't exist'`, 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
-	_, err = kaoriUser.Client.c.Collection("User").Doc(u.Email).
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(u.Email).
 		Collection("RefreshToken").Doc(rf).
-		Set(kaoriUser.Client.ctx, map[string]int64{"exp": exp})
+		Set(kaoriUserDB.Client.Ctx, map[string]int64{"exp": exp})
 
 	if err != nil {
 		printLog("General", ip, "ApiSignUp", "Database error: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -507,7 +513,15 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
 	//Send mails
 	signupField := cfg.Template.Mail["registration"]
-	err = sendEmail(u.Email, signupField.Object, c, signupField.File)
+	err = kaoriMail.SendEmail(
+		cfg.Mail.SmtpServer.Host + cfg.Mail.SmtpServer.Port,
+		cfg.Mail.Address,
+		cfg.Password.Mail,
+		u.Email,
+		signupField.Object,
+		signupField.File,
+		c,
+	)
 	if err != nil {
 		printLog("General", ip, "ApiSignUp", "Error to send mail: "+err.Error(), 1)
 		return
@@ -517,52 +531,52 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
 func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
-	params := []ParamsInfo{
+	params := []kaoriUtils.ParamsInfo{
 		{Key: "id", Required: true},
 		{Key: "email", Required: true},
 	}
 
-	p, err := getParams(params, r)
+	p, err := kaoriUtils.GetParams(params, r)
 	if err != nil {
 		printLog("General", ip, "ApiConfirmSignup", "Error to get params: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
-	if !VerifyRefreshToken(p["email"].(string), p["id"].(string)) {
+	if !kaoriJwt.VerifyRefreshToken(p["email"].(string), p["id"].(string)) {
 		printLog(p["email"].(string), ip, "ApiConfirmSignup", "Warning to verify refresh token: Token not valid", 2)
-		printErr(w, "Token not valid!")
+		kaoriUtils.PrintErr(w, "Token not valid!")
 		return
 	}
 
 	//Remove old refresh token
-	_, err = kaoriUser.Client.c.Collection("User").Doc(p["email"].(string)).
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(p["email"].(string)).
 		Collection("RefreshToken").Doc(p["id"].(string)).
-		Delete(kaoriUser.Client.ctx)
+		Delete(kaoriUserDB.Client.Ctx)
 
 	if err != nil {
 		printLog(p["email"].(string), ip, "ApiConfirmSignup", "Error database: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Set user to active
-	_, err = kaoriUser.Client.c.Collection("User").Doc(p["email"].(string)).
-		Set(kaoriUser.Client.ctx, map[string]bool{"IsActive": true}, firestore.MergeAll)
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(p["email"].(string)).
+		Set(kaoriUserDB.Client.Ctx, map[string]bool{"IsActive": true}, firestore.MergeAll)
 
 	if err != nil {
 		printLog(p["email"].(string), ip, "ApiConfirmSignup", "Error database: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Redirect to login
-	data, err := parseTemplateHtml(cfg.Template.Html["redirect"], "https://"+cfg.Server.Host+cfg.Server.Port+endpointLogin.String())
+	data, err := kaoriUtils.ParseTemplateHtml(cfg.Template.Html["redirect"], "https://"+cfg.Server.Host+cfg.Server.Port+endpointLogin.String())
 	if err != nil {
 		printLog(p["email"].(string), ip, "ApiConfirmSignup", "Error to create template: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -574,45 +588,54 @@ func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 func ApiServiceAnime(w http.ResponseWriter, r *http.Request) {
 
 	var a kaoriData.Anime
-	//var eps []*Episode
+	var err error
 
 	//GetIP
-	//ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	//Get anime id
-	u := r.URL.Path
-	id := filepath.Base(u)
-
-	fmt.Println("ID:", id)
-
-	a.Id = id
-
-	err := a.GetAnimeFromDb(kaoriDataDB.Client.c, kaoriDataDB.Client.ctx)
+	id := filepath.Base(r.URL.Path)
+	a.Id, err = strconv.Atoi(id)
 	if err != nil {
-		log.Println(err)
+		printLog("General", ip, "ServiceAnime", err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
-	fmt.Println(a)
+	err = a.GetAnimeFromDb(kaoriDataDB.Client.C, kaoriDataDB.Client.Ctx)
+	if err != nil {
+		printLog("General", ip, "ServiceAnime", err.Error(), 1)
+		http.Error(w, "Anime not found", http.StatusNotFound)
+		return
+	}
+
+	data, _ := json.Marshal(a)
+
+	//TODO: Generate template
+	w.Write(data)
+}
+
+func ApiServiceManga(w http.ResponseWriter, r *http.Request) {
+
 }
 
 //API ADD-DATA
 
 func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	//Extract token JWT
-	tokenString := ExtractToken(r)
-	metadata, err := ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
+	tokenString := kaoriJwt.ExtractToken(r)
+	metadata, err := kaoriJwt.ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
 	if err != nil {
 		printLog("General", ip, "ApiConfigGet", "Error to extract access token metadata: " + err.Error(), 1)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
 	// Declare a new MusicData struct.
-	var md MusicData
+	var md kaoriData.MusicData
 
 	// Try to decode the request body into the struct. If there is an error,
 	// respond to the client with the error message and a 400 status code.
@@ -629,14 +652,14 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 	err = md.CheckError()
 	if err != nil {
 		printLog(metadata.Email, ip, "ApiAddMusic", "Warning to check input users: "+err.Error(), 2)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
 	//Check if it already exist
-	_, err = kaoriTmp.Client.c.Collection(md.Type).
+	_, err = kaoriTmpDB.Client.C.Collection(md.Type).
 		Doc(strconv.Itoa(md.IdAnilist)).
-		Get(kaoriTmp.Client.ctx)
+		Get(kaoriTmpDB.Client.Ctx)
 	if err == nil {
 		printLog(metadata.Email, ip, "ApiAddMusic", fmt.Sprintf("Warning item with id=%s already exist: ", md.IdAnilist), 2)
 		http.Error(w, `{"code": 409, "msg": "The track already exists"}`, http.StatusConflict)
@@ -644,10 +667,10 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 	}
 
 	md.GetNameAnime()
-	err = md.NormalizeName()
+	err = md.NormalizeName(cfg.Template.Music["name"])
 	if err != nil {
 		printLog(metadata.Email, ip, "ApiAddMusic", "Error to normalize name: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -655,15 +678,15 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 	err = md.UploadTemporaryFile()
 	if err != nil {
 		printLog(metadata.Email, ip, "ApiAddMusic", "Error to upload temporary file: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
 	//Add to database
-	err = md.AddDataToTmpDatabase()
+	err = md.AddDataToTmpDatabase(kaoriTmpDB)
 	if err != nil {
 		printLog(metadata.Email, ip, "ApiAddMusic", "Error to add music data to the temp database: "+err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 }
@@ -672,14 +695,14 @@ func ApiAddMusic(w http.ResponseWriter, r *http.Request) {
 
 func ApiConfigGet(w http.ResponseWriter, r *http.Request){
 
-	ip := GetIP(r)
+	ip := kaoriUtils.GetIP(r)
 
 	//Extract token JWT
-	tokenString := ExtractToken(r)
-	metadata, err := ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
+	tokenString := kaoriJwt.ExtractToken(r)
+	metadata, err := kaoriJwt.ExtractAccessTokenMetadata(tokenString, cfg.Password.AccessToken)
 	if err != nil {
 		printLog("General", ip, "ApiConfigGet", "Error to extract access token metadata: " + err.Error(), 1)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
@@ -695,7 +718,7 @@ func ApiConfigGet(w http.ResponseWriter, r *http.Request){
 
 func ApiConfigSet(w http.ResponseWriter, r *http.Request){
 
-	var cfg2 Config
+	var cfg2 kaoriSettings.Config
 	cfg2 = *cfg
 
 	mappa := r.Context().Value("values").(ContextValues)
@@ -708,12 +731,15 @@ func ApiConfigSet(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
+	//TODO: add
+	/*
 	//Check configuration validity
 	if err = cfg2.CheckConfig(); err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiConfigSet", "Config not valid: " + err.Error(), 1)
 		printErr(w, "Config not valid: " + err.Error())
 		return
 	}
+	 */
 
 	wdone, err := cfg2.WriteConfig()
 	if err != nil {
@@ -740,7 +766,7 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 
 
 	if r.Method == http.MethodGet{
-		set := []ParamsInfo{
+		set := []kaoriUtils.ParamsInfo{
 			{Key: "func", Required: false},
 			{Key: "ip", Required: false},
 			{Key: "user", Required: false},
@@ -750,16 +776,16 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 			{Key: "order", Required: true},
 		}
 
-		params, err = getParams(set, r)
+		params, err = kaoriUtils.GetParams(set, r)
 		if err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to get params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
-		if err = checkFiltersLogGet(set, params); err != nil {
+		if err = kaoriUtils.CheckFiltersLogGet(set, params); err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
@@ -768,13 +794,13 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 		err = json.NewDecoder(r.Body).Decode(&params)
 		if err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to get JSON params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
-		if err = checkFiltersLogPost(params); err != nil {
+		if err = kaoriUtils.CheckFiltersLogPost(params); err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
@@ -784,7 +810,7 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 	f, err := os.Open("log/server.log.json")
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to open log file: "+ err.Error(),1 )
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -821,7 +847,7 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 
 		//Other filters
 		for _, filter := range orderSlice[1:] {
-			logsString, err = filterLog(logsString, filter, params[filter].(string))
+			logsString, err = kaoriUtils.FilterLog(logsString, filter, params[filter].(string))
 			if err != nil {
 				log.Println(err)
 				return
@@ -836,7 +862,7 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 		err = json.Unmarshal([]byte(item), &sl)
 		if err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to create JSON of single log: "+ err.Error(),1 )
-			printInternalErr(w)
+			kaoriUtils.PrintInternalErr(w)
 			return
 		}
 
@@ -847,7 +873,7 @@ func ApiLogServer(w http.ResponseWriter, r *http.Request){
 	data, err := json.Marshal(logs)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to create JSON of slice log: "+ err.Error(),1 )
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -864,7 +890,7 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 	mappa := r.Context().Value("values").(ContextValues)
 
 	if r.Method == http.MethodGet {
-		set := []ParamsInfo{
+		set := []kaoriUtils.ParamsInfo{
 			{Key: "method", Required: false},
 			{Key: "url", Required: false},
 			{Key: "ref", Required: false},
@@ -877,16 +903,16 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 			{Key: "order", Required: true},
 		}
 
-		params, err = getParams(set, r)
+		params, err = kaoriUtils.GetParams(set, r)
 		if err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to get params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
-		if err = checkFiltersLogGet(set, params); err != nil {
+		if err = kaoriUtils.CheckFiltersLogGet(set, params); err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
@@ -894,13 +920,13 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 		err = json.NewDecoder(r.Body).Decode(&params)
 		if err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to get JSON params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 
-		if err = checkFiltersLogPost(params); err != nil {
+		if err = kaoriUtils.CheckFiltersLogPost(params); err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error params: "+err.Error(), 1)
-			printErr(w, err.Error())
+			kaoriUtils.PrintErr(w, err.Error())
 			return
 		}
 	}
@@ -909,7 +935,7 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 	f, err := os.Open("log/connection.log.json")
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to open log file: "+ err.Error(),1 )
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -946,7 +972,7 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 
 		//Other filters
 		for _, filter := range orderSlice[1:] {
-			logsString, err = filterLog(logsString, filter, params[filter].(string))
+			logsString, err = kaoriUtils.FilterLog(logsString, filter, params[filter].(string))
 			if err != nil {
 				log.Println(err)
 				return
@@ -962,7 +988,7 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 		err = json.Unmarshal([]byte(item), &hl)
 		if err != nil {
 			printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogConnection", "Error to create JSON of single log: "+ err.Error(),1 )
-			printInternalErr(w)
+			kaoriUtils.PrintInternalErr(w)
 			return
 		}
 
@@ -973,7 +999,7 @@ func ApiLogConnection(w http.ResponseWriter, r *http.Request){
 	data, err := json.Marshal(logs)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiLogServer", "Error to create JSON of slice log: "+ err.Error(),1 )
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -987,24 +1013,80 @@ func ApiAnimeInsert(w http.ResponseWriter, r *http.Request) {
 
 	mappa := r.Context().Value("values").(ContextValues)
 
+	idAnilist := filepath.Base(r.URL.Path)
+
 	//Read client data
 	err := json.NewDecoder(r.Body).Decode(&a)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
+	num, err := strconv.Atoi(idAnilist)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
 
+	if a.Id != 0 {
 
-	err = a.SendToDb(kaoriDataDB.Client.c, kaoriDataDB.Client.ctx)
+		if a.Id != num {
+			kaoriUtils.PrintErr(w, "Error, id of body request and id in the URL don't match")
+			return
+		}
+
+	} else {
+		a.Id = num
+	}
+
+	err = a.SendToDb(kaoriDataDB.Client.C, kaoriDataDB.Client.Ctx)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
-		printErr(w, err.Error())
+		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
 
-	fmt.Println("ARCHIVE:", a.Episodes[0].Videos)
+	kaoriUtils.PrintOk(w)
+}
+
+func ApiMangaInsert(w http.ResponseWriter, r *http.Request) {
+
+	var m kaoriData.Manga
+
+	mappa := r.Context().Value("values").(ContextValues)
+
+	idAnilist := filepath.Base(r.URL.Path)
+
+	//Read client data
+	err := json.NewDecoder(r.Body).Decode(&m)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, err.Error())
+		return
+	}
+
+	if m.Id != "" {
+		if m.Id != idAnilist {
+			kaoriUtils.PrintErr(w, "Error, id of body request and id in the URL don't match")
+			return
+		}
+	} else {
+		m.Id = idAnilist
+	}
+
+	err = m.SendToDatabase(kaoriMangaDB.Client.C, kaoriMangaDB.Client.Ctx)
+	if err != nil {
+		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, err.Error())
+		return
+	}
+
+	fmt.Println("MANGA:", m)
+
+	kaoriUtils.PrintOk(w)
+
 }
 
 //API ADMIN COMMAND
@@ -1016,7 +1098,7 @@ func ApiCommandRestart(w http.ResponseWriter, r *http.Request){
 	err := syscall.Kill(syscall.Getpid(), syscall.SIGUSR1)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandRestart", "Error to send signal: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
@@ -1028,7 +1110,7 @@ func ApiCommandShutdown(w http.ResponseWriter, r *http.Request) {
 	err := syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandShutdown", "Error to send signal: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 }
@@ -1039,7 +1121,7 @@ func ApiCommandForcedShutdown(w http.ResponseWriter, r *http.Request) {
 	err := syscall.Kill(syscall.Getpid(), syscall.SIGTERM)
 	if err != nil {
 		printLog(mappa.Get("email"), mappa.Get("ip"), "ApiCommandForcedShutdown", "Error to send signal: " + err.Error(), 1)
-		printInternalErr(w)
+		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 }

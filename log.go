@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/felixge/httpsnoop"
 	logger "github.com/sirupsen/logrus"
+	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"net/http"
 	"os"
 	"sync"
@@ -66,7 +67,7 @@ func logRequestHandler(h http.Handler) http.Handler {
 			Data:      time.Now().Unix(),
 		}
 
-		ri.Ipaddr = GetIP(r)
+		ri.Ipaddr = kaoriUtils.GetIP(r)
 
 		// this runs handler h and captures information about
 		// HTTP request
