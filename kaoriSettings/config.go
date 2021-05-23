@@ -24,16 +24,16 @@ type Config struct {
 }
 
 //NewConfig è un costruttore dell'oggetto config.
-func NewConfig() (*Config, error) {
+func NewConfig(pathConfig string) (*Config, error) {
 
 	provider, err := config.NewYAML(
-		config.File(configFolder+"server.yml"),
-		config.File(configFolder+"logger.yml"),
-		config.File(configFolder+"database.yml"),
-		config.File(configFolder+"password.yml"),
-		config.File(configFolder+"mail.yml"),
-		config.File(configFolder+"template.yml"),
-		config.File(configFolder+"jwt.yml"),
+		config.File(pathConfig+"server.yml"),
+		config.File(pathConfig+"logger.yml"),
+		config.File(pathConfig+"database.yml"),
+		config.File(pathConfig+"password.yml"),
+		config.File(pathConfig+"mail.yml"),
+		config.File(pathConfig+"template.yml"),
+		config.File(pathConfig+"jwt.yml"),
 	)
 
 	if err != nil {
