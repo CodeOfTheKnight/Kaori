@@ -36,27 +36,7 @@ type ParamsInfo struct {
 const LittleBoxURI string = "https://litterbox.catbox.moe/resources/internals/api.php"
 const UrlAnilist string = "https://anilist.co"
 
-//lsGui ritorna la path e il nome dei file presenti nella cartella KaoriGui.
-func lsGui(dir string) (files []string, err error) {
-	err = filepath.Walk(dir,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if !info.IsDir() {
-				if strings.Contains(path, "/css/") || strings.Contains(path, "/js/") || strings.Contains(path, "/lib/") {
-					files = append(files, path)
-				}
-			}
-			return nil
-		})
-	if err != nil {
-		return nil, err
-	}
-	return files, nil
-}
-
-//ls ritorna la path e il nome dei file presenti in una directory.
+//Ls ritorna la path e il nome dei file presenti in una directory.
 func ls(dir string) (files []string, err error) {
 	err = filepath.Walk(dir,
 		func(path string, info os.FileInfo, err error) error {
@@ -84,28 +64,28 @@ func GetIP(r *http.Request) string {
 }
 
 //printInternalErr imposta a 500 lo status code della risposta HTTP.
-func printInternalErr(w http.ResponseWriter) {
+func PrintInternalErr(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Write([]byte("{\"code\": 500, \"msg\": \"Internal Server Error\"}\n"))
 }
 
 //printErr ritorna un errore al client impostando a 400 lo status code della risposta HTTP.
-func printErr(w http.ResponseWriter, err string) {
+func PrintErr(w http.ResponseWriter, err string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
 	w.Write([]byte(fmt.Sprintf("{\"code\": 400, \"msg\": \"%s\"}\n", err)))
 }
 
 //printOk ritorna scrive al client uno status code 200 per indicare che va tutto bene.
-func printOk(w http.ResponseWriter) {
+func PrintOk(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("{\"code\": 200, \"msg\": \"OK\"}\n"))
 }
 
 //getParams ritorna i parametri inviati tramite metodo GET dell'HTTP request.
-func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, error) {
+func GetParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, error) {
 
 	values := make(map[string]interface{})
 
@@ -133,7 +113,7 @@ func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, er
 }
 
 //validateIdAnilist convalida l'id anilist, ritorna true se è corretto altrimenti false.
-func validateIdAnilist(ida int, tipo string) bool {
+func ValidateIdAnilist(ida int, tipo string) bool {
 	resp, _ := http.Get(fmt.Sprintf("%s/%s/%d/", UrlAnilist, tipo, ida))
 	if resp.StatusCode == 200 {
 		return true
@@ -143,7 +123,7 @@ func validateIdAnilist(ida int, tipo string) bool {
 }
 
 //Converts pre-existing base64 data (found in example of https://golang.org/pkg/image/#Decode) to test.png
-func base64toPng(strcode string) ([]byte, error) {
+func Base64toPng(strcode string) ([]byte, error) {
 
 	var bfg bytes.Buffer
 
@@ -162,7 +142,7 @@ func base64toPng(strcode string) ([]byte, error) {
 }
 
 //Given a base64 string of a JPEG, encodes it into an JPEG image test.jpg
-func base64toJpg(data string) ([]byte, error) {
+func Base64toJpg(data string) ([]byte, error) {
 
 	var bfg bytes.Buffer
 
@@ -180,7 +160,7 @@ func base64toJpg(data string) ([]byte, error) {
 	return bfg.Bytes(), nil
 }
 
-func base64toMp3(data string) ([]byte, error) {
+func Base64toMp3(data string) ([]byte, error) {
 
 	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(data))
 	_, err := mp3.NewDecoder(reader)
@@ -196,7 +176,7 @@ func base64toMp3(data string) ([]byte, error) {
 	return content, nil
 }
 
-func uploadLittleBox(data []byte, nameFile string) (uri string, err error) {
+func UploadLittleBox(data []byte, nameFile string) (uri string, err error) {
 
 	//Write multipart-data
 	body := new(bytes.Buffer)
@@ -241,7 +221,7 @@ func GenerateID() string {
 	return ksuid.New().String()
 }
 
-func setCookies(w http.ResponseWriter, token, tokenIss, cookieKey string) error {
+func SetCookies(w http.ResponseWriter, token, tokenIss, cookieKey string) error {
 
 	var s = securecookie.New([]byte(cookieKey), nil)
 
@@ -265,7 +245,7 @@ func setCookies(w http.ResponseWriter, token, tokenIss, cookieKey string) error 
 	return nil
 }
 
-func getCookies(r *http.Request, tokenIss, cookieKey string) (map[string]string, error) {
+func GetCookies(r *http.Request, tokenIss, cookieKey string) (map[string]string, error) {
 
 	var s = securecookie.New([]byte(cookieKey), nil)
 
@@ -279,7 +259,7 @@ func getCookies(r *http.Request, tokenIss, cookieKey string) (map[string]string,
 	return nil, errors.New("Cookies not valid!")
 }
 
-func verifyAuth(db *kaoriDatabase.NoSqlDb, email, password string) (bool, error) {
+func VerifyAuth(db *kaoriDatabase.NoSqlDb, email, password string) (bool, error) {
 
 	document, err := db.Client.C.Collection("User").Doc(email).Get(db.Client.Ctx)
 	if err != nil {
@@ -301,12 +281,12 @@ func verifyAuth(db *kaoriDatabase.NoSqlDb, email, password string) (bool, error)
 	return false, nil
 }
 
-func dateToUnix(date string) int64 {
+func DateToUnix(date string) int64 {
 	t, _ := time.Parse(time.RFC3339Nano, date)
 	return t.Unix()
 }
 
-func parseTemplate(tmpl string, data interface{}) (string, error) {
+func ParseTemplate(tmpl string, data interface{}) (string, error) {
 
 	templatePath, err := filepath.Abs(tmpl)
 	if err != nil {
@@ -327,7 +307,7 @@ func parseTemplate(tmpl string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func parseTemplateHtml(tmpl string, data interface{}) (string, error) {
+func ParseTemplateHtml(tmpl string, data interface{}) (string, error) {
 
 	templatePath, err := filepath.Abs(tmpl)
 	if err != nil {
@@ -348,7 +328,7 @@ func parseTemplateHtml(tmpl string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func existUser(db *kaoriDatabase.NoSqlDb, email string) bool {
+func ExistUser(db *kaoriDatabase.NoSqlDb, email string) bool {
 	_, err := db.Client.C.Collection("User").Doc(email).Get(db.Client.Ctx)
 	if err != nil {
 		return false
@@ -357,7 +337,7 @@ func existUser(db *kaoriDatabase.NoSqlDb, email string) bool {
 	}
 }
 
-func passwordValid(pws string) error {
+func PasswordValid(pws string) error {
 	if len(pws) < 8 {
 		return fmt.Errorf("password len is < 9")
 	}
@@ -373,7 +353,7 @@ func passwordValid(pws string) error {
 	return nil
 }
 
-func portValid(port string) error {
+func PortValid(port string) error {
 	portInt, err := strconv.Atoi(strings.Trim(port, ":"))
 	if err != nil {
 		return errors.New("Invalid Port: Conversion of port to int not valid")
@@ -385,12 +365,12 @@ func portValid(port string) error {
 	return nil
 }
 
-func checkHash(hash string) bool {
+func CheckHash(hash string) bool {
 	ok, _ := regexp.MatchString(`^#(?:[0-9a-fA-F]{3}){1,2}$`, hash)
 	return ok
 }
 
-func filterLog(rows []string, filter string, filterValue string) (r []string, err error) {
+func FilterLog(rows []string, filter string, filterValue string) (r []string, err error) {
 
 	for _, row := range rows {
 
@@ -470,7 +450,7 @@ func filterLog(rows []string, filter string, filterValue string) (r []string, er
 	return r, err
 }
 
-func checkFiltersLogGet(params []ParamsInfo, values map[string]interface{}) error {
+func CheckFiltersLogGet(params []ParamsInfo, values map[string]interface{}) error {
 
 	keys := strings.Split(values["order"].(string), ",")
 
@@ -492,7 +472,7 @@ func checkFiltersLogGet(params []ParamsInfo, values map[string]interface{}) erro
 	return nil
 }
 
-func checkFiltersLogPost(values map[string]interface{}) error {
+func CheckFiltersLogPost(values map[string]interface{}) error {
 	var keys []string
 	orders := strings.Split(values["order"].(string), ",")
 
@@ -518,7 +498,7 @@ func checkFiltersLogPost(values map[string]interface{}) error {
 	return nil
 }
 
-func hasContentType(r *http.Request, mimetype string) bool {
+func HasContentType(r *http.Request, mimetype string) bool {
 	contentType := r.Header.Get("Content-type")
 	if contentType == "" {
 		return mimetype == "application/octet-stream"
