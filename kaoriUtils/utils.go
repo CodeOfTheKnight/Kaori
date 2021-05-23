@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/CodeOfTheKnight/Kaori/kaoriDatabase"
 	"github.com/gorilla/securecookie"
 	"github.com/hajimehoshi/go-mp3"
 	"github.com/segmentio/ksuid"
@@ -26,37 +28,13 @@ import (
 	"time"
 )
 
-package main
+type ParamsInfo struct {
+	Key      string
+	Required bool
+}
 
-import (
-"bytes"
-"encoding/base64"
-"encoding/json"
-"errors"
-"fmt"
-"github.com/gorilla/securecookie"
-"github.com/hajimehoshi/go-mp3"
-"github.com/segmentio/ksuid"
-templateHtml "html/template"
-"image"
-"image/jpeg"
-"image/png"
-"io"
-"log"
-"mime"
-"mime/multipart"
-"net/http"
-"os"
-"path/filepath"
-"regexp"
-"strconv"
-"strings"
-"text/template"
-"time"
-)
-
-const littleBoxURI string = "https://litterbox.catbox.moe/resources/internals/api.php"
-const urlAnilist string = "https://anilist.co"
+const LittleBoxURI string = "https://litterbox.catbox.moe/resources/internals/api.php"
+const UrlAnilist string = "https://anilist.co"
 
 //lsGui ritorna la path e il nome dei file presenti nella cartella KaoriGui.
 func lsGui(dir string) (files []string, err error) {
@@ -95,7 +73,6 @@ func ls(dir string) (files []string, err error) {
 	}
 	return files, nil
 }
-
 
 //Restituisce l'IP del client che ha effettuato la richiesta.
 func GetIP(r *http.Request) string {
@@ -157,7 +134,7 @@ func getParams(params []ParamsInfo, r *http.Request) (map[string]interface{}, er
 
 //validateIdAnilist convalida l'id anilist, ritorna true se è corretto altrimenti false.
 func validateIdAnilist(ida int, tipo string) bool {
-	resp, _ := http.Get(fmt.Sprintf("%s/%s/%d/", urlAnilist, tipo, ida))
+	resp, _ := http.Get(fmt.Sprintf("%s/%s/%d/", UrlAnilist, tipo, ida))
 	if resp.StatusCode == 200 {
 		return true
 	}
@@ -237,7 +214,7 @@ func uploadLittleBox(data []byte, nameFile string) (uri string, err error) {
 	}
 
 	//Make request
-	req, err := http.NewRequest("POST", littleBoxURI, body)
+	req, err := http.NewRequest("POST", LittleBoxURI, body)
 	if err != nil {
 		return "", err
 	}
@@ -264,20 +241,20 @@ func GenerateID() string {
 	return ksuid.New().String()
 }
 
-func setCookies(w http.ResponseWriter, token string) error {
+func setCookies(w http.ResponseWriter, token, tokenIss, cookieKey string) error {
 
-	var s = securecookie.New([]byte(cfg.Password.Cookies), nil)
+	var s = securecookie.New([]byte(cookieKey), nil)
 
 	value := map[string]string{
 		"RefreshToken": token,
 	}
-	if encoded, err := s.Encode(cfg.Jwt.Iss, value); err == nil {
+	if encoded, err := s.Encode(tokenIss, value); err == nil {
 		cookie := &http.Cookie{
-			Name: cfg.Jwt.Iss,
+			Name:     tokenIss,
 			Value:    encoded,
 			Secure:   false,
 			HttpOnly: false,
-			Path: "/",
+			Path:     "/",
 		}
 		fmt.Println("COOKIE", cookie)
 		http.SetCookie(w, cookie)
@@ -288,13 +265,13 @@ func setCookies(w http.ResponseWriter, token string) error {
 	return nil
 }
 
-func getCookies(r *http.Request) (map[string]string, error) {
+func getCookies(r *http.Request, tokenIss, cookieKey string) (map[string]string, error) {
 
-	var s = securecookie.New([]byte(cfg.Password.Cookies), nil)
+	var s = securecookie.New([]byte(cookieKey), nil)
 
-	if cookie, err := r.Cookie(cfg.Jwt.Iss); err == nil {
+	if cookie, err := r.Cookie(tokenIss); err == nil {
 		value := make(map[string]string)
-		if err = s.Decode(cfg.Jwt.Iss, cookie.Value, &value); err == nil {
+		if err = s.Decode(tokenIss, cookie.Value, &value); err == nil {
 			return value, nil
 		}
 	}
@@ -302,9 +279,9 @@ func getCookies(r *http.Request) (map[string]string, error) {
 	return nil, errors.New("Cookies not valid!")
 }
 
-func verifyAuth(email, password string) (bool, error) {
+func verifyAuth(db *kaoriDatabase.NoSqlDb, email, password string) (bool, error) {
 
-	document, err := kaoriUser.Client.C.Collection("User").Doc(email).Get(kaoriUser.Client.Ctx)
+	document, err := db.Client.C.Collection("User").Doc(email).Get(db.Client.Ctx)
 	if err != nil {
 		return false, err
 	}
@@ -371,8 +348,8 @@ func parseTemplateHtml(tmpl string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func existUser(email string) bool {
-	_, err := kaoriUser.Client.C.Collection("User").Doc(email).Get(kaoriUser.Client.Ctx)
+func existUser(db *kaoriDatabase.NoSqlDb, email string) bool {
+	_, err := db.Client.C.Collection("User").Doc(email).Get(db.Client.Ctx)
 	if err != nil {
 		return false
 	} else {
@@ -430,7 +407,6 @@ func filterLog(rows []string, filter string, filterValue string) (r []string, er
 			return nil, err
 		}
 
-
 		switch filter {
 		case "msg":
 			if strings.Contains(strings.Trim(string(str), "\""), filterValue) {
@@ -461,7 +437,7 @@ func filterLog(rows []string, filter string, filterValue string) (r []string, er
 					return nil, err
 				}
 
-				if (dateLog.Unix() >= date1.Unix()) && (dateLog.Unix() <= date2.Unix()){
+				if (dateLog.Unix() >= date1.Unix()) && (dateLog.Unix() <= date2.Unix()) {
 					r = append(r, row)
 				}
 			} else {
