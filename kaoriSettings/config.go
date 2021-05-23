@@ -5,12 +5,8 @@ import (
 	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"go.uber.org/config"
 	"os"
-	"path/filepath"
 	"strings"
 )
-
-//configFolder è una costante che definisce la path dove risiedono i file di configurazione.
-const configFolder string = "../config"
 
 type error interface {
 	Error() string
@@ -173,15 +169,10 @@ func (cfg *Config) CheckConfig() error {
 }
 */
 
-func CheckPrecedentConfig() error {
-
-	path, err := filepath.Abs(configFolder)
-	if err != nil {
-		return err
-	}
+func CheckPrecedentConfig(pathConfig string) error {
 
 	//Get files name
-	files, err := kaoriUtils.Ls(path)
+	files, err := kaoriUtils.Ls(pathConfig)
 	if err != nil {
 		return err
 	}
