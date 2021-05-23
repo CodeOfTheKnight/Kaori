@@ -45,10 +45,13 @@ firebase.google.com/go v3.13.0+incompatible h1:3TdYC3DDi6aHn20qoRkxwGqNgdjtblwVA
 firebase.google.com/go v3.13.0+incompatible/go.mod h1:xlah6XbEyW6tbfSklcfe5FHJIwjt8toICdV5Wh9ptHs=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523094256-a4640e276a91 h1:k2M3rzmkvfRn7aTVMTD21Fabnwy7vHgc066ZJg0l8TE=
 github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523094256-a4640e276a91/go.mod h1:WcLOO0FVH6rHEtLhuN4UbbRIYQ+YEDWJNf/TpdyPgwo=
-github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210523143743-48d9cac14eb6 h1:IR6JlS2v7ozdz8v6bH1vj6nvZ8qTYi5MxZQ4ik9YkTs=
-github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210523143743-48d9cac14eb6/go.mod h1:bG3ykYjRBExJy297yJIvPpJ/bPttBs0BSWdlhJq28Dw=
+github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523151639-0f9a753d6ec5 h1:GYm19Mm4mBNeM8ZKkvWr/PgEQoP3Ps4EaYfx8GtGIgI=
+github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523151639-0f9a753d6ec5/go.mod h1:WcLOO0FVH6rHEtLhuN4UbbRIYQ+YEDWJNf/TpdyPgwo=
+github.com/CodeOfTheKnight/Kaori/kaoriJwt v0.0.0-20210523151750-58becc16c544 h1:6ujFYHO5nLDXYQguQYegQm5uBXCDjXMfsKqznuvBfq0=
+github.com/CodeOfTheKnight/Kaori/kaoriJwt v0.0.0-20210523151750-58becc16c544/go.mod h1:JE++76SUK+uufrKmCWXuAgpZ2wtWtK+4hwUUEzmSgdg=
+github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210523151639-0f9a753d6ec5 h1:UKpjMWr9gk75iidGaM3F5r1EZHZL/yQfNNIhuxWj6x0=
+github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210523151639-0f9a753d6ec5/go.mod h1:bG3ykYjRBExJy297yJIvPpJ/bPttBs0BSWdlhJq28Dw=
 github.com/CodeOfTheKnight/kaoriDatabase v0.0.0-20210522221732-b7bab38b9bda/go.mod h1:ydzloa4lfsVPChYdmsngzZDVd5bDmp9sjIMcz5nH/R4=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
