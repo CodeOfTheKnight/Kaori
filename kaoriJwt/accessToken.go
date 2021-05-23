@@ -22,38 +22,6 @@ func NewAccessToken(addExpire int) *JWTAccessMetadata {
 	return &JWTAccessMetadata{Exp: time.Now().Add(time.Minute * time.Duration(addExpire)).Unix()}
 }
 
-func (jm *JWTAccessMetadata) GenerateToken(jwtPass string) (string, error) {
-
-	if err := jm.check(); err != nil {
-		return "", err
-	}
-
-	/*
-	//Get permissions
-	document, err := db.Client.C.Collection("User").Doc(jam.Email).Get(db.Client.Ctx)
-	if err != nil {
-		return "", err
-	}
-	data := document.Data()
-	 */
-
-	//Generate Access token
-	atClaims := jwt.MapClaims{}
-	atClaims["iss"] = jm.Iss
-	atClaims["iat"] = time.Now().Unix()
-	atClaims["exp"] = jm.Exp
-	atClaims["company"] = jm.Company
-	atClaims["email"] = jm.Email
-	atClaims["permission"] = jm.Permission
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-	token, err := at.SignedString([]byte(jwtPass))
-	if err != nil {
-		return "", err
-	}
-
-	return token, nil
-}
-
 func ExtractAccessMetadata(tokenString, secret string) (*JWTAccessMetadata, error) {
 
 	token, err := VerifyToken(tokenString, secret)
@@ -104,6 +72,53 @@ func ExtractAccessMetadata(tokenString, secret string) (*JWTAccessMetadata, erro
 		}, nil
 	}
 	return nil, err
+}
+
+func (jm *JWTAccessMetadata) GenerateToken(jwtPass string) (string, error) {
+
+	if err := jm.check(); err != nil {
+		return "", err
+	}
+
+	/*
+	//Get permissions
+	document, err := db.Client.C.Collection("User").Doc(jam.Email).Get(db.Client.Ctx)
+	if err != nil {
+		return "", err
+	}
+	data := document.Data()
+	 */
+
+	//Generate Access token
+	atClaims := jwt.MapClaims{}
+	atClaims["iss"] = jm.Iss
+	atClaims["iat"] = time.Now().Unix()
+	atClaims["exp"] = jm.Exp
+	atClaims["company"] = jm.Company
+	atClaims["email"] = jm.Email
+	atClaims["permission"] = jm.Permission
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	token, err := at.SignedString([]byte(jwtPass))
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func (jwt JWTAccessMetadata) GetPermission() (perms []Permission, err error) {
+
+	runes := []rune(jwt.Permission)
+
+	for _, r := range runes {
+		p, err := runeToPermission(r)
+		if err != nil {
+			return nil, err
+		}
+		perms = append(perms, p)
+	}
+
+	return perms, nil
 }
 
 func (jm *JWTAccessMetadata) check() error {

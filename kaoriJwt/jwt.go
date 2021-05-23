@@ -1,6 +1,7 @@
 package kaoriJwt
 
 import (
+	"errors"
 	"fmt"
 	"github.com/CodeOfTheKnight/Kaori/kaoriDatabase"
 	"github.com/form3tech-oss/jwt-go"
@@ -118,3 +119,4 @@ func CheckOldsToken(db *kaoriDatabase.NoSqlDb, email string) error {
 
 	return nil
 }
+
