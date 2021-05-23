@@ -1,9 +1,11 @@
 package kaoriSettings
 
 import (
+	"errors"
 	"fmt"
 	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"go.uber.org/config"
+	"gopkg.in/yaml.v2"
 	"os"
 	"strings"
 )
@@ -104,8 +106,6 @@ func (conf *Config) WriteConfig() (wdone []string, err error) {
 	return
 }
 
-/*
-//TODO: Modify database configuration
 //WriteDatabaseConf Scrive i settaggi dei database nel relativo file.
 func (conf *Config) WriteDatabaseConf() error {
 
@@ -129,12 +129,6 @@ func (conf *Config) WriteDatabaseConf() error {
 	return nil
 }
 
-*/
-
-
-//TODO: Modify database config
-
-/*
 //CheckConfig controlla la validità di tutte le configurazioni.
 func (cfg *Config) CheckConfig() error {
 
@@ -148,8 +142,15 @@ func (cfg *Config) CheckConfig() error {
 		return err
 	}
 
-	//Check databases settings
-	for _, db := range cfg.Database {
+	//Check not relational databases settings
+	for _, db := range cfg.Database.NonRelational {
+		if err := db.CheckDatabase(); err != nil {
+			return err
+		}
+	}
+
+	//Check relational database settings
+	for _, db := range cfg.Database.Relational {
 		if err := db.CheckDatabase(); err != nil {
 			return err
 		}
@@ -167,7 +168,6 @@ func (cfg *Config) CheckConfig() error {
 
 	return nil
 }
-*/
 
 func CheckPrecedentConfig(pathConfig string) error {
 

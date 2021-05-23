@@ -1,5 +1,12 @@
 package kaoriSettings
 
+import (
+	"errors"
+	"fmt"
+	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
+	"os"
+)
+
 //DatabaseConfig è una struttura con le impostazioni del database.
 type DatabaseConfig struct {
 	Relational []DBRelational `yaml:"relational" json:"relational"`
@@ -19,12 +26,8 @@ type DBNonRealtional struct {
 	Key       string `yaml:"key" json:"key,omitempty"`
 }
 
-
-//TODO: Modify checkDatabaseProjectId
-/*
-
 //CheckDatabase controlla che tutte le impostazioni del database siano corrette.
-func (db *DatabaseConfig) CheckDatabase() error {
+func (db *DBNonRealtional) CheckDatabase() error {
 
 	//Check projectId
 	if err := db.CheckDatabaseProjectId(); err != nil {
@@ -40,7 +43,7 @@ func (db *DatabaseConfig) CheckDatabase() error {
 }
 
 //CheckDatabase controlla che projectId sia corretto.
-func (db *DatabaseConfig) CheckDatabaseProjectId() error {
+func (db *DBNonRealtional) CheckDatabaseProjectId() error {
 	if db.ProjectId == "" {
 		return errors.New("ProjectId not valid.")
 	}
@@ -48,11 +51,79 @@ func (db *DatabaseConfig) CheckDatabaseProjectId() error {
 }
 
 //CheckDatabase controlla che esista il file che contiene la key del database.
-func (db *DatabaseConfig) CheckDatabaseKey() error {
+func (db *DBNonRealtional) CheckDatabaseKey() error {
 	if _, err := os.Stat(db.Key); os.IsNotExist(err) {
 		return errors.New(fmt.Sprintf(`Key database file path "%s", not exist. Modify config file "server.yml!"`, db.Key))
 	}
 	return nil
 }
 
-*/
+func (db *DBRelational) CheckDatabase() error {
+
+	if err := db.CheckUsername(); err != nil {
+		return err
+	}
+
+	if err := db.CheckPassword(); err != nil {
+		return err
+	}
+
+	if err := db.CheckHost(); err != nil {
+		return err
+	}
+
+	if err := db.CheckPort(); err != nil {
+		return err
+	}
+
+	if err := db.CheckDBName(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DBRelational) CheckUsername() error {
+
+	if db.Username == "" {
+		return errors.New("Username not valid.")
+	}
+
+	return nil
+}
+
+func (db *DBRelational) CheckPassword() error {
+
+	if db.Password == "" {
+		return errors.New("Password not valid")
+	}
+
+	return nil
+}
+
+func (db *DBRelational) CheckHost() error {
+
+	if db.Host == "" {
+		return errors.New("Host not setted.")
+	}
+
+	return nil
+}
+
+func (db *DBRelational) CheckPort() error {
+
+	if err := kaoriUtils.PortValid(db.Port); err != nil {
+		return errors.New("Port not valid.")
+	}
+
+	return nil
+}
+
+func (db *DBRelational) CheckDBName() error {
+
+	if db.Db == "" {
+		return errors.New("Database name not valid.")
+	}
+
+	return nil
+}

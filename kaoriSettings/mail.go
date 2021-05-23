@@ -3,7 +3,6 @@ package kaoriSettings
 import (
 	"errors"
 	"fmt"
-	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"gopkg.in/yaml.v2"
 	"os"
 	"strings"
