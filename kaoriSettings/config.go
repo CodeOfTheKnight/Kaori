@@ -5,6 +5,7 @@ import (
 	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"go.uber.org/config"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -174,8 +175,13 @@ func (cfg *Config) CheckConfig() error {
 
 func CheckPrecedentConfig() error {
 
+	path, err := filepath.Abs(configFolder)
+	if err != nil {
+		return err
+	}
+
 	//Get files name
-	files, err := kaoriUtils.Ls(configFolder)
+	files, err := kaoriUtils.Ls(path)
 	if err != nil {
 		return err
 	}
