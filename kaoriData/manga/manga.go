@@ -3,41 +3,32 @@ package manga
 import (
 	"cloud.google.com/go/firestore"
 	"context"
+	"database/sql"
 	"github.com/CodeOfTheKnight/Kaori/kaoriData"
 	"github.com/fatih/structs"
+	"log"
+	"strconv"
+	"time"
 )
 
 type Manga struct {
-	Id string
+	Id int
 	Name string
 	ChaptersNumber int
 	Chapters []*Chapter
-}
-
-type Chapter struct {
-	Number string
-	Title string
-	Pages []*Page
-}
-
-type Page struct {
-	Number string
-	Language string
-	Server string
-	Link string
 }
 
 func (m *Manga) SendToKaori(kaoriServer, token string) error {
 	return kaoriData.SendToKaori(m, kaoriServer, token)
 }
 
-func (m *Manga) SendToDatabase(c *firestore.Client, ctx context.Context) error {
+func (m *Manga) SendToDatabaseNR(c *firestore.Client, ctx context.Context) error {
 
 	ma := structs.Map(m)
 	delete(ma, "Chapters")
 
 	//Send manga data
-	mangaDoc := c.Collection("Manga").Doc(m.Id)
+	mangaDoc := c.Collection("Manga").Doc(strconv.Itoa(m.Id))
 	_, err := mangaDoc.Set(ctx, ma, firestore.MergeAll)
 	if err != nil {
 		return err
@@ -54,7 +45,7 @@ func (m *Manga) SendToDatabase(c *firestore.Client, ctx context.Context) error {
 			chapterDoc := mangaDoc.Collection("Languages").
 										Doc(p.Language).
 										Collection("Chapters").
-										Doc(ch.Number)
+										Doc(strconv.Itoa(ch.Number))
 
 			_, err = chapterDoc.Set(ctx, mc, firestore.MergeAll)
 			if err != nil {
@@ -63,7 +54,7 @@ func (m *Manga) SendToDatabase(c *firestore.Client, ctx context.Context) error {
 
 			//Send pages
 			pagesDoc := chapterDoc.Collection("Pages").
-									Doc(p.Number).
+									Doc(strconv.Itoa(p.Number)).
 									Collection("Servers").
 									Doc(p.Server)
 
@@ -74,6 +65,38 @@ func (m *Manga) SendToDatabase(c *firestore.Client, ctx context.Context) error {
 				return err
 			}
 
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Manga) SendToDatabase(cl *sql.DB) error {
+
+	//Send manga info
+	query := "INSERT INTO Manga(ID, Nome) VALUES (?, ?)"
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5 *time.Second)
+	defer cancelfunc()
+
+	stmt, err := cl.PrepareContext(ctx, query)
+	if err != nil {
+		log.Printf("Error %s when preparing SQL statement", err)
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, m.Id, m.Name)
+	if err != nil {
+		log.Printf("Error %s when inserting row into products table", err)
+		return err
+	}
+
+	for _, chapter := range m.Chapters {
+
+		err = chapter.SendToDB(cl, m.Id)
+		if err != nil {
+			return err
 		}
 
 	}
