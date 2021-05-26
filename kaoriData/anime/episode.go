@@ -77,3 +77,74 @@ func (ep *Episode) SendToDbRel(cl *sql.DB, IdAnime int) (int, error) {
 
 	return int(prdID), nil
 }
+
+func GetEpisodesFromDB(db *sql.DB, idAnime int) (eps []*Episode, err error) {
+
+	// Execute the query
+	smtp, err := db.Prepare("SELECT ID, Numero, Titolo FROM Episodi WHERE AnimeID = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := smtp.Query(idAnime)
+	if err != nil {
+		return nil, err
+	}
+	defer results.Close()
+
+	for results.Next() {
+
+		var ep Episode
+		var id int
+
+		// for each row, scan the result into our tag composite object
+		err = results.Scan(&id, &ep.Number, &ep.Title)
+		if err != nil {
+			return nil, err
+		}
+
+		ep.Videos, err = GetVideoFromDB(db, id)
+		if err != nil {
+			return nil, err
+		}
+
+		eps = append(eps, &ep)
+	}
+
+	return eps, nil
+}
+
+func GetEpisodeFromDB(db *sql.DB, idAnime int, numEp int) (*Episode, error) {
+
+	var ep Episode
+
+	// Execute the query
+	smtp, err := db.Prepare("SELECT ID, Numero, Titolo FROM Episodi WHERE AnimeID = ? AND Numero = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := smtp.Query(idAnime, numEp)
+	if err != nil {
+		return nil, err
+	}
+	defer results.Close()
+
+	for results.Next() {
+
+		var id int
+
+		// for each row, scan the result into our tag composite object
+		err = results.Scan(&id, &ep.Number, &ep.Title)
+		if err != nil {
+			return nil, err
+		}
+
+		ep.Videos, err = GetVideoFromDB(db, id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &ep, nil
+}

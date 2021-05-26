@@ -42,7 +42,7 @@ func (a *Anime) CheckAnime() error {
 	return nil
 }
 
-func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error {
+func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error  {
 
 	var eps []*Episode
 	var l string

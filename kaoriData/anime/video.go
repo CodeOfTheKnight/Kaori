@@ -190,3 +190,51 @@ func (v *Video) SendToDbRel(cl *sql.DB, episodeID int) (int, error) {
 	return int(prdID), nil
 }
 
+func GetVideoFromDB(db *sql.DB, episodeID int) (videos []*Video, err error) {
+
+
+	// Execute the query
+	smtp, err := db.Prepare("SELECT Lingua, Width, Height, Bitrate, Durata, Fansub, Server, Link FROM Video WHERE EpisodeID = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := smtp.Query(episodeID)
+	if err != nil {
+		return nil, err
+	}
+	defer results.Close()
+
+	for results.Next() {
+
+		var v Video
+		var q InfoQuality
+		var s StreamLink
+
+		// for each row, scan the result into our tag composite object
+		err = results.Scan(
+				&v.Language,
+				&q.Width,
+				&q.Height,
+				&s.Bitrate,
+				&s.Duration,
+				&s.Fansub,
+				&v.Server,
+				&s.Link,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		v.Quality = &q
+		v.StreamLink = &s
+
+		// and then print out the tag's Name attribute
+		log.Println(v)
+
+		videos = append(videos, &v)
+	}
+
+	return videos, nil
+}
+

@@ -38,3 +38,20 @@ func TestVideo_SendToDbRel(t *testing.T) {
 	t.Log(num)
 
 }
+
+func TestVideo_GetVideoFromDB(t *testing.T) {
+
+	db, err := sql.Open("mysql", "root:Goghetto1106@tcp(192.168.1.4:3306)/KaoriAnime")
+
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	videos, err := GetVideoFromDB(db, 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(videos)
+
+}

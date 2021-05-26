@@ -45,8 +45,6 @@ firebase.google.com/go v3.13.0+incompatible h1:3TdYC3DDi6aHn20qoRkxwGqNgdjtblwVA
 firebase.google.com/go v3.13.0+incompatible/go.mod h1:xlah6XbEyW6tbfSklcfe5FHJIwjt8toICdV5Wh9ptHs=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/CodeOfTheKnight/Kaori/kaoriData v0.0.0-20210523123245-408af830ea98 h1:mKQxeLHc8h8T8ZgHsVHcBh+6wug7miGTMbmeprDzst8=
-github.com/CodeOfTheKnight/Kaori/kaoriData v0.0.0-20210523123245-408af830ea98/go.mod h1:98aAeRfcdB25SuT4y+HIcojVjL8PC+NWW50/hh8/zr8=
 github.com/CodeOfTheKnight/Kaori/kaoriData v0.0.0-20210523124232-9ca693f74717 h1:AaM6mckNeSJfeudpxjFPQuAjpeYd+AcItCPjpfrpMfc=
 github.com/CodeOfTheKnight/Kaori/kaoriData v0.0.0-20210523124232-9ca693f74717/go.mod h1:98aAeRfcdB25SuT4y+HIcojVjL8PC+NWW50/hh8/zr8=
 github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523094256-a4640e276a91/go.mod h1:WcLOO0FVH6rHEtLhuN4UbbRIYQ+YEDWJNf/TpdyPgwo=

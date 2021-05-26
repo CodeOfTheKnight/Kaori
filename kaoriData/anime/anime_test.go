@@ -86,3 +86,20 @@ func TestAnime_SendToDbRel(t *testing.T) {
 
 	t.Log("[OK]")
 }
+
+func TestGetAnimeFromDB(t *testing.T) {
+
+	db, err := sql.Open("mysql", "root:Goghetto1106@tcp(192.168.1.4:3306)/KaoriAnime")
+
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	a, err := GetAnimeFromDB(db, 335)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(a)
+}
