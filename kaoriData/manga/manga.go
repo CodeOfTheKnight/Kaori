@@ -133,7 +133,7 @@ func GetMangaFromDB(db *sql.DB, idManga int) (*Manga, error) {
 			return nil, err
 		}
 
-		m.Chapters, err = GetChapterFromDB(db, idManga)
+		m.Chapters, err = GetChaptersFromDB(db, idManga)
 		if err != nil {
 			return nil, err
 		}
