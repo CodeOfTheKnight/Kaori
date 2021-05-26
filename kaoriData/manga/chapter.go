@@ -3,6 +3,7 @@ package manga
 import (
 	"context"
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"time"
 )
@@ -16,7 +17,7 @@ type Chapter struct {
 func (c *Chapter) SendToDB(cl *sql.DB, mangaID int) error {
 
 	//Insert AnimeInfo
-	query := "INSERT INTO Capitolo(Numero, Nome, MangaID) VALUES (?, ?, ?)"
+	query := "INSERT INTO Capitoli(Numero, Nome, MangaID) VALUES (?, ?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5 *time.Second)
 	defer cancelfunc()
 
@@ -49,4 +50,43 @@ func (c *Chapter) SendToDB(cl *sql.DB, mangaID int) error {
 	}
 
 	return nil
+}
+
+func GetChapterFromDB(db *sql.DB, animeID int) (chapters []*Chapter, err error) {
+
+	// Execute the query
+	smtp, err := db.Prepare("SELECT ID, Numero, Nome FROM Capitoli WHERE MangaID = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := smtp.Query(animeID)
+	if err != nil {
+		return nil, err
+	}
+	defer results.Close()
+
+	for results.Next() {
+
+		var ch Chapter
+		var id int
+
+		// for each row, scan the result into our tag composite object
+		err = results.Scan(&id, &ch.Number, &ch.Title)
+		if err != nil {
+			return nil, err
+		}
+
+		// and then print out the tag's Name attribute
+		log.Println(ch)
+
+		ch.Pages, err = GetPageFromDB(db, id)
+		if err != nil {
+			return nil, err
+		}
+
+		chapters = append(chapters, &ch)
+	}
+
+	return chapters, nil
 }

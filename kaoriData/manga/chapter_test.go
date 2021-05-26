@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestPage_SendToDB(t *testing.T)  {
+func TestChapter_GetChapterFromDB(t *testing.T) {
 
 	db, err := sql.Open("mysql", "root:Goghetto1106@tcp(192.168.1.4:3306)/KaoriManga")
 
@@ -14,10 +14,10 @@ func TestPage_SendToDB(t *testing.T)  {
 	}
 	defer db.Close()
 
-	pages, err := GetPageFromDB(db, 1)
+	mangas, err := GetChapterFromDB(db, 455)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(pages)
+	t.Log(mangas)
 
 }

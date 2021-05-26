@@ -7,4 +7,5 @@ require (
 	github.com/CodeOfTheKnight/Kaori/kaoriData v0.0.0-20210523124232-9ca693f74717
 	github.com/CodeOfTheKnight/Kaori/kaoriData/user v0.0.0-20210523124232-9ca693f74717 // indirect
 	github.com/fatih/structs v1.1.0
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
 )

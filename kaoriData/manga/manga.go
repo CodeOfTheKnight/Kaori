@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"github.com/CodeOfTheKnight/Kaori/kaoriData"
 	"github.com/fatih/structs"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"strconv"
 	"time"
@@ -106,4 +107,40 @@ func (m *Manga) SendToDatabase(cl *sql.DB) error {
 
 func (m *Manga) AppendFile(filePath string) error {
 	return kaoriData.AppendFile(m, filePath)
+}
+
+func GetMangaFromDB(db *sql.DB, idManga int) (*Manga, error) {
+
+	var m Manga
+
+	// Execute the query
+	smtp, err := db.Prepare("SELECT Nome FROM Manga WHERE ID = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := smtp.Query(idManga)
+	if err != nil {
+		return nil, err
+	}
+	defer results.Close()
+
+	for results.Next() {
+
+		// for each row, scan the result into our tag composite object
+		err = results.Scan(&m.Name)
+		if err != nil {
+			return nil, err
+		}
+
+		m.Chapters, err = GetChapterFromDB(db, idManga)
+		if err != nil {
+			return nil, err
+		}
+
+		// and then print out the tag's Name attribute
+		log.Println(m)
+	}
+
+	return &m, nil
 }
