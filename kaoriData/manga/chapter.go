@@ -52,7 +52,7 @@ func (c *Chapter) SendToDB(cl *sql.DB, mangaID int) error {
 	return nil
 }
 
-func GetChapterFromDB(db *sql.DB, animeID int) (chapters []*Chapter, err error) {
+func GetChaptersFromDB(db *sql.DB, animeID int) (chapters []*Chapter, err error) {
 
 	// Execute the query
 	smtp, err := db.Prepare("SELECT ID, Numero, Nome FROM Capitoli WHERE MangaID = ?")
@@ -89,4 +89,42 @@ func GetChapterFromDB(db *sql.DB, animeID int) (chapters []*Chapter, err error) 
 	}
 
 	return chapters, nil
+}
+
+func GetChapterFromDB(db *sql.DB, animeID int, numPag int) (*Chapter, error) {
+
+	var ch Chapter
+
+	// Execute the query
+	smtp, err := db.Prepare("SELECT ID, Numero, Nome FROM Capitoli WHERE MangaID = ? AND Numero = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := smtp.Query(animeID, numPag)
+	if err != nil {
+		return nil, err
+	}
+	defer results.Close()
+
+	for results.Next() {
+
+		var id int
+
+		// for each row, scan the result into our tag composite object
+		err = results.Scan(&id, &ch.Number, &ch.Title)
+		if err != nil {
+			return nil, err
+		}
+
+		// and then print out the tag's Name attribute
+		log.Println(ch)
+
+		ch.Pages, err = GetPageFromDB(db, id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &ch, nil
 }
