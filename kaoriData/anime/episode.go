@@ -10,7 +10,7 @@ import (
 )
 
 type Episode struct {
-	Number int `firestore:"number"`
+	Number string `firestore:"number"`
 	Title string
 	Videos []*Video
 }
@@ -38,11 +38,11 @@ func (ep *Episode) CheckEpisode() error {
 
 func (ep *Episode) checkNumber() error {
 
-	if ep.Number == 0 {
+	if ep.Number == "" {
 		return errors.New("Number of episode not setted")
 	}
 
-	if _, err := strconv.Atoi(strconv.Itoa(ep.Number)); err != nil {
+	if _, err := strconv.Atoi(ep.Number); err != nil {
 		return errors.New("Number of episode not valid")
 	}
 
