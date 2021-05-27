@@ -79,7 +79,7 @@ func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error  {
 				Collection("Languages").
 				Doc(video.Language).
 				Collection("Episodes").
-				Doc(strconv.Itoa(ep.Number)).
+				Doc(ep.Number).
 				Collection("Quality").
 				Doc(q).
 				Collection("Servers").
@@ -109,7 +109,7 @@ func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error  {
 				Collection("Languages").
 				Doc(video.Language).
 				Collection("Episodes").
-				Doc(strconv.Itoa(ep.Number)).
+				Doc(ep.Number).
 				Collection("Quality").
 				Doc(q).
 				Set(db.Client.Ctx, structs.Map(video.Quality), firestore.MergeAll)
@@ -122,7 +122,7 @@ func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error  {
 										Collection("Languages").
 										Doc(l).
 										Collection("Episodes").
-										Doc(strconv.Itoa(ep.Number)).
+										Doc(ep.Number).
 										Set(db.Client.Ctx, map[string]string{
 											"Title": ep.Title,
 										}, firestore.MergeAll)
@@ -270,7 +270,7 @@ func (a *Anime) GetAnimeEpisodeDb(c *firestore.Client, ctx context.Context) erro
 
 			fmt.Println("EP:", docEpisode.Ref.ID)
 
-			ep.Number, err = strconv.Atoi(docEpisode.Ref.ID)
+			ep.Number = docEpisode.Ref.ID
 			if err != nil {
 				return err
 			}
@@ -281,7 +281,7 @@ func (a *Anime) GetAnimeEpisodeDb(c *firestore.Client, ctx context.Context) erro
 					Collection("Languages").
 					Doc(docLanguage.Ref.ID).
 					Collection("Episodes").
-					Doc(strconv.Itoa(ep.Number)).
+					Doc(ep.Number).
 					Collection("Quality").
 					Documents(ctx)
 			defer iterQuality.Stop()
@@ -304,7 +304,7 @@ func (a *Anime) GetAnimeEpisodeDb(c *firestore.Client, ctx context.Context) erro
 						Collection("Languages").
 						Doc(docLanguage.Ref.ID).
 						Collection("Episodes").
-						Doc(strconv.Itoa(ep.Number)).
+						Doc(ep.Number).
 						Collection("Quality").
 						Doc(docQuality.Ref.ID).
 						Collection("Servers").
