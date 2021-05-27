@@ -47,7 +47,7 @@ func SendToKaori(obj interface{}, kaoriUrl string, token string) error {
 	client := &http.Client{Transport: tr}
 
 	//Create request
-	req, err := http.NewRequest("POST", kaoriUrl, bytes.NewReader(data))
+	req, err := http.NewRequest("PUT", kaoriUrl, bytes.NewReader(data))
 	if err != nil {
 		return errors.New("Error to create request: " + err.Error())
 	}
