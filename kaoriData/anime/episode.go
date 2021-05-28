@@ -52,7 +52,7 @@ func (ep *Episode) checkNumber() error {
 func (ep *Episode) SendToDbRel(cl *sql.DB, IdAnime int) (int, error) {
 
 	//Insert AnimeInfo
-	query := "INSERT INTO Episodi(Numero, Titolo, AnimeID) VALUES (?, ?, ?)"
+	query := "INSERT IGNORE INTO Episodi(Numero, Titolo, AnimeID) VALUES (?, ?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
