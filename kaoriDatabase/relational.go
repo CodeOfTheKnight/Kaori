@@ -37,7 +37,16 @@ func NewSqlDb(user, key, host, port, db, driver string) (*SqlDb, error) {
 
 func (sdb *SqlDb) Connect() (err error) {
 
-	sdb.Client, err = sql.Open(sdb.Driver, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", sdb.Username, sdb.Password, sdb.Host, sdb.Port, sdb.Db))
+	var url string
+
+	if sdb.Username == "" && sdb.Password == "" {
+		url = fmt.Sprintf("tcp(%s:%s)/%s", sdb.Host, sdb.Port, sdb.Db)
+	}else {
+		url = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", sdb.Username, sdb.Password, sdb.Host, sdb.Port, sdb.Db)
+	}
+
+
+	sdb.Client, err = sql.Open(sdb.Driver, url)
 	if err != nil {
 		panic(err.Error())
 	}
