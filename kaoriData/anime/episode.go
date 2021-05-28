@@ -53,7 +53,7 @@ func (ep *Episode) SendToDbRel(cl *sql.DB, IdAnime int) (int, error) {
 
 	//Insert AnimeInfo
 	query := "INSERT IGNORE INTO Episodi(Numero, Titolo, AnimeID) VALUES (?, ?, ?)"
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5 * time.Second)
 	defer cancelfunc()
 
 	stmt, err := cl.PrepareContext(ctx, query)
@@ -73,6 +73,35 @@ func (ep *Episode) SendToDbRel(cl *sql.DB, IdAnime int) (int, error) {
 	if err != nil {
 		log.Printf("Error %s when getting last inserted product",     err)
 		return -1, err
+	}
+
+	if prdID == 0 {
+
+		// Execute the query
+		smtp, err := cl.Prepare("SELECT ID FROM Anime WHERE AnimeID = ? AND Numero = ?")
+		if err != nil {
+			return -1, err
+		}
+
+		results, err := smtp.Query(IdAnime, ep.Number)
+		if err != nil {
+			return -1, err
+		}
+		defer results.Close()
+
+		for results.Next() {
+
+			var id int
+
+			// for each row, scan the result into our tag composite object
+			err = results.Scan(&id)
+			if err != nil {
+				return -1, err
+			}
+
+			return id, nil
+		}
+
 	}
 
 	return int(prdID), nil

@@ -164,9 +164,9 @@ func (v *Video) checkServer() error {
 func (v *Video) SendToDbRel(cl *sql.DB, episodeID int) (int, error) {
 
 	if episodeID == 0 {
-		fmt.Println("Episode{ID}: ", episodeID)
+		fmt.Println("EPISODE{ID}: ", episodeID)
 	}
-	
+
 	//Insert AnimeInfo
 	query := "INSERT INTO Video(Lingua, Width, Height, Bitrate, Durata, Fansub, Server, Link, EpisodeID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5 *time.Second)
