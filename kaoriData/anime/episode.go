@@ -78,7 +78,7 @@ func (ep *Episode) SendToDbRel(cl *sql.DB, IdAnime int) (int, error) {
 	if prdID == 0 {
 
 		// Execute the query
-		smtp, err := cl.Prepare("SELECT ID FROM Episode WHERE AnimeID = ? AND Numero = ?")
+		smtp, err := cl.Prepare("SELECT ID FROM Episodi WHERE AnimeID = ? AND Numero = ?")
 		if err != nil {
 			return -1, err
 		}
