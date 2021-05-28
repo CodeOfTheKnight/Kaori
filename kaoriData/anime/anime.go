@@ -139,7 +139,7 @@ func (a *Anime) SendToDb(db *kaoriDatabase.NoSqlDb) error  {
 func (a *Anime) SendToDbRel(cl *sql.DB) error {
 
 	//Insert AnimeInfo
-	query := "INSERT INTO Anime(ID, Name) VALUES (?, ?)"
+	query := "INSERT IGNORE INTO Anime(ID, Name) VALUES (?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5 *time.Second)
 	defer cancelfunc()
 
