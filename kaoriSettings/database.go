@@ -3,7 +3,6 @@ package kaoriSettings
 import (
 	"errors"
 	"fmt"
-	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"os"
 )
 
@@ -60,14 +59,6 @@ func (db *DBNonRealtional) CheckDatabaseKey() error {
 
 func (db *DBRelational) CheckDatabase() error {
 
-	if err := db.CheckUsername(); err != nil {
-		return err
-	}
-
-	if err := db.CheckPassword(); err != nil {
-		return err
-	}
-
 	if err := db.CheckHost(); err != nil {
 		return err
 	}
@@ -78,24 +69,6 @@ func (db *DBRelational) CheckDatabase() error {
 
 	if err := db.CheckDBName(); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (db *DBRelational) CheckUsername() error {
-
-	if db.Username == "" {
-		return errors.New("Username not valid.")
-	}
-
-	return nil
-}
-
-func (db *DBRelational) CheckPassword() error {
-
-	if db.Password == "" {
-		return errors.New("Password not valid")
 	}
 
 	return nil
