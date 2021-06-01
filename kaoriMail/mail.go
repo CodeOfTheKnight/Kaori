@@ -26,6 +26,10 @@ type Service struct {
 	Mails map[string]Mail
 }
 
+const (
+	MIME = "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+)
+
 type Mail struct {
 	Msg    string
 	Labels string
@@ -335,8 +339,7 @@ func SendEmail(serverAddress, mailAddress, mailKey, to, sub, tmpl string,  data 
 	fmt.Println(emailBody)
 
 	msg := "From: " + from + "\n" +
-		"To: " + to + "\n" +
-		"Subject: " + sub + "\n\n" +
+		"To: " + to + "\r\n" + MIME + "\r\n" +
 		emailBody
 
 	err = smtp.SendMail(serverAddress,
