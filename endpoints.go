@@ -8,6 +8,8 @@ const (
 	endpointLogin endpoints = "/login"
 	endpointAnime    endpoints = "/anime/{id:[0-9]+}"   //[GET] Parametri: IdAnilist
 	endpointManga    endpoints = "/manga/{id:[0-9]+}"   //[GET] Parametri: IdAnilist
+	endpointEpisode endpoints = "/episode"
+	endpointChapter endpoints = "/chapter"
 
 	//Endpoint per servizio
 	endpointService endpoints = "/api/service/"
@@ -25,6 +27,7 @@ const (
 	authLogin         endpoints = "/login"
 	authSignUp        endpoints = "/signup"
 	authConfirmSignUp endpoints = "/confirm"
+	authRejectSignUp  endpoints = "/reject"
 	authUserExist     endpoints = "/exist" //[GET] Parametri: email
 
 	//Endpoint addData

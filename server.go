@@ -28,7 +28,9 @@ var (
 	kaoriTmpDB *kaoriDatabase.NoSqlDb
 	kaoriUserDB *kaoriDatabase.NoSqlDb
 	kaoriDataDB *kaoriDatabase.NoSqlDb
-	kaoriMangaDB *kaoriDatabase.NoSqlDb
+	//kaoriMangaDB *kaoriDatabase.NoSqlDb
+	kaoriMangaDB *kaoriDatabase.SqlDb
+	kaoriAnimeDB *kaoriDatabase.SqlDb
 	cfg *kaoriSettings.Config
 )
 
@@ -94,7 +96,7 @@ func init() {
 
 	kaoriLog.PrintLog("Server", "", "init", "Setting Database start", 0)
 
-	//SET DATABASES
+	//SET DATABASES NO Relational
 	kaoriTmpDB, err = kaoriDatabase.NewNoSqlDb(cfg.Database.NonRelational[0].ProjectId, cfg.Database.NonRelational[0].Key)
 	if err != nil {
 		kaoriLog.PrintLog("Server", "", "init", err.Error(), 1)
@@ -113,15 +115,23 @@ func init() {
 		panic(err)
 	}
 
+	/*
 	kaoriMangaDB, err = kaoriDatabase.NewNoSqlDb(cfg.Database.NonRelational[3].ProjectId, cfg.Database.NonRelational[3].Key)
 	if err != nil {
 		kaoriLog.PrintLog("Server", "", "init", err.Error(), 1)
 		panic(err)
 	}
+	*/
 
 	//SET DATABASE RELAZIONALE
 
-	_, err = kaoriDatabase.NewSqlDb("root", "Goghetto1106", "192.168.1.4", "3306", "KaoriAnime", "mysql")
+	kaoriAnimeDB, err = kaoriDatabase.NewSqlDb(cfg.Database.Relational[0].Username, cfg.Database.Relational[0].Password, cfg.Database.Relational[0].Host, cfg.Database.Relational[0].Port, cfg.Database.Relational[0].Db, "mysql")
+	if err != nil {
+		kaoriLog.PrintLog("Server", "", "init", err.Error(), 1)
+		panic(err)
+	}
+
+	kaoriMangaDB, err = kaoriDatabase.NewSqlDb(cfg.Database.Relational[1].Username, cfg.Database.Relational[1].Password, cfg.Database.Relational[1].Host, cfg.Database.Relational[1].Port, cfg.Database.Relational[1].Db, "mysql")
 	if err != nil {
 		kaoriLog.PrintLog("Server", "", "init", err.Error(), 1)
 		panic(err)

@@ -15,6 +15,7 @@ import (
 	"github.com/CodeOfTheKnight/Kaori/kaoriMail"
 	"github.com/CodeOfTheKnight/Kaori/kaoriSettings"
 	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
+	anilist "github.com/kaiserbh/anilistgo/anilist/query"
 	"github.com/mitchellh/mapstructure"
 	"io"
 	"log"
@@ -68,8 +69,6 @@ func ApiUserInfo(w http.ResponseWriter, r *http.Request){
 
 func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
 
-	var s kaoriUser.Settings
-
 	mappa := r.Context().Value("values").(ContextValues)
 	fmt.Println(mappa)
 
@@ -86,18 +85,7 @@ func ApiSettingsGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("STRUCT:", document.Data())
-
-	userData := document.Data()
-
-	err = mapstructure.Decode(userData["Settings"], &s)
-	if err != nil {
-		log.Println(err)
-	}
-
-	fmt.Println("SETTING:", s)
-
-	data, err := json.Marshal(s)
+	data, err := json.Marshal(document.Data()["Settings"])
 	if err != nil {
 		kaoriLog.PrintLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsGet", "Error create JSON: " + err.Error(), 1)
 		kaoriUtils.PrintInternalErr(w)
@@ -178,7 +166,7 @@ func ApiSettingsSet(w http.ResponseWriter, r *http.Request){
 	}
 
 	//Make JSON response
-	data, err := json.Marshal(u.Settings)
+	data, err := json.Marshal(m)
 	if err != nil {
 		kaoriLog.PrintLog(mappa.Get("email"), mappa.Get("ip"), "ApiSettingsSet", "Error to create JSON: " + err.Error(), 1)
 		kaoriUtils.PrintInternalErr(w)
@@ -474,8 +462,8 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
 	type Conferma struct {
 		Username string
-		Link     string
-		Login    string
+		LinkConfirm     string
+		LinkReject string
 	}
 
 	//Save refresh token in the database
@@ -491,14 +479,20 @@ func ApiSignUp(w http.ResponseWriter, r *http.Request) {
 
 	c := Conferma{
 		Username: u.Username,
-		Link: fmt.Sprintf(
+		LinkConfirm: fmt.Sprintf(
 			"https://%s%sconfirm?email=%s&id=%s",
 			cfg.Server.Host+cfg.Server.Port,
 			endpointAuth,
 			u.Email,
 			refToken.RefreshId,
 		),
-		Login: "https://" + cfg.Server.Host + cfg.Server.Port + endpointLogin.String(),
+		LinkReject: fmt.Sprintf(
+			"https://%s%sreject?email=%s&id=%s",
+			cfg.Server.Host+cfg.Server.Port,
+			endpointAuth,
+			u.Email,
+			refToken.RefreshId,
+		),
 	}
 
 	//Send mails
@@ -573,11 +567,180 @@ func ApiConfirmSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(data))
 }
 
+func ApiRejectSignUp(w http.ResponseWriter, r *http.Request){
+
+	ip := kaoriUtils.GetIP(r)
+
+	params := []kaoriUtils.ParamsInfo{
+		{Key: "id", Required: true},
+		{Key: "email", Required: true},
+	}
+
+	p, err := kaoriUtils.GetParams(params, r)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiConfirmSignup", "Error to get params: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	if !kaoriJwt.VerifyRefreshToken(kaoriUserDB, p["email"].(string), p["id"].(string)) {
+		kaoriLog.PrintLog(p["email"].(string), ip, "ApiConfirmSignup", "Warning to verify refresh token: Token not valid", 2)
+		kaoriUtils.PrintErr(w, "Token not valid!")
+		return
+	}
+
+	//Remove old refresh token
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(p["email"].(string)).
+		Collection("RefreshToken").Doc(p["id"].(string)).
+		Delete(kaoriUserDB.Client.Ctx)
+
+	if err != nil {
+		kaoriLog.PrintLog(p["email"].(string), ip, "ApiConfirmSignup", "Error database: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	//Remove user
+	_, err = kaoriUserDB.Client.C.Collection("User").Doc(p["email"].(string)).Delete(kaoriUserDB.Client.Ctx)
+	if err != nil {
+		// Handle any errors in an appropriate way, such as returning them.
+		log.Printf("An error has occurred: %s", err)
+	}
+
+	if err != nil {
+		kaoriLog.PrintLog(p["email"].(string), ip, "ApiConfirmSignup", "Error database: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	//Redirect to login
+	data, err := kaoriUtils.ParseTemplateHtml(cfg.Template.Html["redirect"], "https://"+cfg.Server.Host+cfg.Server.Port+endpointLogin.String())
+	if err != nil {
+		kaoriLog.PrintLog(p["email"].(string), ip, "ApiConfirmSignup", "Error to create template: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	w.Write([]byte(data))
+}
+
 //API SERVICE
 
 func ApiServiceAnime(w http.ResponseWriter, r *http.Request) {
 
-	var a kaoriAnime.Anime
+	type data struct {
+        Id string
+		Info anilist.Media
+		Data kaoriAnime.Anime
+	}
+	var d data
+
+	//var a kaoriAnime.Anime
+	var err error
+
+	//GetIP
+	ip := kaoriUtils.GetIP(r)
+	
+	//Get anime id
+	id := filepath.Base(r.URL.Path)
+	idNum, err := strconv.Atoi(id)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ServiceAnime", err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	fmt.Println("ID:", idNum)
+
+
+	//Get information from anilist
+	m := anilist.Media{}
+	err = m.FilterAnimeByID(idNum)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceAnime", "Serving anime error: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id not found")
+		return
+	}
+
+	//Get video info
+	d.Data.Episodes, err = kaoriAnime.GetEpisodesFromDB(kaoriAnimeDB.Client, idNum)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceAnime", "Error to get anime episodes: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id not found")
+		return
+	}
+	d.Info = m
+	d.Id = id
+
+	respData, err := kaoriUtils.ParseTemplateHtml("kaoriSrc/template/html/anime/anime.html", d)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceAnime", "Error to parse template: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	w.Write([]byte(respData))
+}
+
+func ApiServiceEpisode(w http.ResponseWriter, r *http.Request) {
+
+	ip := kaoriUtils.GetIP(r)
+
+	params := []kaoriUtils.ParamsInfo{
+		{Key: "id", Required: true},
+		{Key: "num", Required: true},
+	}
+
+	p, err := kaoriUtils.GetParams(params, r)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceEpisode", "Error to get episode: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Params not valid")
+		return
+	}
+
+	idNum, err := strconv.Atoi(p["id"].(string))
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceEpisode", err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id or num page not valid")
+		return
+	}
+
+	pageNum, err := strconv.Atoi(p["num"].(string))
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceEpisode", err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id or num page not valid")
+		return
+	}
+
+	fmt.Println(idNum, pageNum)
+
+	episode, err := kaoriAnime.GetEpisodeFromDB(kaoriAnimeDB.Client, idNum, pageNum)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceEpisode", "Error to get episode: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id or episode not found.")
+		return
+	}
+
+	data, err := json.Marshal(episode.Videos)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceEpisode", "Error to get episode: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	w.Write(data)
+}
+
+func ApiServiceManga(w http.ResponseWriter, r *http.Request) {
+
+	type data struct {
+		Info anilist.Media
+		Data kaoriManga.Manga
+		Conf kaoriSettings.ServerConfig
+	}
+	var d data
+
+	//var a kaoriAnime.Anime
 	var err error
 
 	//GetIP
@@ -585,27 +748,92 @@ func ApiServiceAnime(w http.ResponseWriter, r *http.Request) {
 
 	//Get anime id
 	id := filepath.Base(r.URL.Path)
-	a.Id, err = strconv.Atoi(id)
+	idNum, err := strconv.Atoi(id)
 	if err != nil {
-		kaoriLog.PrintLog("General", ip, "ServiceAnime", err.Error(), 1)
+		kaoriLog.PrintLog("General", ip, "ServiceManga", err.Error(), 1)
 		kaoriUtils.PrintInternalErr(w)
 		return
 	}
 
-	err = a.GetAnimeFromDb(kaoriDataDB.Client.C, kaoriDataDB.Client.Ctx)
+	fmt.Println("ID:", idNum)
+
+
+	//Get information from anilist
+	m := anilist.Media{}
+	err = m.FilterAnimeByID(idNum)
 	if err != nil {
-		kaoriLog.PrintLog("General", ip, "ServiceAnime", err.Error(), 1)
-		http.Error(w, "Anime not found", http.StatusNotFound)
+		kaoriLog.PrintLog("General", ip, "ApiServiceManga", "Serving manga error: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id not found")
 		return
 	}
 
-	data, _ := json.Marshal(a)
+	//Get video info
+	d.Data.Chapters, err = kaoriManga.GetChaptersFromDB(kaoriAnimeDB.Client, idNum)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceManga", "Error to get manga chapter: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id not found")
+		return
+	}
+	d.Info = m
 
-	//TODO: Generate template
-	w.Write(data)
+	respData, err := kaoriUtils.ParseTemplateHtml("kaoriSrc/template/html/manga/manga.html", d)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceManga", "Error to parse template: "+err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	w.Write([]byte(respData))
+
 }
 
-func ApiServiceManga(w http.ResponseWriter, r *http.Request) {
+func ApiServiceChapter(w http.ResponseWriter, r *http.Request) {
+
+	ip := kaoriUtils.GetIP(r)
+
+	params := []kaoriUtils.ParamsInfo{
+		{Key: "id", Required: true},
+		{Key: "num", Required: true},
+	}
+
+	p, err := kaoriUtils.GetParams(params, r)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceChapter", "Error to get chapter: " + err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Params not valid")
+		return
+	}
+
+	idNum, err := strconv.Atoi(p["id"].(string))
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceChapter", err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id or num page not valid")
+		return
+	}
+
+	chNum, err := strconv.Atoi(p["num"].(string))
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceChapter", err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id or num page not valid")
+		return
+	}
+
+	fmt.Println(idNum, chNum)
+
+	chapter, err := kaoriManga.GetChapterFromDB(kaoriAnimeDB.Client, idNum, chNum)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceEpisode", "Error to get episode: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, "Id or episode not found.")
+		return
+	}
+
+	data, err := json.Marshal(chapter.Pages)
+	if err != nil {
+		kaoriLog.PrintLog("General", ip, "ApiServiceChapter", "Error to get episode: " + err.Error(), 1)
+		kaoriUtils.PrintInternalErr(w)
+		return
+	}
+
+	w.Write(data)
 
 }
 
@@ -1023,6 +1251,7 @@ func ApiAnimeInsert(w http.ResponseWriter, r *http.Request) {
 	if a.Id != 0 {
 
 		if a.Id != num {
+			kaoriLog.PrintLog(mappa.Get("email"), mappa.Get("ip"), "ApiInsertAnime", "Error, id of body request and id in the URL don't match", 1)
 			kaoriUtils.PrintErr(w, "Error, id of body request and id in the URL don't match")
 			return
 		}
@@ -1031,9 +1260,20 @@ func ApiAnimeInsert(w http.ResponseWriter, r *http.Request) {
 		a.Id = num
 	}
 
+	//NO RELATIONAL DATABASE
+	/*
 	err = a.SendToDb(kaoriDataDB)
 	if err != nil {
 		kaoriLog.PrintLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
+		kaoriUtils.PrintErr(w, err.Error())
+		return
+	}
+	*/
+
+	err = a.SendToDbRel(kaoriAnimeDB.Client)
+	if err != nil {
+		strError := fmt.Sprintf("Error to insert anime in the relational database [%d]: %s", a.Id, err.Error())
+		kaoriLog.PrintLog(mappa.Get("email"), mappa.Get("id"), "ApiAnimeInsert", strError , 1)
 		kaoriUtils.PrintErr(w, err.Error())
 		return
 	}
@@ -1041,6 +1281,7 @@ func ApiAnimeInsert(w http.ResponseWriter, r *http.Request) {
 	kaoriUtils.PrintOk(w)
 }
 
+/*
 func ApiMangaInsert(w http.ResponseWriter, r *http.Request) {
 
 	var m kaoriManga.Manga
@@ -1057,16 +1298,23 @@ func ApiMangaInsert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if m.Id != "" {
-		if m.Id != idAnilist {
+	num, err := strconv.Atoi(idAnilist)
+	if err != nil {
+		return
+	}
+
+	if m.Id != 0 {
+
+		if m.Id != num {
 			kaoriUtils.PrintErr(w, "Error, id of body request and id in the URL don't match")
 			return
 		}
+
 	} else {
-		m.Id = idAnilist
+		m.Id = num
 	}
 
-	err = m.SendToDatabase(kaoriMangaDB.Client.C, kaoriMangaDB.Client.Ctx)
+	err = m.SendToDatabaseNR(kaoriMangaDB.Client.C, kaoriMangaDB.Client.Ctx)
 	if err != nil {
 		kaoriLog.PrintLog(mappa.Get("email"), mappa.Get("ip"), "ApiAnimeInsert", "Error to get params: "+err.Error(), 1)
 		kaoriUtils.PrintErr(w, err.Error())
@@ -1078,6 +1326,7 @@ func ApiMangaInsert(w http.ResponseWriter, r *http.Request) {
 	kaoriUtils.PrintOk(w)
 
 }
+ */
 
 //API ADMIN COMMAND
 

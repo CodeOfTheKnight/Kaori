@@ -142,8 +142,6 @@ func refreshMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		w.Write([]byte(`{"code": 200, "msg": "OK"}`))
-
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)
 
