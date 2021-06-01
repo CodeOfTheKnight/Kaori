@@ -327,7 +327,7 @@ func SendEmail(serverAddress, mailAddress, mailKey, to, sub, tmpl string,  data 
 	from := mailAddress
 	pass := mailKey
 
-	emailBody, err := kaoriUtils.ParseTemplate(tmpl, data)
+	emailBody, err := kaoriUtils.ParseTemplateHtml(tmpl, data)
 	if err != nil {
 		return errors.New("unable to parse email template")
 	}
