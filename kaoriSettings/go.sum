@@ -48,8 +48,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523094256-a4640e276a91 h1:k2M3rzmkvfRn7aTVMTD21Fabnwy7vHgc066ZJg0l8TE=
 github.com/CodeOfTheKnight/Kaori/kaoriDatabase v0.0.0-20210523094256-a4640e276a91/go.mod h1:WcLOO0FVH6rHEtLhuN4UbbRIYQ+YEDWJNf/TpdyPgwo=
-github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210602145937-0ae9f0ce4ee1 h1:PVDyUFC4ilNj9YmCfG0jnXlwnwlCTALVGl0UV+K6QKM=
-github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210602145937-0ae9f0ce4ee1/go.mod h1:bG3ykYjRBExJy297yJIvPpJ/bPttBs0BSWdlhJq28Dw=
+github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210602150742-5fc0bbe694a6 h1:C302WEDwYR5AH4vH7oSD5vNODnpT3rWvzdVyjk9350w=
+github.com/CodeOfTheKnight/Kaori/kaoriUtils v0.0.0-20210602150742-5fc0bbe694a6/go.mod h1:bG3ykYjRBExJy297yJIvPpJ/bPttBs0BSWdlhJq28Dw=
 github.com/CodeOfTheKnight/kaoriDatabase v0.0.0-20210522221732-b7bab38b9bda/go.mod h1:ydzloa4lfsVPChYdmsngzZDVd5bDmp9sjIMcz5nH/R4=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
