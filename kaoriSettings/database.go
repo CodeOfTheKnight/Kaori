@@ -1,9 +1,9 @@
 package kaoriSettings
 
 import (
-	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"errors"
 	"fmt"
+	"github.com/CodeOfTheKnight/Kaori/kaoriUtils"
 	"os"
 )
 
@@ -19,7 +19,6 @@ type DBRelational struct {
 	Host string `yaml:"host" json:"host"`
 	Port string `yaml:"port" json:"port"`
 	Db string `yaml:"db" json:"db"`
-	Driver string `yaml:"driver" json:"driver"`
 }
 
 type DBNonRealtional struct {
@@ -73,10 +72,6 @@ func (db *DBRelational) CheckDatabase() error {
 		return err
 	}
 
-	if err := db.CheckDriver(); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -102,15 +97,6 @@ func (db *DBRelational) CheckDBName() error {
 
 	if db.Db == "" {
 		return errors.New("Database name not valid.")
-	}
-
-	return nil
-}
-
-func (db *DBRelational) CheckDriver() error {
-
-	if db.Driver != "mysql" && db.Driver != "sqlite"{
-		return errors.New("Driver not valid")
 	}
 
 	return nil
