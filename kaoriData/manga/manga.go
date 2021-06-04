@@ -46,7 +46,7 @@ func (m *Manga) SendToDatabaseNR(c *firestore.Client, ctx context.Context) error
 			chapterDoc := mangaDoc.Collection("Languages").
 										Doc(p.Language).
 										Collection("Chapters").
-										Doc(strconv.Itoa(ch.Number))
+										Doc(ch.Number)
 
 			_, err = chapterDoc.Set(ctx, mc, firestore.MergeAll)
 			if err != nil {
