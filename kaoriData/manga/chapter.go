@@ -9,7 +9,7 @@ import (
 )
 
 type Chapter struct {
-	Number int
+	Number string
 	Title string
 	Pages []*Page
 }
@@ -91,7 +91,7 @@ func GetChaptersFromDB(db *sql.DB, animeID int) (chapters []*Chapter, err error)
 	return chapters, nil
 }
 
-func GetChapterFromDB(db *sql.DB, animeID int, numPag int) (*Chapter, error) {
+func GetChapterFromDB(db *sql.DB, animeID int, numChap int) (*Chapter, error) {
 
 	var ch Chapter
 
@@ -101,7 +101,7 @@ func GetChapterFromDB(db *sql.DB, animeID int, numPag int) (*Chapter, error) {
 		return nil, err
 	}
 
-	results, err := smtp.Query(animeID, numPag)
+	results, err := smtp.Query(animeID, numChap)
 	if err != nil {
 		return nil, err
 	}
