@@ -105,9 +105,13 @@ func (srv *ServerConfig) CheckPort() error {
 		return errors.New("Invalid Port: Conversion of port to int not valid")
 	}
 
-	if portInt < 1024 || portInt > 49151 {
-		return errors.New("Port not valid. [1024-49151]")
+	
+	if portInt != 80 {
+		if portInt < 1024 || portInt > 49151 {
+			return errors.New("Port not valid. [1024-49151]")
+		}
 	}
+
 	return nil
 }
 
