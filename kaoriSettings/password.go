@@ -14,6 +14,7 @@ type PasswordConfig struct {
 	RefreshToken string `yaml:"refreshToken" json:"refreshToken,omitempty"`
 	Cookies      string `yaml:"cookies" json:"cookies,omitempty"`
 	Mail         string `yaml:"mail" json:"mail,omitempty"`
+	Oauth        string `yaml:"oauth" json:"oauth"`
 }
 
 //WriteConf Scrive i settaggi delle password nel relativo file.
@@ -59,6 +60,11 @@ func (psw *PasswordConfig) CheckPassword() error {
 	//Check Access Token password
 	if err := kaoriUtils.PasswordValid(psw.AccessToken); err != nil {
 		return fmt.Errorf("Access Token " + err.Error())
+	}
+
+	//Check Oauth password
+	if err := kaoriUtils.PasswordValid(psw.Oauth); err != nil {
+		return fmt.Errorf("Oauth password " + err.Error())
 	}
 
 	return nil
