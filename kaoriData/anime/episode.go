@@ -110,7 +110,7 @@ func (ep *Episode) SendToDbRel(cl *sql.DB, IdAnime int) (int, error) {
 func GetEpisodesFromDB(db *sql.DB, idAnime int) (eps []*Episode, err error) {
 
 	// Execute the query
-	smtp, err := db.Prepare("SELECT ID, Numero, Titolo FROM Episodi WHERE AnimeID = ?")
+	smtp, err := db.Prepare("SELECT Numero, Titolo FROM Episodi WHERE AnimeID = ?")
 	if err != nil {
 		return nil, err
 	}
@@ -124,15 +124,9 @@ func GetEpisodesFromDB(db *sql.DB, idAnime int) (eps []*Episode, err error) {
 	for results.Next() {
 
 		var ep Episode
-		var id int
 
 		// for each row, scan the result into our tag composite object
-		err = results.Scan(&id, &ep.Number, &ep.Title)
-		if err != nil {
-			return nil, err
-		}
-
-		ep.Videos, err = GetVideoFromDB(db, id)
+		err = results.Scan(&ep.Number, &ep.Title)
 		if err != nil {
 			return nil, err
 		}

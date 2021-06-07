@@ -19,7 +19,7 @@ func TestAnime_SendToDbRel(t *testing.T) {
 		Name:     "Citrus",
 		Episodes: []*Episode{
 			{
-				Number: 1,
+				Number: "1",
 				Title: "L'incontro delle ragazze",
 				Videos: []*Video{
 					{
@@ -56,7 +56,7 @@ func TestAnime_SendToDbRel(t *testing.T) {
 				},
 			},
 			{
-				Number: 2,
+				Number: "2",
 				Title: "La scopata delle due",
 				Videos: []*Video{
 					{
@@ -87,7 +87,7 @@ func TestAnime_SendToDbRel(t *testing.T) {
 	t.Log("[OK]")
 }
 
-func TestGetAnimeFromDB(t *testing.T) {
+/*func TestGetAnimeFromDB(t *testing.T) {
 
 	db, err := sql.Open("mysql", "root:Goghetto1106@tcp(192.168.1.4:3306)/KaoriAnime")
 
@@ -102,4 +102,4 @@ func TestGetAnimeFromDB(t *testing.T) {
 	}
 
 	t.Log(a)
-}
+}*/

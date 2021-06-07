@@ -15,7 +15,7 @@ func TestEpisode_SendToDbRel(t *testing.T) {
 	defer db.Close()
 
 	ep := &Episode{
-		Number: 1,
+		Number: "1",
 		Title:  "Episodio fan service",
 		Videos: nil,
 	}
@@ -31,14 +31,14 @@ func TestEpisode_SendToDbRel(t *testing.T) {
 
 func TestGetEpisodesFromDB(t *testing.T) {
 
-	db, err := sql.Open("mysql", "root:Goghetto1106@tcp(192.168.1.4:3306)/KaoriAnime")
+	db, err := sql.Open("mysql", "kiritony_KiritoNya:Goghetto1106@tcp(65.19.141.67:3306)/kiritony_KaoriAnime")
 
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 
-	eps, err := GetEpisodesFromDB(db, 335)
+	eps, err := GetEpisodesFromDB(db, 223)
 	if err != nil {
 		t.Fatal(err)
 	}
