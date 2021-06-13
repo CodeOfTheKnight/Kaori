@@ -234,6 +234,7 @@ func SetCookies(w http.ResponseWriter, token, tokenIss, cookieKey string) error 
 			Value:    encoded,
 			Secure:   false,
 			HttpOnly: false,
+            SameSite: http.SameSiteStrictMode,
 			Path:     "/",
 		}
 		fmt.Println("COOKIE", cookie)
@@ -523,4 +524,39 @@ func IsEmailValid(email string) bool {
 		return false
 	}
 	return emailRegex.MatchString(email)
+}
+
+//CheckImage controlla se è un'immagine e se è nei formati gestibili dal server
+func CheckImage(data string) (err error) {
+
+	switch strings.Split(data[5:], ";base64")[0] {
+	case "image/png":
+
+		imgCover, err := Base64toPng(strings.Split(data, "base64,")[1])
+		if err != nil {
+			return err
+		}
+
+		//Check size
+		if len(imgCover) == 0 {
+			return errors.New("Cover not valid")
+		}
+
+	case "image/jpeg":
+
+		imgCover, err := Base64toJpg(strings.Split(data, "base64,")[1])
+		if err != nil {
+			return err
+		}
+
+		//Check size
+		if len(imgCover) == 0 {
+			return errors.New("Cover not valid")
+		}
+
+	default:
+		return errors.New("Cover not valid")
+	}
+
+	return nil
 }
